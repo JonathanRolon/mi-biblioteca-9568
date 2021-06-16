@@ -4,6 +4,6 @@ import groovy.transform.CompileStatic
 @CompileStatic
 interface Calificador {
 
-    calificar(Respuesta resp, Integer calificacion)
+    void calificar(Respuesta resp, Integer calificacion)
 
 }

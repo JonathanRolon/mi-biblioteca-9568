@@ -2,33 +2,73 @@ package com.mibiblioteca.mibiblioteca.domain
 
 import groovy.transform.CompileStatic
 
+import javax.persistence.Column
 import javax.persistence.Entity
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
+import javax.persistence.EnumType
+import javax.persistence.Enumerated
 import javax.persistence.Id
+
+enum Regularidad{
+    REGULAR, SUSPENDIDO, EGRESADO
+}
 
 @CompileStatic
 @Entity
 abstract class Alumno {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer DNI
 
+    @Column(nullable = false)
+    Integer creditos
+
+    @Column(nullable = false)
     String curso
 
-    //calificaciones[]
+    @Column(nullable = true)
+    Integer notaPrimerSemestre
 
-    //biblioteca[]
+    @Column(nullable = true)
+    Integer notaSegundoSemestre
 
-    abstract void sumarCreditos()
+    @Column(nullable = true)
+    Integer notaAnual
 
-    void preguntar(String pregunta){
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    Regularidad regular
+
+    Alumno(Integer DNI,String curso) {
+        this.DNI = DNI
+        this.curso = curso
+        creditos = 0
+        regular = Regularidad.REGULAR
+    }
+
+    Alumno(){
 
     }
 
-    void responder(String respuesta){
+    abstract Alumno sumarCreditos(Integer creditos)
 
+    abstract void restarCreditos(Integer creditos)
+
+    void preguntar(String pregunta) {
+        def publicador = new Publicador()
+        publicador.preguntar(pregunta)
+    }
+
+    void responder(String respuesta, Long idHilo) {
+        def publicador = new Publicador()
+        publicador.responder(respuesta, idHilo)
+    }
+
+    Integer getDNI(){
+        return this.DNI
+    }
+
+    String getCurso(){
+        return this.curso
     }
 
 }

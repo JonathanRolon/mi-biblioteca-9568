@@ -11,8 +11,13 @@ import javax.persistence.Id
 class Editor {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer DNI
+
+    Editor(Integer DNI){
+        this.DNI = DNI
+    }
+
+    Editor(){}
 
     void publicarMaterial(Material m){
 
@@ -25,4 +30,6 @@ class Editor {
     void rechazarSolicitud(Material m, Alumno alumno){
 
     }
+
+
 }

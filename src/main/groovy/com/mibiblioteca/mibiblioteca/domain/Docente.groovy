@@ -11,11 +11,16 @@ import javax.persistence.Id
 class Docente {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer DNI
 
     //cursos[]
     //biblioteca[]
+
+    Docente (Integer DNI){
+        this.DNI = DNI
+    }
+
+    Docente(){}
 
     void calificar(Alumno al){}
 
