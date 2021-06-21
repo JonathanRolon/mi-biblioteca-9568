@@ -1,9 +1,10 @@
 package com.mibiblioteca.mibiblioteca.domain
+
 import groovy.transform.CompileStatic
 
 @CompileStatic
-interface Calificador {
+enum TipoMaterial {
 
-    void calificar(Respuesta resp, Integer calificacion)
+    AUDIOLIBRO, LIBRO, REVISTA
 
 }

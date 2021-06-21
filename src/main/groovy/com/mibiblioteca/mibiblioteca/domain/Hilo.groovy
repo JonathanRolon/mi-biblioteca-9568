@@ -20,17 +20,18 @@ class Hilo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id
+    long id
 
     @Column(nullable = false)
     String consulta
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    EstadoHilo estadoHilo
+    TemaHilo tema
 
     @Column(nullable = false)
-    String tema
+    @Enumerated(EnumType.STRING)
+    EstadoHilo estadoHilo
 
     @Column(nullable = true)
     String motivoCierre
@@ -38,13 +39,17 @@ class Hilo {
     @Column(nullable = true)
     String motivoSuspension
 
-    Hilo(String consulta,String tema ){
+    Hilo(String consulta,TemaHilo tema ){
         this.consulta = consulta
         this.tema = tema
         this.estadoHilo = EstadoHilo.ABIERTO
     }
 
     Hilo(){}
+
+    long getId(){
+        id
+    }
 
     void cerrar(String motivoCierre){
         this.motivoCierre = motivoCierre

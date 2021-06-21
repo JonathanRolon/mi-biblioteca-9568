@@ -10,13 +10,9 @@ import javax.persistence.Lob
 import java.sql.Blob
 import java.sql.Timestamp
 
-enum TipoMaterial{
-    LIBRO, REVISTA, AUDIOLIBRO
-}
-
 @CompileStatic
 @Entity
-abstract class Material {
+class Material {
 
     @Id
     String id
@@ -50,9 +46,9 @@ abstract class Material {
     String editorial
 
     Material(String id, Float precio,String  descripcion,String  titulo,String autor,
-             Timestamp fechaPublicacion,String editorial,String material){
+             Timestamp fechaPublicacion,String editorial,TipoMaterial tipoMaterial){
 
-        this.tipoMaterial = this.str2Enum(material)
+        this.tipoMaterial = tipoMaterial
         this.precio = precio
         this.descripcion = descripcion
         this.titulo = titulo
@@ -63,45 +59,5 @@ abstract class Material {
     }
 
     Material(){}
-
-    float getPrecio() {
-        return precio
-    }
-
-    String getDescripcion() {
-        return descripcion
-    }
-
-    String getTitulo() {
-        return titulo
-    }
-
-    private TipoMaterial str2Enum(String name) {
-        return TipoMaterial.valueOf(TipoMaterial.class, name);
-    }
-
-    String getAutor() {
-        return autor
-    }
-
-    Timestamp getFechaPublicacion() {
-        return fechaPublicacion
-    }
-
-    TipoMaterial getTipoMaterial() {
-        return tipoMaterial
-    }
-
-    String getEditorial() {
-        return editorial
-    }
-
-    void setPrecio(Float precio){
-        this.precio = precio
-    }
-
-    abstract void prestar(Lector l)
-
-    abstract void visualizar()
 
 }

@@ -11,9 +11,9 @@ import javax.persistence.Id
 class Editor {
 
     @Id
-    Integer DNI
+    long DNI
 
-    Editor(Integer DNI){
+    Editor(long DNI){
         this.DNI = DNI
     }
 

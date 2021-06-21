@@ -14,10 +14,10 @@ enum Regularidad{
 
 @CompileStatic
 @Entity
-abstract class Alumno {
+class Alumno {
 
     @Id
-    Integer DNI
+    Long DNI
 
     @Column(nullable = false)
     Integer creditos
@@ -47,28 +47,6 @@ abstract class Alumno {
 
     Alumno(){
 
-    }
-
-    abstract Alumno sumarCreditos(Integer creditos)
-
-    abstract void restarCreditos(Integer creditos)
-
-    void preguntar(String pregunta) {
-        def publicador = new Publicador()
-        publicador.preguntar(pregunta)
-    }
-
-    void responder(String respuesta, Long idHilo) {
-        def publicador = new Publicador()
-        publicador.responder(respuesta, idHilo)
-    }
-
-    Integer getDNI(){
-        return this.DNI
-    }
-
-    String getCurso(){
-        return this.curso
     }
 
 }

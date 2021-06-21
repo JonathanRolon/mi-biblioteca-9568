@@ -11,26 +11,14 @@ import javax.persistence.Id
 class Docente {
 
     @Id
-    Integer DNI
+    long DNI
 
     //cursos[]
     //biblioteca[]
 
-    Docente (Integer DNI){
+    Docente (long DNI){
         this.DNI = DNI
     }
 
     Docente(){}
-
-    void calificar(Alumno al){}
-
-    void asignarTarea(Alumno al, Tarea t){ }
-
-    void calificarTarea(Tarea t, float nota){
-
-    }
-
-    void responder( Hilo hilo, String respuesta){
-
-    }
 }

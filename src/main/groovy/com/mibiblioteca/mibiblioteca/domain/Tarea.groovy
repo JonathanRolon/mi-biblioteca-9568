@@ -13,7 +13,7 @@ class Tarea {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long nroTarea
+    long nroTarea
 
     Tarea(){}
 }

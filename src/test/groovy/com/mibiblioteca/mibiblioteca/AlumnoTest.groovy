@@ -1,13 +1,13 @@
 package com.mibiblioteca.mibiblioteca
 
-import com.mibiblioteca.mibiblioteca.domain.AlumnoNovato
+
 import groovy.transform.CompileStatic
 import org.aspectj.lang.annotation.After
 import org.aspectj.lang.annotation.Before
 import org.junit.jupiter.api.Test
 
 @CompileStatic
-class AlumnoTest {
+class AlumnoTest{
 
     @Before
     void init() {
@@ -31,7 +31,7 @@ class AlumnoTest {
     * */
     @Test
     void alumnoNovatoRegularRecibePrimerCalificacionPorEncimaDeCincoNoSubeHastaAlumnoMedio(){
-        def novato = new AlumnoNovato(35413351,"B")
+
 
     }
 
@@ -45,6 +45,7 @@ class AlumnoTest {
     * */
     @Test
     void alumnoNovatoRegularRecibeDecimaCalificacionPorEncimaDeCincoSubeHastaAlumnoMedio(){
+
 
     }
 
