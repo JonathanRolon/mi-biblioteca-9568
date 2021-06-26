@@ -1,4 +1,4 @@
-package com.mibiblioteca.mibiblioteca.domain
+package com.mibiblioteca.mibiblioteca.model
 
 import groovy.transform.CompileStatic
 
@@ -20,7 +20,7 @@ class Hilo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id
+    Long id
 
     @Column(nullable = false)
     String consulta
@@ -39,17 +39,17 @@ class Hilo {
     @Column(nullable = true)
     String motivoSuspension
 
-    Hilo(String consulta,TemaHilo tema ){
+    @Column(nullable = false)
+    Long dniPublicador
+
+    Hilo(Long dniPublicador, String consulta,TemaHilo tema ){
         this.consulta = consulta
         this.tema = tema
         this.estadoHilo = EstadoHilo.ABIERTO
+        this.dniPublicador = dniPublicador
     }
 
     Hilo(){}
-
-    long getId(){
-        id
-    }
 
     void cerrar(String motivoCierre){
         this.motivoCierre = motivoCierre

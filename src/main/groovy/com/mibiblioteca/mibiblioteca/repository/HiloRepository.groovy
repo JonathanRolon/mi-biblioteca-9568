@@ -1,6 +1,6 @@
 package com.mibiblioteca.mibiblioteca.repository
 
-import com.mibiblioteca.mibiblioteca.domain.Hilo
+import com.mibiblioteca.mibiblioteca.model.Hilo
 import groovy.transform.CompileStatic
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.repository.CrudRepository
@@ -17,4 +17,6 @@ interface HiloRepository extends JpaRepository<Hilo, Long> {
     Hilo save(Hilo hilo)
 
     void deleteById(Long idHilo)
+
+    void deleteAll()
 }

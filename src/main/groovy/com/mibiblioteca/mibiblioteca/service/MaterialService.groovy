@@ -1,7 +1,7 @@
 package com.mibiblioteca.mibiblioteca.service
 
-import com.mibiblioteca.mibiblioteca.domain.Material
-import com.mibiblioteca.mibiblioteca.domain.Material
+import com.mibiblioteca.mibiblioteca.model.Material
+import com.mibiblioteca.mibiblioteca.model.Material
 import groovy.transform.CompileStatic
 
 @CompileStatic
@@ -16,8 +16,6 @@ interface MaterialService {
     Material update(Material material)
 
     void deleteById(String id)
-
-    void prestar(Material m, LectorService l)
 
     void visualizar(Material material)
 

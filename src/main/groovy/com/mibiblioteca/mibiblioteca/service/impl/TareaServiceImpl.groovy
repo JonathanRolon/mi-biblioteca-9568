@@ -1,6 +1,6 @@
 package com.mibiblioteca.mibiblioteca.service.impl
 
-import com.mibiblioteca.mibiblioteca.domain.Tarea
+import com.mibiblioteca.mibiblioteca.model.Tarea
 import com.mibiblioteca.mibiblioteca.service.TareaService
 import groovy.transform.CompileStatic
 import org.springframework.stereotype.Service

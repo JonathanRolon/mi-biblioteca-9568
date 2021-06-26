@@ -1,7 +1,7 @@
 package com.mibiblioteca.mibiblioteca.repository
 
-import com.mibiblioteca.mibiblioteca.domain.Alumno
-import com.mibiblioteca.mibiblioteca.domain.Editor
+import com.mibiblioteca.mibiblioteca.model.Alumno
+import com.mibiblioteca.mibiblioteca.model.Editor
 import groovy.transform.CompileStatic
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.repository.CrudRepository
@@ -18,5 +18,7 @@ interface EditorRepository  extends JpaRepository<Editor, Long> {
     Editor save(Editor editor)
 
     void deleteById(Long dni)
+
+    void deleteAll()
 
 }

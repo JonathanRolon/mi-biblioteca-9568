@@ -1,8 +1,8 @@
 package com.mibiblioteca.mibiblioteca.repository
 
-import com.mibiblioteca.mibiblioteca.domain.Alumno
-import com.mibiblioteca.mibiblioteca.domain.Material
-import com.mibiblioteca.mibiblioteca.domain.Tarea
+import com.mibiblioteca.mibiblioteca.model.Alumno
+import com.mibiblioteca.mibiblioteca.model.Material
+import com.mibiblioteca.mibiblioteca.model.Tarea
 import groovy.transform.CompileStatic
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.repository.CrudRepository
@@ -19,5 +19,7 @@ interface MaterialRepository extends JpaRepository<Material, String> {
     Material save(Material tarea)
 
     void deleteById(String idMaterial)
+
+    void deleteAll()
 
 }

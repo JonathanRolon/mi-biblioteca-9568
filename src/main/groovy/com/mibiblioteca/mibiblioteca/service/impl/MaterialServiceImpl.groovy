@@ -1,14 +1,9 @@
 package com.mibiblioteca.mibiblioteca.service.impl
 
-import com.mibiblioteca.mibiblioteca.domain.Material
-import com.mibiblioteca.mibiblioteca.service.LectorService
+import com.mibiblioteca.mibiblioteca.model.Material
 import com.mibiblioteca.mibiblioteca.service.MaterialService
-import groovy.transform.CompileStatic
-import org.springframework.stereotype.Service
 
-@CompileStatic
-@Service
-class RevistaServiceImpl implements MaterialService {
+class MaterialServiceImpl implements MaterialService{
     @Override
     List<Material> findAll() {
         return null
@@ -31,11 +26,6 @@ class RevistaServiceImpl implements MaterialService {
 
     @Override
     void deleteById(String id) {
-
-    }
-
-    @Override
-    void prestar(Material m, LectorService l) {
 
     }
 

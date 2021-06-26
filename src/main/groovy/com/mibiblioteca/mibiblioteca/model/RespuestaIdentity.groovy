@@ -1,30 +1,27 @@
-package com.mibiblioteca.mibiblioteca.domain
+package com.mibiblioteca.mibiblioteca.model
 
 import com.sun.istack.NotNull
 import groovy.transform.CompileStatic
 
 import javax.persistence.Embeddable
-import javax.persistence.GeneratedValue
-import javax.persistence.GenerationType
-import javax.validation.constraints.Size
 
 @Embeddable
 @CompileStatic
 class RespuestaIdentity implements Serializable{
 
     @NotNull
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long nroRespuesta
+    Long publicador
 
     @NotNull
-    long nroHilo
+    Long nroHilo
 
     RespuestaIdentity() {
 
     }
 
-    RespuestaIdentity(long hilo) {
-        this.nroHilo = nroHilo;
+    RespuestaIdentity(Long dniPublicador, Long hilo) {
+        this.nroHilo = nroHilo
+        this.publicador = dniPublicador
     }
 
     @Override
@@ -35,13 +32,13 @@ class RespuestaIdentity implements Serializable{
         RespuestaIdentity that = (RespuestaIdentity) o;
 
         if (!nroHilo.equals(that.nroHilo)) return false;
-        return nroRespuesta.equals(that.nroRespuesta);
+        return publicador.equals(that.publicador);
     }
 
     @Override
     int hashCode() {
         int result = nroHilo.hashCode();
-        result = 31 * result + nroRespuesta.hashCode();
+        result = 31 * result + publicador.hashCode();
         return result;
     }
 

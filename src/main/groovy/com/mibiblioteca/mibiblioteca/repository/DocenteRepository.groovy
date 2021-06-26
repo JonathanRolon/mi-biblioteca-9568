@@ -1,6 +1,6 @@
 package com.mibiblioteca.mibiblioteca.repository
 
-import com.mibiblioteca.mibiblioteca.domain.Docente
+import com.mibiblioteca.mibiblioteca.model.Docente
 import groovy.transform.CompileStatic
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.repository.CrudRepository
@@ -18,5 +18,7 @@ interface DocenteRepository extends JpaRepository<Docente, Long> {
     Docente save(Docente docente)
 
     void deleteById(Long dni)
+
+    void deleteAll()
 
 }

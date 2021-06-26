@@ -1,4 +1,4 @@
-package com.mibiblioteca.mibiblioteca.domain
+package com.mibiblioteca.mibiblioteca.model
 import groovy.transform.CompileStatic
 
 import javax.persistence.Column

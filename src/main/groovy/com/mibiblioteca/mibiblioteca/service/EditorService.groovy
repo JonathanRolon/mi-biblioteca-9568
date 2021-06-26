@@ -1,6 +1,6 @@
 package com.mibiblioteca.mibiblioteca.service
 
-import com.mibiblioteca.mibiblioteca.domain.Editor
+import com.mibiblioteca.mibiblioteca.model.Editor
 import groovy.transform.CompileStatic
 
 @CompileStatic

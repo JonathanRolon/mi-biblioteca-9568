@@ -1,8 +1,8 @@
 package com.mibiblioteca.mibiblioteca.repository
 
-import com.mibiblioteca.mibiblioteca.domain.Editor
-import com.mibiblioteca.mibiblioteca.domain.Respuesta
-import com.mibiblioteca.mibiblioteca.domain.RespuestaIdentity
+import com.mibiblioteca.mibiblioteca.model.Editor
+import com.mibiblioteca.mibiblioteca.model.Respuesta
+import com.mibiblioteca.mibiblioteca.model.RespuestaIdentity
 import groovy.transform.CompileStatic
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
@@ -13,9 +13,11 @@ interface RespuestaRepository extends JpaRepository<Respuesta, RespuestaIdentity
 
     List<Respuesta> findAll()
 
-    Editor save(Editor editor)
+    Respuesta save(Respuesta respuesta)
 
     Optional<Respuesta> findById(RespuestaIdentity respuestaIdentityi)
 
     void deleteById(RespuestaIdentity respuestaIdentity)
+
+    void deleteAll()
 }

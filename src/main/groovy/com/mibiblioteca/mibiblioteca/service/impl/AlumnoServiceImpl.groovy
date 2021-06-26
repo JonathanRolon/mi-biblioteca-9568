@@ -1,57 +1,30 @@
 package com.mibiblioteca.mibiblioteca.service.impl
 
-import com.mibiblioteca.mibiblioteca.domain.Alumno
-import com.mibiblioteca.mibiblioteca.domain.Material
-import com.mibiblioteca.mibiblioteca.domain.Respuesta
-import com.mibiblioteca.mibiblioteca.domain.TemaHilo
+import com.mibiblioteca.mibiblioteca.model.Alumno
+import com.mibiblioteca.mibiblioteca.model.NivelAlumno
 import com.mibiblioteca.mibiblioteca.repository.AlumnoRepository
 import com.mibiblioteca.mibiblioteca.service.AlumnoService
-import com.mibiblioteca.mibiblioteca.service.CalificadorService
-import com.mibiblioteca.mibiblioteca.service.LectorService
-import groovy.transform.CompileStatic
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
-@CompileStatic
+import java.sql.Timestamp
+
 @Service
-class AlumnoServiceImpl implements AlumnoService, LectorService, CalificadorService{
+class AlumnoServiceImpl implements AlumnoService{
 
     @Autowired
     private final AlumnoRepository alumnoRepository
 
-    void preguntar(TemaHilo temaHilo, String pregunta){
-
-    }
-
-    void responder(String respuesta, Long idHilo){
-
-    }
-
-    void sumarCreditos(Integer creditos) {
-
-    }
-
-    void restarCreditos(Integer creditos) {
-
+    AlumnoServiceImpl(AlumnoRepository alumnoRepository){
+        this.alumnoRepository = alumnoRepository
     }
 
     @Override
-    List<Alumno> findAll() {
-        alumnoRepository.findAll()
-
-    }
-
-    @Override
-    Optional<Alumno> findById(Long dni) {
-       alumnoRepository.findById dni
-
-    }
-
-    @Override
-    Alumno create(Alumno alumno) {
-        Optional<Alumno> al = alumno.getDNI() ? this.findById(alumno.getDNI()) : null
-        if (!al){
-            alumnoRepository.save(al.get())
+    Alumno create(Long dni, String nombre, String apellido, Timestamp fecNac, String curso) {
+        Optional<Alumno> al = this.findById(dni)
+        if (!al) {
+            def alumno = new Alumno(dni, nombre, apellido, fecNac, curso)
+            alumnoRepository.save(alumno)
         }
     }
 
@@ -73,17 +46,13 @@ class AlumnoServiceImpl implements AlumnoService, LectorService, CalificadorServ
     }
 
     @Override
-    void calificar(Respuesta respuesta, int calificacion) {
-
+    Optional<Alumno> findById(Long dni) {
+        alumnoRepository.findById dni
     }
 
     @Override
-    void comprar(Material m, List<Object> metodosPago) {
-
+    List<Alumno> findAll() {
+        alumnoRepository.findAll()
     }
 
-    @Override
-    void solicitarPrestamo(Material m) {
-
-    }
 }

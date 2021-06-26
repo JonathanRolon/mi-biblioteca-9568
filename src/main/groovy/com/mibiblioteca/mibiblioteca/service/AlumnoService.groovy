@@ -1,19 +1,19 @@
 package com.mibiblioteca.mibiblioteca.service
 
-import com.mibiblioteca.mibiblioteca.domain.Alumno
-import groovy.transform.CompileStatic
+import com.mibiblioteca.mibiblioteca.model.Alumno
 
-@CompileStatic
+import java.sql.Timestamp
+
 interface AlumnoService {
-
-    List<Alumno> findAll()
-
-    Optional<Alumno> findById(Long dni)
-
-    Alumno create(Alumno alumno)
+    Alumno create(Long dni, String nombre, String apellido, Timestamp fecNac, String curso)
 
     Alumno update(Alumno alumno)
 
     void deleteById(Long dni)
+
+    Optional<Alumno> findById(Long dni)
+
+    List<Alumno> findAll()
+
 
 }

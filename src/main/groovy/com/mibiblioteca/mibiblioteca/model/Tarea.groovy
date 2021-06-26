@@ -1,4 +1,5 @@
-package com.mibiblioteca.mibiblioteca.domain
+package com.mibiblioteca.mibiblioteca.model
+
 import groovy.transform.CompileStatic
 
 import javax.persistence.Entity
@@ -8,17 +9,11 @@ import javax.persistence.Id
 
 @CompileStatic
 @Entity
-class Docente {
+class Tarea {
 
     @Id
-    long DNI
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    long nroTarea
 
-    //cursos[]
-    //biblioteca[]
-
-    Docente (long DNI){
-        this.DNI = DNI
-    }
-
-    Docente(){}
+    Tarea(){}
 }

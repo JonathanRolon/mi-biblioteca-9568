@@ -1,6 +1,6 @@
 package com.mibiblioteca.mibiblioteca.service
 
-import com.mibiblioteca.mibiblioteca.domain.Tarea
+import com.mibiblioteca.mibiblioteca.model.Tarea
 import groovy.transform.CompileStatic
 
 @CompileStatic

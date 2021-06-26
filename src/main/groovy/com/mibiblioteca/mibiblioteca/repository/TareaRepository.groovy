@@ -1,6 +1,6 @@
 package com.mibiblioteca.mibiblioteca.repository
 
-import com.mibiblioteca.mibiblioteca.domain.Tarea
+import com.mibiblioteca.mibiblioteca.model.Tarea
 import groovy.transform.CompileStatic
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.repository.CrudRepository
@@ -17,5 +17,7 @@ interface TareaRepository extends JpaRepository<Tarea, Long> {
     Tarea save(Tarea tarea)
 
     void deleteById(Long idTarea)
+
+    void deleteAll()
 
 }

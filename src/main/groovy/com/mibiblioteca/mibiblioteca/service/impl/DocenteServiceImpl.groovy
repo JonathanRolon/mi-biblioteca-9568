@@ -1,26 +1,27 @@
 package com.mibiblioteca.mibiblioteca.service.impl
 
-import com.mibiblioteca.mibiblioteca.domain.Alumno
-import com.mibiblioteca.mibiblioteca.domain.Docente
-import com.mibiblioteca.mibiblioteca.domain.Material
-import com.mibiblioteca.mibiblioteca.domain.Respuesta
-import com.mibiblioteca.mibiblioteca.domain.Tarea
+import com.mibiblioteca.mibiblioteca.model.Alumno
+import com.mibiblioteca.mibiblioteca.model.Calificacion
+import com.mibiblioteca.mibiblioteca.model.Docente
+import com.mibiblioteca.mibiblioteca.model.Material
+import com.mibiblioteca.mibiblioteca.model.Respuesta
+import com.mibiblioteca.mibiblioteca.model.Tarea
 import com.mibiblioteca.mibiblioteca.repository.DocenteRepository
-import com.mibiblioteca.mibiblioteca.service.CalificadorService
+
 import com.mibiblioteca.mibiblioteca.service.DocenteService
-import com.mibiblioteca.mibiblioteca.service.LectorService
+
 import groovy.transform.CompileStatic
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @CompileStatic
 @Service
-class DocenteServiceImpl implements DocenteService, CalificadorService, LectorService{
+class DocenteServiceImpl implements DocenteService{
 
     @Autowired
     private final DocenteRepository docenteRepository
 
-    @Override
+    /*@Override
     void comprar(Material m, List<Object> metodosPago) {
 
     }
@@ -28,12 +29,7 @@ class DocenteServiceImpl implements DocenteService, CalificadorService, LectorSe
     @Override
     void solicitarPrestamo(Material m) {
 
-    }
-
-    @Override
-    void calificar(Respuesta respuesta, int calificacion) {
-
-    }
+    }*/
 
     @Override
     List<Docente> findAll() {
@@ -72,5 +68,15 @@ class DocenteServiceImpl implements DocenteService, CalificadorService, LectorSe
     @Override
     void calificarTarea(Tarea t, float nota) {
 
+    }
+
+    @Override
+    Calificacion calificar(Respuesta respuesta, Long publicador, Integer calificacion) {
+        return null
+    }
+
+    @Override
+    Respuesta responder(Long dniPublicador, String respuesta, Long idHilo){
+        null
     }
 }

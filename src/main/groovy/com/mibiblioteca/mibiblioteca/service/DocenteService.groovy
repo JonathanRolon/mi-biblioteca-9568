@@ -1,8 +1,10 @@
 package com.mibiblioteca.mibiblioteca.service
 
-import com.mibiblioteca.mibiblioteca.domain.Alumno
-import com.mibiblioteca.mibiblioteca.domain.Docente
-import com.mibiblioteca.mibiblioteca.domain.Tarea
+import com.mibiblioteca.mibiblioteca.model.Alumno
+import com.mibiblioteca.mibiblioteca.model.Calificacion
+import com.mibiblioteca.mibiblioteca.model.Docente
+import com.mibiblioteca.mibiblioteca.model.Respuesta
+import com.mibiblioteca.mibiblioteca.model.Tarea
 import groovy.transform.CompileStatic
 
 @CompileStatic
@@ -22,5 +24,8 @@ interface DocenteService {
 
     void calificarTarea(Tarea t, float nota)
 
+    Calificacion calificar(Respuesta respuesta, Long publicador, Integer calificacion)
+
+    Respuesta responder(Long dniPublicador, String respuesta, Long idHilo)
 
 }

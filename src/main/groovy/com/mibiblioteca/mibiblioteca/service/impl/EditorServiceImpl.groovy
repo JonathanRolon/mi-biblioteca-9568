@@ -1,6 +1,6 @@
 package com.mibiblioteca.mibiblioteca.service.impl
 
-import com.mibiblioteca.mibiblioteca.domain.Editor
+import com.mibiblioteca.mibiblioteca.model.Editor
 import com.mibiblioteca.mibiblioteca.service.EditorService
 import groovy.transform.CompileStatic
 import org.springframework.stereotype.Service
