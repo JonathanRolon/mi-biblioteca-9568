@@ -254,8 +254,6 @@ class AlumnoServiceTest {
         medio.subirNivel()
         medio.suspender()
 
-
-
         while (!calificador) {
             calificador = alumnoService.create(generarDNIAleatorio(), "nombre", "apellido", fecNac, "C")
             calificador.subirNivel()
@@ -281,18 +279,6 @@ class AlumnoServiceTest {
 
     /*================= Compra ==================*/
 
-    /*
-    Dado que soy alumno regular nivel Novato
-    y busco un libro de pago de mi interés
-    Cuando  lo guardo como posible compra
-    Entonces el libro queda pendiente de pago.
-    * */
-
-    @Test
-    void alumnoNovatoRegularEligeLibroDePagoYQuedaDisponibleEnSuCanastaDeCompra() {
-
-    }
-
     /* *
     Dado que soy alumno regular nivel Novato
     y tengo un libro pendiente de pago
@@ -302,8 +288,12 @@ class AlumnoServiceTest {
     Entonces el libro se añade a mi biblioteca y se me añaden 100 créditos a mi cuenta.
     * */
 
+
     @Test
     void alumnoNovatoRegularConPrecondicionesAnterioresCompraLibroSuma100creditos() {
+        def fecNac = new Timestamp(System.currentTimeMillis()),
+            novato = alumnoService.create(generarDNIAleatorio(), "nombre", "apellido", fecNac, "C")
+
 
     }
 

@@ -8,6 +8,7 @@ import javax.persistence.Entity
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
 import javax.persistence.Id
+import javax.persistence.OneToMany
 import java.sql.Timestamp
 
 enum Regularidad {
@@ -26,7 +27,6 @@ class Alumno {
                           CONS_TOPE_CALIF_FORO_NOVATO = 10,
                           CONS_TOPE_CALIF_FORO_MEDIO = 20,
                           CONS_TOPE_CALIF_FORO_PRO = 30
-
 
     @Id
     Long DNI
