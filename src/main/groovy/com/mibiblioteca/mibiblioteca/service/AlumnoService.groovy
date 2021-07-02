@@ -1,6 +1,8 @@
 package com.mibiblioteca.mibiblioteca.service
 
 import com.mibiblioteca.mibiblioteca.model.Alumno
+import com.mibiblioteca.mibiblioteca.model.Calificacion
+import com.mibiblioteca.mibiblioteca.model.Respuesta
 
 import java.sql.Timestamp
 

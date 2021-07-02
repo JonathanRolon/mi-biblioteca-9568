@@ -38,4 +38,8 @@ class Calificacion{
         this.calificacionIdentity.getIdCalif()
     }
 
+    Boolean esCalificador(Alumno alumno){
+        alumno.getDNI() === calificacionIdentity.getIdCalif()
+    }
+
 }

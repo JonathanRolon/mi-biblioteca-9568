@@ -175,20 +175,10 @@ class Alumno {
 
         this
     }
-/*
-    Respuesta responder(Long dniPublicador, String respuesta, Long idHilo) {
-        Respuesta r = new Respuesta(dniPublicador, respuesta, idHilo)
-        respuestaRepository.save(r)
-    }*/
-
-    /* void comprar(Material m, List<Object> metodosPago) {
-
-     }
-
 
      void solicitarPrestamo(Material m) {
 
-     }*/
+     }
 
     void suspender() {
         setRegular(Regularidad.SUSPENDIDO)

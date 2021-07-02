@@ -7,6 +7,7 @@ import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
+import javax.persistence.OneToMany
 
 enum EstadoPedido{
     PENDIENTE, CANCELADO, CERRADO
@@ -24,27 +25,19 @@ class PedidoMaterial{
     Long cliente
 
     @Column(nullable = false)
-    String material
-
-    @Column(nullable = false)
-    Double valorDeCompra
-
-    @Column(nullable = false)
     EstadoPedido estadoPedido
 
-    @Column(nullable = false)
-    Double valorCancelado
+    @OneToMany
+    List<Material> articulosSolicitados
 
-    PedidoMaterial(Long dniCliente, String idMaterial, Double valorDeCompra){
+    PedidoMaterial(Long dniCliente, List<Material> productos){
         cliente = dniCliente
-        material = idMaterial
-        this.valorDeCompra = valorDeCompra
-        this.estadoPedido = EstadoPedido.PENDIENTE
-        this.valorCancelado = 0
+        estadoPedido = EstadoPedido.PENDIENTE
+        articulosSolicitados = productos
     }
 
-    PedidoMaterial(){
+    PedidoMaterial(){}
 
-    }
+
 
 }

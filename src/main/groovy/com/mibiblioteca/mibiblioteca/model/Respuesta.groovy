@@ -2,9 +2,11 @@ package com.mibiblioteca.mibiblioteca.model
 
 import groovy.transform.CompileStatic
 
+import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.EmbeddedId
 import javax.persistence.Entity
+import javax.persistence.OneToMany
 import javax.persistence.Table
 
 @CompileStatic
@@ -18,14 +20,22 @@ class Respuesta implements Serializable {
     @Column(nullable = false)
     String contenido
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Calificacion> calificaciones
+
     Respuesta(Long dniPublicador, String respuesta, Long idHilo) {
         contenido = respuesta
         respuestaIdentity = new RespuestaIdentity()
         respuestaIdentity.setPublicador(dniPublicador)
         respuestaIdentity.setNroHilo(idHilo)
+        calificaciones = new ArrayList<Calificacion>()
     }
 
-    Respuesta() {}
+    Respuesta(){}
+
+    void agregarCalificacion(Calificacion calificacion){
+        calificaciones.push(calificacion)
+    }
 
     RespuestaIdentity getIdentity(){
         return respuestaIdentity
@@ -37,6 +47,10 @@ class Respuesta implements Serializable {
 
     Long getPublicador(){
         return respuestaIdentity.getPublicador()
+    }
+
+    Boolean esCalificador(){
+
     }
 
 }

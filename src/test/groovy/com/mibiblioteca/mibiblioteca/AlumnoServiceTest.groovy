@@ -1,37 +1,26 @@
 package com.mibiblioteca.mibiblioteca
 
 import com.mibiblioteca.mibiblioteca.model.Alumno
-import com.mibiblioteca.mibiblioteca.model.Calificacion
-import com.mibiblioteca.mibiblioteca.model.Hilo
 import com.mibiblioteca.mibiblioteca.model.NivelAlumno
-import com.mibiblioteca.mibiblioteca.model.Regularidad
 import com.mibiblioteca.mibiblioteca.model.Respuesta
 import com.mibiblioteca.mibiblioteca.model.TemaHilo
 import com.mibiblioteca.mibiblioteca.repository.AlumnoRepository
-import com.mibiblioteca.mibiblioteca.repository.CalificacionRepository
+
 import com.mibiblioteca.mibiblioteca.repository.HiloRepository
-import com.mibiblioteca.mibiblioteca.repository.RespuestaRepository
+
 import com.mibiblioteca.mibiblioteca.service.AlumnoService
-import com.mibiblioteca.mibiblioteca.service.CalificacionService
-import com.mibiblioteca.mibiblioteca.service.HiloService
-import com.mibiblioteca.mibiblioteca.service.RespuestaService
+import com.mibiblioteca.mibiblioteca.service.PublicadorService
 import com.mibiblioteca.mibiblioteca.service.impl.AlumnoServiceImpl
-import com.mibiblioteca.mibiblioteca.service.impl.CalificacionServiceImpl
-import com.mibiblioteca.mibiblioteca.service.impl.HiloServiceImpl
-import com.mibiblioteca.mibiblioteca.service.impl.RespuestaServiceImpl
+import com.mibiblioteca.mibiblioteca.service.impl.PublicadorServiceImpl
 import groovy.transform.CompileStatic
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 
-import javax.persistence.EntityManager
 import javax.transaction.Transactional
 import java.sql.Timestamp
 import java.util.concurrent.ThreadLocalRandom
@@ -46,43 +35,27 @@ class AlumnoServiceTest {
     @Autowired
     private HiloRepository hiloRepository
     @Autowired
-    private RespuestaRepository respuestaRepository
-    @Autowired
-    private CalificacionRepository calificacionRepository
-    @Autowired
     private AlumnoRepository alumnoRepository
 
     /* servicios */
     @Autowired
     private AlumnoService alumnoService
     @Autowired
-    private CalificacionService calificacionService
-    @Autowired
-    private RespuestaService respuestaService
-    @Autowired
-    private HiloService hiloService
+    private PublicadorService publicadorService
 
     @BeforeEach
     public void setup() {
-
         alumnoService = new AlumnoServiceImpl(alumnoRepository)
-        calificacionService = new CalificacionServiceImpl(calificacionRepository, alumnoRepository)
-        hiloService = new HiloServiceImpl(hiloRepository)
-        respuestaService = new RespuestaServiceImpl(respuestaRepository)
-
+        publicadorService = new PublicadorServiceImpl(hiloRepository, alumnoRepository)
     }
 
     @AfterEach
     void teardown() {
-
         alumnoRepository.deleteAll()
-        respuestaRepository.deleteAll()
-        calificacionRepository.deleteAll()
         hiloRepository.deleteAll()
     }
 
     /*================= Foro de consultas y creditos ==================*/
-
 
     Long generarDNIAleatorio() {
         ThreadLocalRandom.current().nextInt(6000000, 99999998 + 1);
@@ -98,9 +71,11 @@ class AlumnoServiceTest {
     }
 
     Respuesta dadoQuePublicoUnaRespuestaEnElForo(Alumno alumno) {
-        def hilo = hiloService.crearHilo(alumno.getDNI(), TemaHilo.CS_LENGUAJE,
+        def fecNac = new Timestamp(System.currentTimeMillis())
+        def otroAlumno = alumnoService.create(1111045654,"nombre","apellido",fecNac , "B")
+        def hilo = publicadorService.crearHilo(otroAlumno.getDNI(), TemaHilo.CS_LENGUAJE,
                 "Como interpreto el cap. 3 del libro X?")
-        respuestaService.responder(alumno.getDNI(), hilo, "respuestahilo1")
+        publicadorService.responder(alumno.getDNI(), hilo, "respuestahilo1")
     }
 
     boolean noPuedoCalificarRespForo(Alumno alumno) {
@@ -113,13 +88,12 @@ class AlumnoServiceTest {
         contestador.subirNivel()
         contestador.subirNivel()
 
-        def hilo = hiloService.crearHilo(preguntador.getDNI(), TemaHilo.CS_BIOLOGICAS,
+        def hilo = publicadorService.crearHilo(preguntador.getDNI(), TemaHilo.CS_BIOLOGICAS,
                 "Como interpreto el cap. 3 del libro Y?")
-        def respuesta = respuestaService.responder(contestador.getDNI(), hilo, "respuestahilo2")
+        def respuesta = publicadorService.responder(contestador.getDNI(), hilo, "respuestahilo2")
+        def calificac = publicadorService.calificar(alumno, respuesta, 7)
 
-        def calificac = calificacionService.calificar(alumno, respuesta, 7)
-
-        calificac == null
+        calificac === null
 
     }
 
@@ -136,7 +110,7 @@ class AlumnoServiceTest {
         for (int i = 0; i < 2; i++) pro.subirNivel()
 
         //Cuando otro usuario califica por encima de 5 mi respuesta
-        calificacionService.calificar(pro, respuesta, 6)
+        publicadorService.calificar(pro, respuesta, 6)
         //Entonces no sumo creditos y no puedo calificar respuestas de otros alumnos
         assert (novato.getCreditos() == 0 && noPuedoCalificarRespForo(novato))
     }
@@ -153,6 +127,7 @@ class AlumnoServiceTest {
 
     @Test
     void alumnoNovatoRegularRecibeDecimaCalificacionPorEncimaDeCincoSubeHastaAlumnoMedio() {
+
         def fecNac = new Timestamp(System.currentTimeMillis()),
             novato = dadoQuesoyAlumnoNovatoRegular(),
             respuesta = dadoQuePublicoUnaRespuestaEnElForo(novato),
@@ -169,11 +144,11 @@ class AlumnoServiceTest {
                 otroCalif = alumnoService.create(generarDNIAleatorio(),"nombre","apellido",fecNac , "C")
             }
             otroCalif.subirNivel()
-            calificacionService.calificar(otroCalif, respuesta, randomCalif)
+            publicadorService.calificar(otroCalif, respuesta, randomCalif)
         }
 
         calificador.subirNivel()
-        calificacionService.calificar(calificador, respuesta, generarCalificacionPosRandom())
+        publicadorService.calificar(calificador, respuesta, generarCalificacionPosRandom())
 
         assert (novato.getNivel() == NivelAlumno.MEDIO &&
                 novato.getCreditos() == 50 &&
@@ -199,11 +174,11 @@ class AlumnoServiceTest {
                 otroCalif = alumnoService.create(generarDNIAleatorio(),"nombre","apellido",fecNac , "C")
             }
             otroCalif.subirNivel()
-            calificacionService.calificar(otroCalif, respuesta, randomCalif)
+            publicadorService.calificar(otroCalif, respuesta, randomCalif)
         }
 
         calificador.subirNivel()
-        calificacionService.calificar(calificador, respuesta, 4)
+        publicadorService.calificar(calificador, respuesta, 4)
 
         assert (novato.getNivel() == NivelAlumno.NOVATO &&
                 novato.getCreditos() == 0 &&
@@ -232,10 +207,10 @@ class AlumnoServiceTest {
                 otroCalif = alumnoService.create(generarDNIAleatorio(),"nombre","apellido",fecNac , "C")
             }
             otroCalif.subirNivel()
-            calificacionService.calificar(otroCalif, respuesta, randomCalif)
+            publicadorService.calificar(otroCalif, respuesta, randomCalif)
         }
 
-        calificacionService.calificar(calificador, respuesta, generarCalificacionPosRandom())
+        publicadorService.calificar(calificador, respuesta, generarCalificacionPosRandom())
 
         assert (medio.getNivel() == NivelAlumno.MEDIO &&
                 medio.getCreditos() == 30 &&
@@ -266,10 +241,10 @@ class AlumnoServiceTest {
                 otroCalif = alumnoService.create(generarDNIAleatorio(),"nombre","apellido",fecNac , "C")
             }
             otroCalif.subirNivel()
-            calificacionService.calificar(otroCalif, respuesta, randomCalif)
+            publicadorService.calificar(otroCalif, respuesta, randomCalif)
         }
 
-        calificacionService.calificar(calificador, respuesta, generarCalificacionPosRandom())
+        publicadorService.calificar(calificador, respuesta, generarCalificacionPosRandom())
 
         assert (medio.getNivel() == NivelAlumno.MEDIO &&
                 medio.getCreditos() == 0 &&

@@ -1,7 +1,6 @@
 package com.mibiblioteca.mibiblioteca.service.impl
 
 import com.mibiblioteca.mibiblioteca.model.Alumno
-import com.mibiblioteca.mibiblioteca.model.NivelAlumno
 import com.mibiblioteca.mibiblioteca.repository.AlumnoRepository
 import com.mibiblioteca.mibiblioteca.service.AlumnoService
 import org.springframework.beans.factory.annotation.Autowired
@@ -54,5 +53,7 @@ class AlumnoServiceImpl implements AlumnoService{
     List<Alumno> findAll() {
         alumnoRepository.findAll()
     }
+
+
 
 }

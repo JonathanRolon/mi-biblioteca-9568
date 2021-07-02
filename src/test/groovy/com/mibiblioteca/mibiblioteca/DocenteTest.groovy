@@ -1,10 +1,39 @@
 package com.mibiblioteca.mibiblioteca
 
+import com.mibiblioteca.mibiblioteca.model.Material
+import com.mibiblioteca.mibiblioteca.model.PedidoMaterial
+import com.mibiblioteca.mibiblioteca.model.TipoMaterial
+import com.mibiblioteca.mibiblioteca.repository.PedidoMaterialRepository
+import com.mibiblioteca.mibiblioteca.service.PedidoMaterialService
+import com.mibiblioteca.mibiblioteca.service.impl.PedidoMaterialServiceImpl
 import groovy.transform.CompileStatic
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.junit.jupiter.MockitoExtension
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
 
+import javax.transaction.Transactional
+import java.sql.Timestamp
+import java.time.LocalDateTime
+
+@ExtendWith(MockitoExtension.class)
+@Transactional
 @CompileStatic
+@SpringBootTest
 class DocenteTest {
+
+    @Autowired
+    private PedidoMaterialRepository pedidoMaterialRepository
+
+    @Autowired
+    private PedidoMaterialService pedidoMaterialService
+
+    @BeforeEach
+    void setup(){
+        pedidoMaterialService = new PedidoMaterialServiceImpl(pedidoMaterialRepository)
+    }
 
     /*================= Tareas ==================*/
 
