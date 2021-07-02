@@ -263,12 +263,16 @@ class AlumnoServiceTest {
     Entonces el libro se añade a mi biblioteca y se me añaden 100 créditos a mi cuenta.
     * */
 
-
     @Test
     void alumnoNovatoRegularConPrecondicionesAnterioresCompraLibroSuma100creditos() {
         def fecNac = new Timestamp(System.currentTimeMillis()),
             novato = alumnoService.create(generarDNIAleatorio(), "nombre", "apellido", fecNac, "C")
 
+        // crear pedido con libro pendiente
+        // en el servicio cuando va a comprar: validarTarjeta en tarjetaservice
+        // en el servicio cuando va a comprar: obtener libros comprados del alumno == 2
+        // en el servicio cuando va a comprar: si son validos cambiar estado pedido a cerrado
+        // y añadir el libro al alumno validando si debe sumar creditos
 
     }
 
@@ -283,6 +287,13 @@ class AlumnoServiceTest {
 
     @Test
     void alumnoMedioRegularConPrecondicionesAnterioresPagaLibroPendienteSuma100credSubeAPro() {
+
+        // crear pedido con libro pendiente
+        // registrarle una tarjeta valida al alumno
+        // en el servicio cuando va a comprar: validarTarjeta en tarjetaservice
+        // en el servicio cuando va a comprar: obtener libros comprados del alumno == 4
+        // en el servicio cuando va a comprar: si son validos cambiar estado pedido a cerrado
+        // y añadir el libro al alumno validando si debe sumar creditos, validar nivel
 
     }
 
@@ -300,26 +311,7 @@ class AlumnoServiceTest {
 
     @Test
     void alumnoMedioRegularConPrecondicionesAnterioresPagaConCreditoSubeAPROSuma100cred() {
-
-    }
-
-    /*================= Préstamo de material ==================*/
-    /* *
-    Dado que soy alumno regular
-    y seleccione el material que necesito
-    y tengo menos de 3 tipos de material prestados actualmente
-    Cuando elijo solicitar préstamo
-    Entonces el material queda pendiente de aprobación en un periodo de 72 hs max. de parte de un editor.
-     * */
-
-    @Test
-    void alumnoRegularCumpleCondicionesAnterioresSolicitaPrestamoMaterialQuedaPendienteAprob72hs() {
-
-    }
-
-    @Test
-    void alumnoRegularVisualizaElPrestamoAprobadoPorUnEditorEnSuBiblioteca() {
-
+        //
     }
 
     /*================= Tareas ==================*/

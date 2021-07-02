@@ -3,6 +3,7 @@ package com.mibiblioteca.mibiblioteca.model
 
 import groovy.transform.CompileStatic
 
+import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.EnumType
@@ -66,7 +67,13 @@ class Alumno {
     @Column(nullable = false)
     NivelAlumno nivel
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    List<TarjetaDeCredito> tarjetasRegistradas
+
     //private ResourceBundleMessageSource messageSource
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    List<Material> biblioteca
 
     Alumno(Long DNI, String nombre, String apellido, Timestamp fechaNacimiento, String curso) {
         this.DNI = DNI
@@ -78,6 +85,7 @@ class Alumno {
         creditos = 0
         regular = Regularidad.REGULAR
         calificPositivasEnForo = 0
+        biblioteca = new ArrayList<Material>()
         //initMessagesBundle()
     }
 
@@ -147,12 +155,8 @@ class Alumno {
         this
     }
 
-    private Integer obtenerCalifPositivas(Alumno calificado) {
-        calificado.getCalificPositivasEnForo()
-    }
-
     private Boolean sumaCreditos() {
-        def califEncimaDeCinco = obtenerCalifPositivas(this),
+        def califEncimaDeCinco = getCalificPositivasEnForo(),
             sumarCreditosNovato = (califEncimaDeCinco == CONS_TOPE_CALIF_FORO_NOVATO && esNovato()),
             sumarCreditosMedio = (califEncimaDeCinco == CONS_TOPE_CALIF_FORO_MEDIO && esMedio()),
             sumarCreditosPRO = (califEncimaDeCinco == CONS_TOPE_CALIF_FORO_PRO && esPRO())
@@ -166,7 +170,7 @@ class Alumno {
     }
 
     Alumno validarNivel() {
-        def califEncimaDeCinco = obtenerCalifPositivas(this),
+        def califEncimaDeCinco = getCalificPositivasEnForo(),
             subirNivelNovato = (califEncimaDeCinco == CONS_TOPE_NIVEL_CALIF_FORO_NOVATO && esNovato()),
             subirNivelMedio = (califEncimaDeCinco == CONS_TOPE_NIVEL_CALIF_FORO_MEDIO && esMedio())
 
@@ -176,9 +180,25 @@ class Alumno {
         this
     }
 
-     void solicitarPrestamo(Material m) {
+    void desbloquearMaterial(Material material){
+        biblioteca.push(material)
+    }
 
-     }
+    void registrarTarjeta(TarjetaDeCredito tarjetaDeCredito){
+        this.tarjetasRegistradas.push(tarjetaDeCredito)
+    }
+
+    void borrarRegistroTarjeta(TarjetaDeCredito tarjetaDeCredito){
+        def indexABorrar = tarjetasRegistradas.findIndexOf{it ->
+            it.getNroTarjeta() === tarjetaDeCredito.getNroTarjeta() &&
+            it.getCSV() === tarjetaDeCredito.getCSV()
+        }
+        tarjetasRegistradas.remove(indexABorrar)
+    }
+
+    void vaciarBiblioteca(){
+        biblioteca = null;
+    }
 
     void suspender() {
         setRegular(Regularidad.SUSPENDIDO)

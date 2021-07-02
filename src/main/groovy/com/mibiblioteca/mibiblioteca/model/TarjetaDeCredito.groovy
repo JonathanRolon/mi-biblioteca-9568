@@ -35,4 +35,11 @@ class TarjetaDeCredito {
 
     TarjetaDeCredito(){}
 
+    Long getNroTarjeta() {
+        this.getTarjetaIdentity().getNroTarjeta()
+    }
+
+    Integer getCSV() {
+        this.getTarjetaIdentity().getCSV()
+    }
 }

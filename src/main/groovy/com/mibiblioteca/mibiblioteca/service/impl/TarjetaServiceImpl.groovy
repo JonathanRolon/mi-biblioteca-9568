@@ -1,5 +1,6 @@
 package com.mibiblioteca.mibiblioteca.service.impl
 
+import com.mibiblioteca.mibiblioteca.model.TarjetaDeCredito
 import com.mibiblioteca.mibiblioteca.repository.TarjetaRepository
 import com.mibiblioteca.mibiblioteca.service.TarjetaService
 import groovy.transform.CompileStatic
@@ -13,6 +14,11 @@ class TarjetaServiceImpl implements TarjetaService{
 
     TarjetaServiceImpl(TarjetaRepository tarjetaRepository){
         this.tarjetaRepository = tarjetaRepository
+    }
+
+    @Override
+    Boolean validarTarjeta(TarjetaDeCredito tarjetaDeCredito){
+        true
     }
 
 }
