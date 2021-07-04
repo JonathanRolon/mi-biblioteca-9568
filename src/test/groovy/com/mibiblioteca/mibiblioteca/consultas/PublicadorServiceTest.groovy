@@ -33,7 +33,6 @@ import java.sql.Timestamp
 import java.time.LocalDateTime
 import java.util.concurrent.ThreadLocalRandom
 
-@ExtendWith(MockitoExtension.class)
 @Transactional
 @CompileStatic
 @SpringBootTest
@@ -51,13 +50,14 @@ class PublicadorServiceTest {
     @Autowired
     private PublicadorService publicadorService
 
-    /* Entidades */
+    /* data */
     Curso curso
     Timestamp fecNac
 
-
+    /* útiles */
     @BeforeEach
     public void setup() {
+        //se inyecta de esta manera porque el repository arroja null pointer exc.
         alumnoService = new AlumnoServiceImpl(alumnoRepository)
         publicadorService = new PublicadorServiceImpl(hiloRepository, alumnoRepository)
         curso =  new Curso("A")
@@ -137,6 +137,7 @@ class PublicadorServiceTest {
         pro
     }
 
+    /* Tests */
     @Test
     void alumnoNovatoRegularRecibePrimerCalificacionPorEncimaDeCincoNoSubeNivel() {
 

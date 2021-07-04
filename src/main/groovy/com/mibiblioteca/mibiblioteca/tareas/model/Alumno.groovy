@@ -1,6 +1,9 @@
 package com.mibiblioteca.mibiblioteca.tareas.model
 
-import com.mibiblioteca.mibiblioteca.compras.model.Material
+
+import com.mibiblioteca.mibiblioteca.compras.model.ComprobantePago
+import com.mibiblioteca.mibiblioteca.compras.model.exception.PagoDobleException
+import com.mibiblioteca.mibiblioteca.compras.model.exception.ComprobantePagoNoAdjuntoException
 import groovy.transform.CompileStatic
 
 import javax.persistence.CascadeType
@@ -66,7 +69,7 @@ class Alumno {
     NivelAlumno nivel
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    List<Material> biblioteca
+    List<ComprobantePago> comprobantesPago
 
     @ManyToOne(cascade = CascadeType.ALL)
     Curso curso
@@ -83,7 +86,7 @@ class Alumno {
         creditos = 0
         regular = Regularidad.REGULAR
         calificPositivasEnForo = 0
-        biblioteca = new ArrayList<Material>()
+        comprobantesPago = new ArrayList<ComprobantePago>()
         //initMessagesBundle()
     }
 
@@ -178,24 +181,16 @@ class Alumno {
         this
     }
 
-    void desbloquearMaterial(Material material){
-        biblioteca.push(material)
-    }
-
-   /* void registrarTarjeta(TarjetaDeCredito tarjetaDeCredito){
-        this.tarjetasRegistradas.push(tarjetaDeCredito)
-    }
-
-    void borrarRegistroTarjeta(TarjetaDeCredito tarjetaDeCredito){
-        def indexABorrar = tarjetasRegistradas.findIndexOf{it ->
-            it.getNroTarjeta() === tarjetaDeCredito.getNroTarjeta() &&
-            it.getCSV() === tarjetaDeCredito.getCSV()
+    void desbloquearMaterial(ComprobantePago comprobantePago){
+        try{
+            def existe = comprobantesPago.find{it-> it.getIdMaterial() === comprobantePago.getIdMaterial()}
+            if(existe)
+                throw new PagoDobleException("Se realizó un pago doble de un material ya adquirido.")
+            comprobantesPago.push(comprobantePago)
+        }catch(RuntimeException ex){
+            throw new ComprobantePagoNoAdjuntoException("Ocurrio un error al intentar adjuntar el comprobante.")
         }
-        tarjetasRegistradas.remove(indexABorrar)
-    }*/
 
-    void vaciarBiblioteca(){
-        biblioteca = null;
     }
 
     void suspender() {

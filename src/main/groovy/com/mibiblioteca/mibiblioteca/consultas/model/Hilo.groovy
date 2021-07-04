@@ -1,6 +1,5 @@
 package com.mibiblioteca.mibiblioteca.consultas.model
 
-
 import groovy.transform.CompileStatic
 
 import javax.persistence.CascadeType

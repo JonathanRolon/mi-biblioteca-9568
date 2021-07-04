@@ -6,6 +6,7 @@ import com.mibiblioteca.mibiblioteca.tareas.model.Curso
 import java.sql.Timestamp
 
 interface AlumnoService {
+
     Alumno create(Long dni, String nombre, String apellido, Timestamp fecNac, Curso curso)
 
     Alumno update(Alumno alumno)

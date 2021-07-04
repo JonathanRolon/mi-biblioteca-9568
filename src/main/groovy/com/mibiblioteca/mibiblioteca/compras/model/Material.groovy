@@ -1,16 +1,17 @@
 package com.mibiblioteca.mibiblioteca.compras.model
 
-
+import com.mibiblioteca.mibiblioteca.compras.model.exception.FileStorageException
 import com.mibiblioteca.mibiblioteca.consultas.model.TemaHilo
 import groovy.transform.CompileStatic
+import org.springframework.util.StringUtils
+import org.springframework.web.multipart.MultipartFile
 
 import javax.persistence.Column
+import javax.persistence.Embedded
 import javax.persistence.Entity
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
 import javax.persistence.Id
-import javax.persistence.Lob
-import java.sql.Blob
 import java.sql.Timestamp
 
 @CompileStatic
@@ -21,7 +22,7 @@ class Material {
     String idMaterial
 
     @Column(nullable = true)
-    float precio
+    Double precio
 
     @Column(nullable = true)
     String descripcion
@@ -29,9 +30,9 @@ class Material {
     @Column(nullable = false)
     String titulo
 
-    @Column(nullable = false)
-    @Lob
-    private Blob contenido;
+    @Embedded
+    @Column(nullable = true)
+    private ContenidoMaterial contenido;
 
     @Column(nullable = false)
     String autor
@@ -53,8 +54,11 @@ class Material {
     @Column(nullable = true)
     TemaHilo tema
 
-    Material(String idMaterial, Float precio, String descripcion, String titulo, String autor,
-             Timestamp fechaPublicacion, String editorial, TipoMaterial tipoMaterial,TemaHilo tema, MaterialVigencia vigencia) {
+    Material() {}
+
+    Material(String idMaterial, Double precio, String descripcion, String titulo, String autor,
+             Timestamp fechaPublicacion, String editorial, TipoMaterial tipoMaterial, TemaHilo tema,
+             MaterialVigencia vigencia, ContenidoMaterial contenido) {
         this.idMaterial = idMaterial
         this.tipoMaterial = tipoMaterial
         this.precio = precio
@@ -65,11 +69,12 @@ class Material {
         this.editorial = editorial
         this.tema = tema
         this.vigencia = vigencia
-    }
+        this.contenido = contenido
 
-    Material() {}
+    }
 
     Boolean estaVigente() {
         return this.vigencia === MaterialVigencia.VIGENTE
     }
+
 }

@@ -1,58 +1,69 @@
 package com.mibiblioteca.mibiblioteca.compras.model
 
-import com.sun.beans.decoder.ValueObject
-import com.sun.istack.NotNull
 import groovy.transform.CompileStatic
 
-import javax.persistence.Embeddable
+import javax.persistence.Column
+import javax.persistence.Entity
+import javax.persistence.GeneratedValue
+import javax.persistence.GenerationType
+import javax.persistence.Id
 import java.sql.Timestamp
-import java.util.concurrent.ThreadLocalRandom
 
+@Entity
 @CompileStatic
-@Embeddable
-class ComprobantePago implements ValueObject {
+class ComprobantePago{
 
-    @NotNull
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long nroPago
 
-    @NotNull
+    @Column(nullable = false)
     private Double saldoAbonado
 
-    @NotNull
+    @Column(nullable = false)
     private Timestamp fecha
+
+    @Column(nullable = false)
+    private String idMaterial
 
     ComprobantePago() {}
 
-    ComprobantePago(Double saldo, Timestamp fechaPago) {
+    ComprobantePago(Double saldo, Timestamp fechaPago, String material) {
         saldoAbonado = saldo
         fecha = fechaPago
-        nroPago = ThreadLocalRandom.current().nextInt(100000000, 999999999 + 1);
+       idMaterial = material
     }
 
-    @Override
-    boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ComprobantePago that = (ComprobantePago) o;
-        nroPago.equals(that.nroPago) &&
-                saldoAbonado.equals(that.saldoAbonado) &&
-                fecha.equals(that.fecha)
+    Long getNroPago() {
+        return nroPago
     }
 
-    @Override
-    int hashCode() {
-        nroPago.hashCode() +
-                saldoAbonado.hashCode() +
-                fecha.hashCode()
+    void setNroPago(Long nroPago) {
+        this.nroPago = nroPago
     }
 
-    @Override
-    Object getValue() {
-        return null
+    Double getSaldoAbonado() {
+        return saldoAbonado
     }
 
-    @Override
-    boolean isVoid() {
-        return false
+    void setSaldoAbonado(Double saldoAbonado) {
+        this.saldoAbonado = saldoAbonado
     }
+
+    Timestamp getFecha() {
+        return fecha
+    }
+
+    void setFecha(Timestamp fecha) {
+        this.fecha = fecha
+    }
+
+    String getIdMaterial() {
+        return idMaterial
+    }
+
+    void setIdMaterial(String idMaterial) {
+        this.idMaterial = idMaterial
+    }
+
 }

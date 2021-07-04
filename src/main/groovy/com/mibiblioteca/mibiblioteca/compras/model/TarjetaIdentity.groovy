@@ -21,6 +21,7 @@ class TarjetaIdentity implements Serializable{
     @NotNull
     Integer CSV
 
+    @Override
     boolean equals(o) {
         if (this.is(o)) return true
         if (getClass() != o.class) return false
@@ -33,10 +34,11 @@ class TarjetaIdentity implements Serializable{
         return true
     }
 
+    @Override
     int hashCode() {
         int result
         result = (nroTarjeta != null ? nroTarjeta.hashCode() : 0)
-        result = (entidad != null ? entidad.hashCode() : 0)
+        result += (entidad != null ? entidad.hashCode() : 0)
         result = 31 * result + (CSV != null ? CSV.hashCode() : 0)
         return result
     }

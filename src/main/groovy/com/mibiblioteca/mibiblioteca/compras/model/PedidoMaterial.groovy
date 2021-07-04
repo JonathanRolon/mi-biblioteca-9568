@@ -5,7 +5,6 @@ import groovy.transform.CompileStatic
 
 import javax.persistence.CascadeType
 import javax.persistence.Column
-import javax.persistence.Convert
 import javax.persistence.Embedded
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
@@ -44,39 +43,38 @@ class PedidoMaterial {
     @Column(nullable = false)
     EstadoPedido estadoPedido
 
-    @Column(nullable = true)
-    @Embedded
-    private ComprobantePago comprobantePago
-
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-    List<Material> articulosSolicitados
+    List<ArticuloMaterial> articulosSolicitados
 
     PedidoMaterial(Long dniCliente) {
         cliente = dniCliente
         estadoPedido = EstadoPedido.PENDIENTE
         fechaCreacion = Timestamp.valueOf(LocalDateTime.now())
-        articulosSolicitados = new ArrayList<Material>()
+        articulosSolicitados = new ArrayList<ArticuloMaterial>()
     }
 
     PedidoMaterial() {}
 
-    void agregar(Material material) {
+    ArticuloMaterial agregar(Material material) {
         def vigente = material.estaVigente()
+
         if(!vigente) return //excepcion
 
         def existe = articulosSolicitados.find { it ->
             it.getIdMaterial() === material.getIdMaterial()
         }
         if (!existe && articulosSolicitados.size() < MAX_CANT_ARTICULOS) {
-            articulosSolicitados.push(material)
-
+            def articuloMaterial = new ArticuloMaterial(material.getIdMaterial(), getNroPedido()
+            ,material.getPrecio())
+            articulosSolicitados.push(articuloMaterial)
+            articuloMaterial
         }else{
-            //excepcion
+            null //excepcion
         }
 
     }
 
-    void borrarMaterial(Material material) {
+    void borrarArticuloMaterial(Material material) {
         def posicion = articulosSolicitados.findIndexOf { it ->
             it.getIdMaterial() == material.getIdMaterial()
         }
@@ -84,7 +82,7 @@ class PedidoMaterial {
     }
 
     Double getTotal() {
-        def total = articulosSolicitados.inject(0 as Double, { suma, it -> suma + it.getPrecio()})
+        def total = articulosSolicitados.inject(0 as Double, { suma, it -> suma + it.getPrecioVenta()})
         total
     }
 
