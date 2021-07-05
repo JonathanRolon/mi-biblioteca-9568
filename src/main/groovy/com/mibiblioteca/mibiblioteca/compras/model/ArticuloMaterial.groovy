@@ -16,13 +16,13 @@ class ArticuloMaterial {
     ArticuloMaterialIdentity articuloMaterialIdentity
 
     @Column(nullable = false)
-    private Double precioVenta
+    private BigDecimal precioVenta
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     EstadoArticulo estado
 
-    ArticuloMaterial (String idMaterial, Long nroPedido, Double precioVenta){
+    ArticuloMaterial (String idMaterial, Long nroPedido, BigDecimal precioVenta){
 
         articuloMaterialIdentity = new ArticuloMaterialIdentity()
         articuloMaterialIdentity.setIdMaterial(idMaterial)
@@ -31,7 +31,7 @@ class ArticuloMaterial {
         estado = EstadoArticulo.PENDIENTE_PAGO
     }
 
-    Double getPrecioVenta(){
+    BigDecimal getPrecioVenta(){
         precioVenta
     }
 

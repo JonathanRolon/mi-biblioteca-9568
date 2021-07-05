@@ -28,7 +28,7 @@ class MaterialServiceImpl implements MaterialService {
     }
 
     @Override
-    Material crear(String idMaterial, Double precio, String descripcion, String titulo,
+    Material crear(String idMaterial, BigDecimal precio, String descripcion, String titulo,
                    String autor, Timestamp fechaPublicacion, String editorial,
                    TipoMaterial tipoMaterial, TemaHilo tema, MaterialVigencia vigencia,
                    MultipartFile archivo) {

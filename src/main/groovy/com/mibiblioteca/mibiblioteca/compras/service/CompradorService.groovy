@@ -9,7 +9,7 @@ import groovy.transform.CompileStatic
 @CompileStatic
 interface CompradorService {
 
-    PedidoMaterial pagar(PedidoMaterial pedido, TarjetaDeCredito tarjeta, Double montoTarjeta, Integer creditos)
+    PedidoMaterial pagar(PedidoMaterial pedido, TarjetaDeCredito tarjeta, BigDecimal montoTarjeta, Integer creditos)
 
     PedidoMaterial crearPedido(Alumno alumno)
 

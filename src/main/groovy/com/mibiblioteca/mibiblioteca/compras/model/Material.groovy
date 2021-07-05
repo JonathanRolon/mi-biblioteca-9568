@@ -22,7 +22,7 @@ class Material {
     String idMaterial
 
     @Column(nullable = true)
-    Double precio
+    BigDecimal precio
 
     @Column(nullable = true)
     String descripcion
@@ -56,7 +56,7 @@ class Material {
 
     Material() {}
 
-    Material(String idMaterial, Double precio, String descripcion, String titulo, String autor,
+    Material(String idMaterial, BigDecimal precio, String descripcion, String titulo, String autor,
              Timestamp fechaPublicacion, String editorial, TipoMaterial tipoMaterial, TemaHilo tema,
              MaterialVigencia vigencia, ContenidoMaterial contenido) {
         this.idMaterial = idMaterial

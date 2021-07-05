@@ -1,11 +1,15 @@
 
 package com.mibiblioteca.mibiblioteca.compras.model
 
+import com.mibiblioteca.mibiblioteca.compras.model.exception.ArticuloExistenteEnPedidoException
+import com.mibiblioteca.mibiblioteca.compras.model.exception.MaterialNoVigenteException
+import com.mibiblioteca.mibiblioteca.compras.model.exception.PedidoNoCancelableException
+import com.mibiblioteca.mibiblioteca.compras.model.exception.PedidoNoCerrableException
+import com.mibiblioteca.mibiblioteca.tareas.model.Alumno
 import groovy.transform.CompileStatic
 
 import javax.persistence.CascadeType
 import javax.persistence.Column
-import javax.persistence.Embedded
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
@@ -55,23 +59,35 @@ class PedidoMaterial {
 
     PedidoMaterial() {}
 
-    ArticuloMaterial agregar(Material material) {
+    ArticuloMaterial agregar(Material material, Alumno cliente) {
         def vigente = material.estaVigente()
 
-        if(!vigente) return //excepcion
+        if(!vigente)
+            throw new MaterialNoVigenteException("Error: El articulo a agregar no esta disponible.")
 
-        def existe = articulosSolicitados.find { it ->
+        def existeEnPedido = articulosSolicitados.find { it ->
             it.getIdMaterial() === material.getIdMaterial()
         }
-        if (!existe && articulosSolicitados.size() < MAX_CANT_ARTICULOS) {
+        def existeEnAlumno = cliente.yaCompre(material.getIdMaterial())
+
+        if (!existeEnPedido && !existeEnAlumno && articulosSolicitados.size() < MAX_CANT_ARTICULOS) {
             def articuloMaterial = new ArticuloMaterial(material.getIdMaterial(), getNroPedido()
             ,material.getPrecio())
             articulosSolicitados.push(articuloMaterial)
             articuloMaterial
         }else{
-            null //excepcion
+           throw new ArticuloExistenteEnPedidoException("Error: el articulo a agregar ya existe.")
         }
 
+    }
+
+    void cerrar(){
+        if(estadoPedido === EstadoPedido.CANCELADO)
+            throw new PedidoNoCerrableException("Error: El pedido no se puede cerrar, esta cancelado.")
+        if(estadoPedido === EstadoPedido.CERRADO)
+            throw new PedidoNoCerrableException("Error: El pedido ya esta cerrado.")
+        fechaCierre = Timestamp.valueOf(LocalDateTime.now())
+        estadoPedido = EstadoPedido.CERRADO
     }
 
     void borrarArticuloMaterial(Material material) {
@@ -81,12 +97,20 @@ class PedidoMaterial {
         articulosSolicitados.remove(posicion)
     }
 
-    Double getTotal() {
-        def total = articulosSolicitados.inject(0 as Double, { suma, it -> suma + it.getPrecioVenta()})
+    BigDecimal getTotal() {
+        def total = articulosSolicitados.inject(0 as BigDecimal, { suma, it -> suma + it.getPrecioVenta()})
         total
     }
 
     void cancelar() {
-        articulosSolicitados = null
+        if(estadoPedido === EstadoPedido.CANCELADO)
+            throw new PedidoNoCancelableException("Error: El pedido ya esta cancelado.")
+        if(estadoPedido === EstadoPedido.CERRADO)
+            throw new PedidoNoCancelableException("Error: El pedido ya no se puede cancelar, esta cerrado.")
+
+        fechaCancelacion = Timestamp.valueOf(LocalDateTime.now())
+        articulosSolicitados = new ArrayList<ArticuloMaterial>()
+        estadoPedido =  EstadoPedido.CANCELADO
     }
+
 }

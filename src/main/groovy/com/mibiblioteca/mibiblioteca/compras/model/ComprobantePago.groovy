@@ -18,7 +18,7 @@ class ComprobantePago{
     private Long nroPago
 
     @Column(nullable = false)
-    private Double saldoAbonado
+    private BigDecimal saldoAbonado
 
     @Column(nullable = false)
     private Timestamp fecha
@@ -28,8 +28,8 @@ class ComprobantePago{
 
     ComprobantePago() {}
 
-    ComprobantePago(Double saldo, Timestamp fechaPago, String material) {
-        saldoAbonado = saldo
+    ComprobantePago(BigDecimal abonado, Timestamp fechaPago, String material) {
+        saldoAbonado = abonado
         fecha = fechaPago
        idMaterial = material
     }
@@ -42,11 +42,11 @@ class ComprobantePago{
         this.nroPago = nroPago
     }
 
-    Double getSaldoAbonado() {
+    BigDecimal getSaldoAbonado() {
         return saldoAbonado
     }
 
-    void setSaldoAbonado(Double saldoAbonado) {
+    void setSaldoAbonado(BigDecimal saldoAbonado) {
         this.saldoAbonado = saldoAbonado
     }
 

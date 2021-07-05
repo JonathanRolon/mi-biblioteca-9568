@@ -12,7 +12,7 @@ import java.sql.Timestamp
 @CompileStatic
 interface MaterialService {
 
-    Material crear(String idMaterial, Double precio, String descripcion, String titulo, String autor,
+    Material crear(String idMaterial, BigDecimal precio, String descripcion, String titulo, String autor,
                     Timestamp fechaPublicacion, String editorial, TipoMaterial tipoMaterial, TemaHilo tema, MaterialVigencia vigencia, MultipartFile contenido)
 
     Material update(Material material)
