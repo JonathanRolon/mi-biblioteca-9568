@@ -2,10 +2,13 @@ package com.mibiblioteca.mibiblioteca.tareas.service
 
 import com.mibiblioteca.mibiblioteca.tareas.model.Alumno
 import com.mibiblioteca.mibiblioteca.consultas.model.Calificacion
+import com.mibiblioteca.mibiblioteca.tareas.model.Curso
 import com.mibiblioteca.mibiblioteca.tareas.model.Docente
 import com.mibiblioteca.mibiblioteca.consultas.model.Respuesta
 import com.mibiblioteca.mibiblioteca.tareas.model.Tarea
 import groovy.transform.CompileStatic
+
+import java.sql.Timestamp
 
 @CompileStatic
 interface DocenteService {
@@ -14,7 +17,7 @@ interface DocenteService {
 
     Optional<Docente> findById(Long dni)
 
-    Docente create(Docente docente)
+    Docente create(Long dni, String nombre, String apellido, Timestamp fecNac, List<Curso> cursos)
 
     Docente update(Docente docente)
 

@@ -1,5 +1,6 @@
 package com.mibiblioteca.mibiblioteca.consultas.service.Impl
 
+import com.mibiblioteca.mibiblioteca.consultas.service.exception.ErrorAlCalificarRespuestaException
 import com.mibiblioteca.mibiblioteca.tareas.model.Alumno
 import com.mibiblioteca.mibiblioteca.consultas.model.Calificacion
 import com.mibiblioteca.mibiblioteca.consultas.model.Hilo
@@ -37,16 +38,17 @@ class PublicadorServiceImpl implements PublicadorService {
         def calif = new Calificacion(respuesta, calificador.getDNI(), calificacion)
         def hilo = hiloRepository.findById(respuesta.getHiloId()).get()
 
-        if (!hilo) return
-        if (calificacion < MIN_CALIF_RESP || calificacion > MAX_CALIF_RESP) return //excepcion
-        if (calificador.getNivel() === NivelAlumno.NOVATO) return //excepcion
-        if (respuesta.getPublicador() === calificador.getDNI()) return //excepcion
-        if (!calificado.esRegular() || !calificador.esRegular()) return //excepcion
+        if (!hilo ||
+                (!calificado.esRegular() || !calificador.esRegular()) ||
+                (calificacion < MIN_CALIF_RESP || calificacion > MAX_CALIF_RESP) ||
+                (calificador.getNivel() === NivelAlumno.NOVATO) ||
+                (respuesta.getPublicador() === calificador.getDNI()))
+            throw new ErrorAlCalificarRespuestaException("Error: al intentar calificar la respuesta")
 
-        if (calificacion > UMBRAL_CALIF_POS) {
-            calificado.incrementarCalifPositivas()
-            alumnoRepository.save(calificado)
-        }
+            if (calificacion > UMBRAL_CALIF_POS) {
+                calificado.incrementarCalifPositivas()
+                alumnoRepository.save(calificado)
+            }
 
         respuesta.agregarCalificacion(calif)
         hilo.actualizarRespuesta(respuesta)

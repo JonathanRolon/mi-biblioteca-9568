@@ -9,10 +9,8 @@ import javax.persistence.Enumerated
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
-
-enum EstadoTarea{
-    ABIERTA_PEND_RES, ABIERTA_PEND_CALIF, ABIERTA_VENCIDA, CERRADA_PEND_CALIF, CERRADA
-}
+import java.sql.Timestamp
+import java.time.LocalDateTime
 
 @CompileStatic
 @Entity
@@ -23,18 +21,23 @@ class Tarea implements Serializable{
     Long nroTarea
 
     @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    EstadoTarea estadoTarea
+    String consigna
 
     @Column(nullable = false)
-    Long docente
+    private Timestamp fechaCreacion
+
+    @Column(nullable = false)
+    private Timestamp fechaEntrega
 
     Tarea(){}
 
-    Tarea(Long docenteResponsable){
-        this.estadoTarea = EstadoTarea.ABIERTA_PEND_CALIF
-        this.docente = docenteResponsable
+    Tarea(String consigna, Timestamp fechaEntrega){
+        this.consigna = consigna
+        fechaCreacion = Timestamp.valueOf(LocalDateTime.now())
+        this.fechaEntrega = fechaEntrega
     }
 
-
+    Timestamp getFechaEntrega() {
+        fechaEntrega
+    }
 }

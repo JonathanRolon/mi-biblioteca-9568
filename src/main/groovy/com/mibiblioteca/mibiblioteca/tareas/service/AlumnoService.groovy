@@ -7,7 +7,7 @@ import java.sql.Timestamp
 
 interface AlumnoService {
 
-    Alumno create(Long dni, String nombre, String apellido, Timestamp fecNac, Curso curso)
+    Alumno create(Long dni, String nombre, String apellido, Timestamp fecNac, String curso)
 
     Alumno update(Alumno alumno)
 

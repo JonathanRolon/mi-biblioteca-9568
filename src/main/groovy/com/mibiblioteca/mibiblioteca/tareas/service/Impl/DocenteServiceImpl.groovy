@@ -2,6 +2,7 @@ package com.mibiblioteca.mibiblioteca.tareas.service.Impl
 
 import com.mibiblioteca.mibiblioteca.tareas.model.Alumno
 import com.mibiblioteca.mibiblioteca.consultas.model.Calificacion
+import com.mibiblioteca.mibiblioteca.tareas.model.Curso
 import com.mibiblioteca.mibiblioteca.tareas.model.Docente
 import com.mibiblioteca.mibiblioteca.consultas.model.Respuesta
 import com.mibiblioteca.mibiblioteca.tareas.model.Tarea
@@ -13,22 +14,18 @@ import groovy.transform.CompileStatic
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
+import java.sql.Timestamp
+
 @CompileStatic
 @Service
-class DocenteServiceImpl implements DocenteService{
+class DocenteServiceImpl implements DocenteService {
 
     @Autowired
     private final DocenteRepository docenteRepository
 
-    /*@Override
-    void comprar(Material m, List<Object> metodosPago) {
-
+    DocenteServiceImpl(DocenteRepository doc) {
+        docenteRepository = doc
     }
-
-    @Override
-    void solicitarPrestamo(Material m) {
-
-    }*/
 
     @Override
     List<Docente> findAll() {
@@ -41,10 +38,17 @@ class DocenteServiceImpl implements DocenteService{
     }
 
     @Override
-    Docente create(Docente docente) {
-        Optional<Docente> doc = docente.getDNI() ? this.findById(docente.getDNI()) : null
-        if (!doc)
-            docenteRepository.save(doc.get())
+    Docente create(Long dni, String nombre, String apellido, Timestamp fecNac, List<Curso> cursos) {
+        Optional<Docente> doc = docenteRepository.findById(dni)
+        Docente docente = doc ? doc.get() : new Docente(dni, nombre, apellido, fecNac)
+        cursos.each { it ->
+            try {
+                docente.asignarCurso(it)
+            } catch (RuntimeException ex) {
+                throw ex
+            }
+        }
+        docenteRepository.save(docente)
     }
 
     @Override
@@ -75,7 +79,7 @@ class DocenteServiceImpl implements DocenteService{
     }
 
     @Override
-    Respuesta responder(Long dniPublicador, String respuesta, Long idHilo){
+    Respuesta responder(Long dniPublicador, String respuesta, Long idHilo) {
         null
     }
 }

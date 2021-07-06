@@ -55,12 +55,13 @@ class PublicadorServiceTest {
     Timestamp fecNac
 
     /* útiles */
+
     @BeforeEach
     public void setup() {
         //se inyecta de esta manera porque el repository arroja null pointer exc.
         alumnoService = new AlumnoServiceImpl(alumnoRepository)
         publicadorService = new PublicadorServiceImpl(hiloRepository, alumnoRepository)
-        curso =  new Curso("A")
+        curso = new Curso("A")
         fecNac = new Timestamp(System.currentTimeMillis())
     }
 
@@ -82,11 +83,12 @@ class PublicadorServiceTest {
 
     Alumno dadoQuesoyAlumnoNovatoRegular() {
 
-        alumnoService.create(132456, "nombre", "apellido", fecNac, curso)
+        alumnoService.create(132456, "nombre", "apellido", fecNac, curso.getDenominacion())
     }
 
     Respuesta dadoQuePublicoUnaRespuestaEnElForo(Alumno alumno) {
-        def otroAlumno = alumnoService.create(1111045654, "nombre", "apellido", fecNac, curso)
+        def otroAlumno = alumnoService.create(1111045654, "nombre", "apellido", fecNac,
+                curso.getDenominacion())
         def hilo = publicadorService.crearHilo(otroAlumno.getDNI(), TemaHilo.CS_LENGUAJE,
                 "Como interpreto el cap. 3 del libro X?")
         publicadorService.responder(alumno.getDNI(), hilo, "respuestahilo1")
@@ -94,8 +96,10 @@ class PublicadorServiceTest {
 
     boolean noPuedoCalificarRespForo(Alumno alumno) {
 
-        def preguntador = alumnoService.create(132789, "nombre", "apellido", fecNac, curso),
-            contestador = alumnoService.create(4678, "nombre", "apellido", fecNac, curso)
+        def preguntador = alumnoService.create(132789, "nombre", "apellido", fecNac,
+                curso.getDenominacion()),
+            contestador = alumnoService.create(4678, "nombre", "apellido", fecNac,
+                    curso.getDenominacion())
 
         preguntador.subirNivel()
         contestador.subirNivel()
@@ -104,40 +108,50 @@ class PublicadorServiceTest {
         def hilo = publicadorService.crearHilo(preguntador.getDNI(), TemaHilo.CS_BIOLOGICAS,
                 "Como interpreto el cap. 3 del libro Y?")
         def respuesta = publicadorService.responder(contestador.getDNI(), hilo, "respuestahilo2")
-        def calificac = publicadorService.calificar(alumno, respuesta, 7)
 
-        calificac === null
+        try {
+            publicadorService.calificar(alumno, respuesta, 7)
+            false
+        } catch (RuntimeException ex) {
+            true
+        }
 
     }
 
-    void dadoQueYaTengoNCalificaciones(Respuesta respuesta,Integer cantidad){
+    void dadoQueYaTengoNCalificaciones(Respuesta respuesta, Integer cantidad) {
         for (int i = 0; i < cantidad; i++) {
             def otroCalif
             Integer randomCalif = generarCalificacionPosRandom();
             while (!otroCalif) {
-                otroCalif = alumnoService.create(generarDNIAleatorio(), "nombre", "apellido", fecNac, curso)
+                otroCalif = alumnoService.create(generarDNIAleatorio(), "nombre", "apellido", fecNac,
+                        curso.getDenominacion())
             }
             otroCalif.subirNivel()
-            publicadorService.calificar(otroCalif, respuesta, randomCalif)
+            try {
+                publicadorService.calificar(otroCalif, respuesta, randomCalif)
+            } catch (RuntimeException ex) {
+            }
         }
     }
 
-    Alumno getCalificadorMedio(){
+    Alumno getCalificadorMedio() {
         def calificador
         while (!calificador) {
-            calificador = alumnoService.create(generarDNIAleatorio(), "nombre", "apellido", fecNac, curso)
+            calificador = alumnoService.create(generarDNIAleatorio(), "nombre", "apellido", fecNac,
+                    curso.getDenominacion())
         }
         calificador.subirNivel()
         calificador
     }
 
-    Alumno getCalificadorPRO(){
-        def pro = alumnoService.create(53135, "nombre", "apellido", fecNac, curso)
+    Alumno getCalificadorPRO() {
+        def pro = alumnoService.create(53135, "nombre", "apellido", fecNac, curso.getDenominacion())
         for (int i = 0; i < 2; i++) pro.subirNivel()
         pro
     }
 
     /* Tests */
+
     @Test
     void alumnoNovatoRegularRecibePrimerCalificacionPorEncimaDeCincoNoSubeNivel() {
 
@@ -181,7 +195,6 @@ class PublicadorServiceTest {
     }
 
 
-
     @Test
     void alumnoNovatoRegularRecibeDecimaCalificacionPeroDebajoDeCincoNoSubeNivel() {
         def novato = dadoQuesoyAlumnoNovatoRegular(),
@@ -201,7 +214,8 @@ class PublicadorServiceTest {
 
     @Test
     void alumnoMedioRegularRecibe20maCalificacionEncimaDeCincoSuma30Creditos() {
-        def medio = alumnoService.create(generarDNIAleatorio(), "nombre", "apellido", fecNac, curso),
+        def medio = alumnoService.create(generarDNIAleatorio(), "nombre", "apellido", fecNac,
+                curso.getDenominacion()),
             respuesta = dadoQuePublicoUnaRespuestaEnElForo(medio),
             calificador = getCalificadorMedio()
 
@@ -220,16 +234,19 @@ class PublicadorServiceTest {
     @Test
     void alumnoMedioNoRegularRecibeDecimaCalificacionEncimaDeCincoNoSumaCreditos() {
 
-        def medio = alumnoService.create(generarDNIAleatorio(), "nombre", "apellido", fecNac, curso),
+        def medio = alumnoService.create(generarDNIAleatorio(), "nombre", "apellido", fecNac,
+                curso.getDenominacion()),
             respuesta = dadoQuePublicoUnaRespuestaEnElForo(medio),
             calificador = getCalificadorMedio()
 
         medio.subirNivel()
         medio.suspender()
-
         dadoQueYaTengoNCalificaciones(respuesta, 99)
 
-        publicadorService.calificar(calificador, respuesta, generarCalificacionPosRandom())
+        try{
+            publicadorService.calificar(calificador, respuesta, generarCalificacionPosRandom())
+        }catch(RuntimeException ex){
+        }
 
         assert (medio.getNivel() == NivelAlumno.MEDIO &&
                 medio.getCreditos() == 0 &&

@@ -166,7 +166,7 @@ class CompradorServiceTest {
     Alumno getAlumnoNovato() {
         def alumno
         while (!alumno) {
-            alumno = alumnoService.create(generarDNIAleatorio(), "nombre", "apellido", fecNac, curso)
+            alumno = alumnoService.create(generarDNIAleatorio(), "nombre", "apellido", fecNac, curso.getDenominacion())
         }
         alumno
     }
@@ -174,7 +174,7 @@ class CompradorServiceTest {
     Alumno getAlumnoMedio() {
         def alumno
         while (!alumno) {
-            alumno = alumnoService.create(generarDNIAleatorio(), "nombre", "apellido", fecNac, curso)
+            alumno = alumnoService.create(generarDNIAleatorio(), "nombre", "apellido", fecNac, curso.getDenominacion())
         }
         alumno.subirNivel()
     }

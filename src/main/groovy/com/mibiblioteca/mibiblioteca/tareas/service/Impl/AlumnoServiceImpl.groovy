@@ -20,7 +20,7 @@ class AlumnoServiceImpl implements AlumnoService{
     }
 
     @Override
-    Alumno create(Long dni, String nombre, String apellido, Timestamp fecNac, Curso curso) {
+    Alumno create(Long dni, String nombre, String apellido, Timestamp fecNac, String curso) {
         Optional<Alumno> al = this.findById(dni)
         if (!al) {
             def alumno = new Alumno(dni, nombre, apellido, fecNac, curso)

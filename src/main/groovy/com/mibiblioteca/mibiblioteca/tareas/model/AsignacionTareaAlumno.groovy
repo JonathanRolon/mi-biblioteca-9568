@@ -1,36 +1,113 @@
 package com.mibiblioteca.mibiblioteca.tareas.model
 
-
+import com.mibiblioteca.mibiblioteca.tareas.model.exception.CalificacionInvalidaException
+import com.mibiblioteca.mibiblioteca.tareas.model.exception.TareaNoCalificableException
+import com.mibiblioteca.mibiblioteca.tareas.model.exception.TareaNoCerrableException
+import com.mibiblioteca.mibiblioteca.tareas.model.exception.TareaNoResolubleException
 import groovy.transform.CompileStatic
 
-import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.EmbeddedId
 import javax.persistence.Entity
-import javax.persistence.ManyToOne
-import javax.persistence.MapsId
+import javax.persistence.EnumType
+import javax.persistence.Enumerated
+import java.sql.Timestamp
+import java.time.LocalDateTime
+
+enum EstadoAsignacionTarea {
+    ABIERTA_PEND_RES, ABIERTA_PEND_CALIF, ABIERTA_VENCIDA, CERRADA_PEND_CALIF, CERRADA
+}
 
 @Entity
 @CompileStatic
 class AsignacionTareaAlumno {
 
+    private final Integer MIN_CALIF = 1, MAX_CALIF = 10
+
     @EmbeddedId
     TareaAlumnoIdentity id
 
+    @Column(nullable = false)
+    private Timestamp fechaAsignacion
+
     @Column(nullable = true)
-    Integer calificacion
+    private Timestamp fechaCierre
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @MapsId("nroTarea")
-    Tarea tarea
+    @Column(nullable = true)
+    private Timestamp fechaCalificacion
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @MapsId("DNI")
-    Alumno alumno
+    @Column(nullable = true)
+    private String respuesta
 
-    AsignacionTareaAlumno(Tarea tarea, Alumno alumno){
-        this.tarea = tarea
-        this.alumno = alumno
+    @Column(nullable = false)
+    private Timestamp fechaLimite
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    EstadoAsignacionTarea estado
+
+    @Column(nullable = true)
+    private Integer calificacion
+
+    AsignacionTareaAlumno(Long nroTarea, Long DNIAlumno, Timestamp entrega) {
+
+        id = new TareaAlumnoIdentity()
+        id.setDNI(DNIAlumno)
+        id.setIdTarea(nroTarea)
+        estado = EstadoAsignacionTarea.ABIERTA_PEND_RES
+        fechaAsignacion = Timestamp.valueOf(LocalDateTime.now())
+        fechaLimite = entrega
+    }
+
+    AsignacionTareaAlumno() {}
+
+    Long getAlumno() {
+        this.id.getDNI()
+    }
+
+    Long getNroTarea() {
+        this.id.getIdTarea()
+    }
+
+    AsignacionTareaAlumno resolverTarea(String respuesta) {
+        def fechaEnvio = Timestamp.valueOf(LocalDateTime.now())
+
+        if (fechaEnvio.after(fechaLimite) && EstadoAsignacionTarea.ABIERTA_PEND_RES.toString())
+            estado = EstadoAsignacionTarea.ABIERTA_VENCIDA
+
+        if (estado.toString() !== EstadoAsignacionTarea.ABIERTA_PEND_RES.toString())
+            throw new TareaNoResolubleException("La tarea ya no puede resolverse.")
+
+        estado = EstadoAsignacionTarea.ABIERTA_PEND_CALIF
+        fechaCierre = fechaEnvio
+        this.respuesta = respuesta
+        this
+    }
+
+    Integer getCalificacion() {
+        calificacion
+    }
+
+    AsignacionTareaAlumno cerrar() {
+        def invalido = (estado.toString() !== EstadoAsignacionTarea.ABIERTA_PEND_CALIF.toString()) &&
+                        (estado.toString() !== EstadoAsignacionTarea.ABIERTA_VENCIDA.toString())
+        if (invalido)
+         {
+            throw new TareaNoCerrableException("La tarea no se encuentra abierta.")
+        }
+        estado = EstadoAsignacionTarea.CERRADA_PEND_CALIF
+        this
+    }
+
+    void calificar(Integer calificacion) {
+        if (calificacion < MIN_CALIF || calificacion > MAX_CALIF)
+            throw new CalificacionInvalidaException("Error: Puntuación no permitida.")
+        if (estado.toString() !== EstadoAsignacionTarea.CERRADA_PEND_CALIF.toString())
+            throw new TareaNoCalificableException("Error: La tarea debe estar pendiente de calificación.")
+
+        this.calificacion = calificacion
+        estado = EstadoAsignacionTarea.CERRADA
+        fechaCalificacion = Timestamp.valueOf(LocalDateTime.now())
     }
 
 }

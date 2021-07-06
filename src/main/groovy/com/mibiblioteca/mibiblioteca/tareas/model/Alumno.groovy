@@ -76,12 +76,12 @@ class Alumno {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     List<ComprobantePago> comprobantesPago
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    Curso curso
+    @Column(nullable = false)
+    String curso
 
     //private ResourceBundleMessageSource messageSource
 
-    Alumno(Long DNI, String nombre, String apellido, Timestamp fechaNacimiento, Curso curso) {
+    Alumno(Long DNI, String nombre, String apellido, Timestamp fechaNacimiento, String curso) {
         this.DNI = DNI
         this.curso = curso
         this.nivel = NivelAlumno.NOVATO
