@@ -87,7 +87,7 @@ class ManejadorTareasServiceTest {
     }
 
     private Tarea asignarTarea(Docente docente, Curso curso) {
-        def fechaEntrega = new Timestamp(2021, 9, 15, 23, 59, 59,59),
+        def fechaEntrega = Timestamp.valueOf("2021-09-23 10:10:10.0"),
             consigna = "Relevar cuales son los puntos mas importantes del libro Pepito.",
             tarea = new Tarea(consigna, fechaEntrega)
 

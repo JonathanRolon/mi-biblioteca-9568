@@ -9,6 +9,7 @@ import javax.persistence.EmbeddedId
 import javax.persistence.Entity
 import javax.persistence.OneToMany
 import javax.persistence.Table
+import javax.validation.constraints.NotEmpty
 
 @CompileStatic
 @Entity
@@ -19,6 +20,7 @@ class Respuesta implements Serializable {
     private RespuestaIdentity respuestaIdentity;
 
     @Column(nullable = false)
+    @NotEmpty
     String contenido
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)

@@ -3,6 +3,8 @@ package com.mibiblioteca.mibiblioteca.tareas.model
 import com.sun.istack.NotNull
 
 import javax.persistence.Embeddable
+import javax.validation.constraints.Max
+import javax.validation.constraints.Min
 
 @Embeddable
 class TareaAlumnoIdentity implements Serializable {

@@ -1,5 +1,6 @@
 package com.mibiblioteca.mibiblioteca.compras.model
 
+import com.mibiblioteca.mibiblioteca.compras.model.exception.precioExcedePermitidoException
 import groovy.transform.CompileStatic
 
 import javax.persistence.Column
@@ -7,10 +8,14 @@ import javax.persistence.EmbeddedId
 import javax.persistence.Entity
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
+import javax.validation.constraints.NotEmpty
 
 @Entity
 @CompileStatic
 class ArticuloMaterial {
+
+    private final BigDecimal PRECIO_MAX = 99999.0
+    private final BigDecimal PRECIO_MIN = 1.0
 
     @EmbeddedId
     ArticuloMaterialIdentity articuloMaterialIdentity
@@ -27,8 +32,11 @@ class ArticuloMaterial {
         articuloMaterialIdentity = new ArticuloMaterialIdentity()
         articuloMaterialIdentity.setIdMaterial(idMaterial)
         articuloMaterialIdentity.setNroPedido(nroPedido)
-        this.precioVenta = precioVenta
         estado = EstadoArticulo.PENDIENTE_PAGO
+        if(precioVenta > PRECIO_MAX || precioVenta < PRECIO_MIN){
+            throw new precioExcedePermitidoException("Error: El precio no es valido.")
+        }
+        this.precioVenta = precioVenta
     }
 
     BigDecimal getPrecioVenta(){

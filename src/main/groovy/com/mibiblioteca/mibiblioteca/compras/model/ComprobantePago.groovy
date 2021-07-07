@@ -1,12 +1,14 @@
 package com.mibiblioteca.mibiblioteca.compras.model
 
 import groovy.transform.CompileStatic
+import org.hibernate.annotations.CreationTimestamp
 
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
+import javax.validation.constraints.NotEmpty
 import java.sql.Timestamp
 
 @Entity

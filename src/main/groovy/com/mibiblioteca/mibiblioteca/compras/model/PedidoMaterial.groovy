@@ -68,6 +68,7 @@ class PedidoMaterial {
         def existeEnPedido = articulosSolicitados.find { it ->
             it.getIdMaterial() === material.getIdMaterial()
         }
+
         def existeEnAlumno = cliente.yaCompre(material.getIdMaterial())
 
         if (!existeEnPedido && !existeEnAlumno && articulosSolicitados.size() < MAX_CANT_ARTICULOS) {

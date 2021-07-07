@@ -4,10 +4,15 @@ import com.mibiblioteca.mibiblioteca.compras.model.exception.TarjetaErrorAcredit
 import com.mibiblioteca.mibiblioteca.compras.model.exception.TarjetaExcedeLimiteException
 import com.mibiblioteca.mibiblioteca.compras.model.exception.TarjetaMontoNoValidoException
 import groovy.transform.CompileStatic
+import org.hibernate.annotations.CreationTimestamp
 
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Id
+import javax.persistence.Temporal
+import javax.persistence.TemporalType
+import javax.validation.constraints.NotBlank
+import javax.validation.constraints.NotEmpty
 import java.sql.Timestamp
 import java.time.LocalDateTime
 

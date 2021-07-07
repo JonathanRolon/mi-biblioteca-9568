@@ -8,6 +8,7 @@ import javax.persistence.Entity
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
 import javax.persistence.Id
+import javax.validation.constraints.NotEmpty
 
 enum TipoCuenta{
     CA, CC, CRED
@@ -25,6 +26,7 @@ class CuentaBancaria{
     BigInteger CBU
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     EntidadBancaria entidad
 
     @Column(nullable = false)

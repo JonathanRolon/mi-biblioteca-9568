@@ -5,12 +5,18 @@ import com.mibiblioteca.mibiblioteca.tareas.model.exception.TareaNoCalificableEx
 import com.mibiblioteca.mibiblioteca.tareas.model.exception.TareaNoCerrableException
 import com.mibiblioteca.mibiblioteca.tareas.model.exception.TareaNoResolubleException
 import groovy.transform.CompileStatic
+import org.hibernate.annotations.CreationTimestamp
 
 import javax.persistence.Column
 import javax.persistence.EmbeddedId
 import javax.persistence.Entity
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
+import javax.persistence.Temporal
+import javax.persistence.TemporalType
+import javax.validation.constraints.Max
+import javax.validation.constraints.Min
+import javax.validation.constraints.NotBlank
 import java.sql.Timestamp
 import java.time.LocalDateTime
 
@@ -90,7 +96,8 @@ class AsignacionTareaAlumno {
 
     AsignacionTareaAlumno cerrar() {
         def invalido = (estado.toString() !== EstadoAsignacionTarea.ABIERTA_PEND_CALIF.toString()) &&
-                        (estado.toString() !== EstadoAsignacionTarea.ABIERTA_VENCIDA.toString())
+                        (estado.toString() !== EstadoAsignacionTarea.ABIERTA_VENCIDA.toString()) &&
+                        (estado.toString() !== EstadoAsignacionTarea.ABIERTA_PEND_RES.toString())
         if (invalido)
          {
             throw new TareaNoCerrableException("La tarea no se encuentra abierta.")

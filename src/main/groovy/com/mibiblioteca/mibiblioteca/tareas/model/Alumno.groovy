@@ -12,8 +12,8 @@ import javax.persistence.Entity
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
 import javax.persistence.Id
-import javax.persistence.ManyToOne
 import javax.persistence.OneToMany
+import javax.validation.constraints.NotEmpty
 import java.sql.Timestamp
 
 enum Regularidad {
@@ -42,9 +42,11 @@ class Alumno {
     Long DNI
 
     @Column(nullable = false)
+    @NotEmpty(message = "Nombre es requerido.")
     String nombre
 
     @Column(nullable = false)
+    @NotEmpty(message = "Apellido es requerido.")
     String apellido
 
     @Column(nullable = false)
@@ -67,7 +69,12 @@ class Alumno {
     Regularidad regular
 
     @Column(nullable = false)
-    Integer calificPositivasEnForo
+    Integer calificPositivasCredEnForo
+
+    @Column(nullable = false)
+    //Indica cuantas calificaciones positivas
+    // (encima de 5) recibió en este nivel
+    Integer calificTotalesNivelEnForo
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -77,6 +84,7 @@ class Alumno {
     List<ComprobantePago> comprobantesPago
 
     @Column(nullable = false)
+    @NotEmpty(message = "Curso es requerido.")
     String curso
 
     //private ResourceBundleMessageSource messageSource
@@ -90,7 +98,8 @@ class Alumno {
         this.fechaNacimiento = fechaNacimiento
         creditos = 0
         regular = Regularidad.REGULAR
-        calificPositivasEnForo = 0
+        calificPositivasCredEnForo = 0
+        calificTotalesNivelEnForo = 0
         comprobantesPago = new ArrayList<ComprobantePago>()
         //initMessagesBundle()
     }
@@ -102,9 +111,66 @@ class Alumno {
         messageSource.setBasenames("lang/messages_ES")
     }*/
 
+    private Alumno sumarCreditos(Integer creditos) {
+        setCreditos(getCreditos() + creditos)
+        this
+    }
+
+    private Alumno reiniciarCalifPositivasCred() {
+        calificPositivasCredEnForo = 0
+        this
+    }
+
+    private Alumno reiniciarCalifPositivasNivel() {
+        calificPositivasCredEnForo = 0
+        this
+    }
+
+    private void validarCreditosCompra() {
+
+        switch (nivel) {
+            case NivelAlumno.NOVATO:
+                sumarCreditos(CONS_COMPRA_CRED_NOVATO)
+                break
+            case NivelAlumno.MEDIO:
+                sumarCreditos(CONS_COMPRA_CRED_MEDIO)
+                break
+            default: //PRO
+                sumarCreditos(CONS_COMPRA_CRED_PRO)
+        }
+
+    }
+
+    private void validarNivelCompra() {
+
+        def compras = comprobantesPago.findAll { it -> it.getSaldoAbonado() > 0 }
+        def subeNivelNovato = esNovato() && compras.size() >= CONS_COMPRAS_NOVATO_SUBIR_NIVEL,
+            subeNivelMedio = esMedio() && compras.size() >= CONS_COMPRAS_MEDIO_SUBIR_NIVEL
+
+        if (subeNivelNovato || subeNivelMedio) {
+            subirNivel()
+        }
+
+    }
+
+    private Boolean sumaCreditos() {
+        def califEncimaDeCinco = getCalificPositivasCredEnForo(),
+            sumarCreditosNovato = (califEncimaDeCinco == CONS_TOPE_CALIF_FORO_NOVATO && esNovato()),
+            sumarCreditosMedio = (califEncimaDeCinco == CONS_TOPE_CALIF_FORO_MEDIO && esMedio()),
+            sumarCreditosPRO = (califEncimaDeCinco == CONS_TOPE_CALIF_FORO_PRO && esPRO())
+
+        if (sumarCreditosNovato) sumarCreditos(CONS_CREDITOS_NOVATO)
+        if (sumarCreditosMedio) sumarCreditos(CONS_CREDITOS_MEDIO)
+        if (sumarCreditosPRO) sumarCreditos(CONS_CREDITOS_PRO)
+
+        return sumarCreditosNovato || sumarCreditosMedio || sumarCreditosPRO
+
+    }
+
     void restarCreditos(Integer creditos) {
         if (creditos > this.creditos) {
-            throw new CreditosExcedeCantidadDisponibleException("Error: el alumno no posee esa cantidad de creditos disponibles")
+            throw new CreditosExcedeCantidadDisponibleException("Error: el alumno no posee esa " +
+                    "cantidad de creditos disponibles")
         }
         this.creditos -= creditos
     }
@@ -146,73 +212,25 @@ class Alumno {
 
     }
 
-    private Alumno sumarCreditos(Integer creditos) {
-        setCreditos(getCreditos() + creditos)
-        this
-    }
-
     Alumno incrementarCalifPositivas() {
-        setCalificPositivasEnForo(getCalificPositivasEnForo() + 1)
+        calificPositivasCredEnForo += 1
+        calificTotalesNivelEnForo += 1
         def sumaCreditos = sumaCreditos()
         validarNivel()
-        if (sumaCreditos) reiniciarCalifPositivas()
-    }
-
-    private Alumno reiniciarCalifPositivas() {
-        setCalificPositivasEnForo(0)
-        this
-    }
-
-    private Boolean sumaCreditos() {
-        def califEncimaDeCinco = getCalificPositivasEnForo(),
-            sumarCreditosNovato = (califEncimaDeCinco == CONS_TOPE_CALIF_FORO_NOVATO && esNovato()),
-            sumarCreditosMedio = (califEncimaDeCinco == CONS_TOPE_CALIF_FORO_MEDIO && esMedio()),
-            sumarCreditosPRO = (califEncimaDeCinco == CONS_TOPE_CALIF_FORO_PRO && esPRO())
-
-        if (sumarCreditosNovato) sumarCreditos(CONS_CREDITOS_NOVATO)
-        if (sumarCreditosMedio) sumarCreditos(CONS_CREDITOS_MEDIO)
-        if (sumarCreditosPRO) sumarCreditos(CONS_CREDITOS_PRO)
-
-        return sumarCreditosNovato || sumarCreditosMedio || sumarCreditosPRO
-
+        if (sumaCreditos) reiniciarCalifPositivasCred()
     }
 
     Alumno validarNivel() {
-        def califEncimaDeCinco = getCalificPositivasEnForo(),
+        def califEncimaDeCinco = getCalificTotalesNivelEnForo(),
             subirNivelNovato = (califEncimaDeCinco == CONS_TOPE_NIVEL_CALIF_FORO_NOVATO && esNovato()),
             subirNivelMedio = (califEncimaDeCinco == CONS_TOPE_NIVEL_CALIF_FORO_MEDIO && esMedio())
 
-        if (subirNivelNovato) subirNivel()
-        if (subirNivelMedio) subirNivel()
+        if (subirNivelNovato || subirNivelMedio) {
+            subirNivel()
+            reiniciarCalifPositivasNivel()
+        }
 
         this
-    }
-
-    private void validarCreditosCompra() {
-
-        switch (nivel) {
-            case NivelAlumno.NOVATO:
-                sumarCreditos(CONS_COMPRA_CRED_NOVATO)
-                break
-            case NivelAlumno.MEDIO:
-                sumarCreditos(CONS_COMPRA_CRED_MEDIO)
-                break
-            default: //PRO
-                sumarCreditos(CONS_COMPRA_CRED_PRO)
-        }
-
-    }
-
-    private void validarNivelCompra() {
-
-        def compras = comprobantesPago.findAll { it -> it.getSaldoAbonado() > 0 }
-        def subeNivelNovato = esNovato() && compras.size() >= CONS_COMPRAS_NOVATO_SUBIR_NIVEL,
-            subeNivelMedio = esMedio() && compras.size() >= CONS_COMPRAS_MEDIO_SUBIR_NIVEL
-
-        if (subeNivelNovato || subeNivelMedio) {
-            subirNivel()
-        }
-
     }
 
     void desbloquearMaterial(ComprobantePago comprobantePago) {

@@ -1,36 +1,30 @@
 package com.mibiblioteca.mibiblioteca.consultas
 
 import com.mibiblioteca.mibiblioteca.tareas.model.Alumno
-import com.mibiblioteca.mibiblioteca.compras.model.Material
-import com.mibiblioteca.mibiblioteca.compras.model.MaterialVigencia
 import com.mibiblioteca.mibiblioteca.tareas.model.Curso
 import com.mibiblioteca.mibiblioteca.tareas.model.NivelAlumno
 import com.mibiblioteca.mibiblioteca.consultas.model.Respuesta
 import com.mibiblioteca.mibiblioteca.consultas.model.TemaHilo
-import com.mibiblioteca.mibiblioteca.compras.model.TipoMaterial
 import com.mibiblioteca.mibiblioteca.tareas.repository.AlumnoRepository
 
 import com.mibiblioteca.mibiblioteca.consultas.repository.HiloRepository
-import com.mibiblioteca.mibiblioteca.compras.repository.PedidoMaterialRepository
+
 import com.mibiblioteca.mibiblioteca.tareas.service.AlumnoService
-import com.mibiblioteca.mibiblioteca.compras.service.CompradorService
+
 import com.mibiblioteca.mibiblioteca.consultas.service.PublicadorService
 import com.mibiblioteca.mibiblioteca.tareas.service.Impl.AlumnoServiceImpl
 import com.mibiblioteca.mibiblioteca.consultas.service.Impl.PublicadorServiceImpl
-import com.mibiblioteca.mibiblioteca.tareas.service.Impl.ManejadorTareasServiceImpl
-import com.mibiblioteca.mibiblioteca.tareas.service.ManejadorTareasService
+
 import groovy.transform.CompileStatic
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
-import org.mockito.junit.jupiter.MockitoExtension
+
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 
 import javax.transaction.Transactional
 import java.sql.Timestamp
-import java.time.LocalDateTime
 import java.util.concurrent.ThreadLocalRandom
 
 @Transactional
@@ -159,23 +153,13 @@ class PublicadorServiceTest {
             respuesta = dadoQuePublicoUnaRespuestaEnElForo(novato),
             pro = getCalificadorPRO()
 
-        assert (novato.getCalificPositivasEnForo() == 0)
+        assert (novato.getCalificTotalesNivelEnForo() == 0)
 
         //Cuando otro usuario califica por encima de 5 mi respuesta
         publicadorService.calificar(pro, respuesta, 6)
         //Entonces no sumo creditos y no puedo calificar respuestas de otros alumnos
         assert (novato.getCreditos() == 0 && noPuedoCalificarRespForo(novato))
     }
-
-
-    /* *
-    Dado soy alumno regular
-    y que publiqué una respuesta en el foro
-    y tengo nivel novato
-    y tengo nueve calificaciones por encima de 5  en otras respuestas
-    Cuando otro usuario califica por encima de 5 mi respuesta
-    Entonces se agregan 50 créditos a mi cuenta,  paso a ser alumno Medio y puedo calificar respuestas de otros alumnos.
-    * */
 
     @Test
     void alumnoNovatoRegularRecibeDecimaCalificacionPorEncimaDeCincoSubeHastaAlumnoMedio() {

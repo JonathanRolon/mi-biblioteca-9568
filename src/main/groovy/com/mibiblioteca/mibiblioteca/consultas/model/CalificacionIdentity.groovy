@@ -6,7 +6,6 @@ import groovy.transform.CompileStatic
 
 import javax.persistence.Embeddable
 
-
 @Embeddable
 @CompileStatic
 class CalificacionIdentity implements Serializable {
