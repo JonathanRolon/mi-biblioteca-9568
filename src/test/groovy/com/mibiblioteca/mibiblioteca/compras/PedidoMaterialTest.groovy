@@ -11,16 +11,12 @@ import com.mibiblioteca.mibiblioteca.tareas.model.Alumno
 import groovy.transform.CompileStatic
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.mock.web.MockMultipartFile
 
-import javax.transaction.Transactional
 import java.sql.Timestamp
 import java.time.LocalDateTime
 
-@Transactional
 @CompileStatic
-@SpringBootTest
 class PedidoMaterialTest {
 
     MockMultipartFile libro

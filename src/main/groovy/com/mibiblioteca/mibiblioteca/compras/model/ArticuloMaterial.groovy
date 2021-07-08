@@ -8,7 +8,6 @@ import javax.persistence.EmbeddedId
 import javax.persistence.Entity
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
-import javax.validation.constraints.NotEmpty
 
 @Entity
 @CompileStatic
@@ -41,10 +40,6 @@ class ArticuloMaterial {
 
     BigDecimal getPrecioVenta(){
         precioVenta
-    }
-
-    void pagar(){
-        this.estado = EstadoArticulo.PAGO
     }
 
     String getIdMaterial() {

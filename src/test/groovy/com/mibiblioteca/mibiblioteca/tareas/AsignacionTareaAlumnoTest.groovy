@@ -6,15 +6,10 @@ import com.mibiblioteca.mibiblioteca.tareas.model.EstadoAsignacionTarea
 import com.mibiblioteca.mibiblioteca.tareas.model.Tarea
 import groovy.transform.CompileStatic
 import org.junit.jupiter.api.Test
-import org.springframework.boot.test.context.SpringBootTest
 
-import javax.transaction.Transactional
 import java.sql.Timestamp
-import java.time.LocalDateTime
 
-@Transactional
 @CompileStatic
-@SpringBootTest
 class AsignacionTareaAlumnoTest {
 
     @Test

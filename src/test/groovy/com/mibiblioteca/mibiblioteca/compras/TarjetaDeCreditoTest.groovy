@@ -4,14 +4,10 @@ import com.mibiblioteca.mibiblioteca.compras.model.EntidadBancaria
 import com.mibiblioteca.mibiblioteca.compras.model.TarjetaDeCredito
 import groovy.transform.CompileStatic
 import org.junit.jupiter.api.Test
-import org.springframework.boot.test.context.SpringBootTest
 
-import javax.transaction.Transactional
 import java.sql.Timestamp
 
-@Transactional
 @CompileStatic
-@SpringBootTest
 class TarjetaDeCreditoTest {
 
     @Test

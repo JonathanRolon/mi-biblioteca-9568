@@ -79,7 +79,7 @@ class CompradorServiceImpl implements CompradorService {
             alumnoRepository.save(alumno)
         } catch (RuntimeException ex) {
             throw new CreditosExcedeCantidadDisponibleException("Ocurrió un error al intentar decrementar " +
-                    "los creditos del alumno")
+                    "los creditos del alumno.")
         }
     }
 

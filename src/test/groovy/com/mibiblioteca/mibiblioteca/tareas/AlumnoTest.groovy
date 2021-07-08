@@ -2,19 +2,13 @@ package com.mibiblioteca.mibiblioteca.tareas
 
 import com.mibiblioteca.mibiblioteca.compras.model.ComprobantePago
 import com.mibiblioteca.mibiblioteca.tareas.model.Alumno
-import com.mibiblioteca.mibiblioteca.tareas.model.Curso
 import com.mibiblioteca.mibiblioteca.tareas.model.NivelAlumno
 import groovy.transform.CompileStatic
 import org.junit.jupiter.api.Test
-import org.springframework.boot.test.context.SpringBootTest
-
-import javax.transaction.Transactional
 import java.sql.Timestamp
 import java.time.LocalDateTime
 
-@Transactional
 @CompileStatic
-@SpringBootTest
 class AlumnoTest {
 
     @Test

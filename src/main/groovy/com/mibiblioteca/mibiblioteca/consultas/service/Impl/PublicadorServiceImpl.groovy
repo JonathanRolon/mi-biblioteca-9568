@@ -66,7 +66,6 @@ class PublicadorServiceImpl implements PublicadorService {
 
     @Override
     Hilo crearHilo(Long dniPreguntador, TemaHilo temaHilo, String consulta) {
-
         def hilo = new Hilo(dniPreguntador, consulta, temaHilo)
         hiloRepository.save(hilo)
     }
