@@ -1,4 +1,4 @@
-package com.mibiblioteca.mibiblioteca.compras
+package com.mibiblioteca.mibiblioteca.compras.integration
 
 import com.mibiblioteca.mibiblioteca.compras.model.CuentaBancaria
 import com.mibiblioteca.mibiblioteca.compras.model.EntidadBancaria

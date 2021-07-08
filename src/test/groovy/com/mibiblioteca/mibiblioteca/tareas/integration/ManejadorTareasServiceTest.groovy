@@ -1,4 +1,4 @@
-package com.mibiblioteca.mibiblioteca.tareas
+package com.mibiblioteca.mibiblioteca.tareas.integration
 
 import com.mibiblioteca.mibiblioteca.tareas.model.Alumno
 import com.mibiblioteca.mibiblioteca.tareas.model.Curso
