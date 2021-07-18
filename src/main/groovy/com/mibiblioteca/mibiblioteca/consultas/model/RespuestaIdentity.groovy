@@ -4,6 +4,8 @@ import com.sun.istack.NotNull
 import groovy.transform.CompileStatic
 
 import javax.persistence.Embeddable
+import java.sql.Timestamp
+import java.time.LocalDateTime
 
 @Embeddable
 @CompileStatic
@@ -15,13 +17,17 @@ class RespuestaIdentity implements Serializable{
     @NotNull
     Long nroHilo
 
-    RespuestaIdentity() {
+    @NotNull
+    Timestamp fechaCreacion
 
+    RespuestaIdentity() {
+        this.fechaCreacion = Timestamp.valueOf(LocalDateTime.now())
     }
 
     RespuestaIdentity(Long dniPublicador, Long nroHilo) {
         this.nroHilo = nroHilo
         this.publicador = dniPublicador
+        this.fechaCreacion = Timestamp.valueOf(LocalDateTime.now())
     }
 
     @Override

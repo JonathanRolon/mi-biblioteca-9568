@@ -1,0 +1,45 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+<!-- Modal -->
+<div class="modal fade" id="_idHiloAddModal" th:fragment="add"  tabindex="-1" role="dialog" aria-labelledby="_idAddModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="_idAddModalLabel">Datos de la consulta</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="#" th:action="@{/hilos/add}" th:object="${hilo}" method="post">
+                    <div class="form-group">
+                        <label for="_idTema" class="col-form-label"></label>
+                        <select id="_idTema" th:field="*{tema}" class="form-select" aria-label="Default select example">
+                            <option value="" selected>Seleccionar tema</option>
+                            <option value="CS_LENGUAJE">Ciencias del Lenguaje</option>
+                            <option value="CS_BIOLOGICAS">Ciencias biologicas</option>
+                            <option value="CS_SOCIALES">Ciencias sociales</option>
+                            <option value="CS_FORMALES">Ciencias formales</option>
+                            <option value="CS_FACTICAS">Ciencias facticas</option>
+                            <option value="TECNOLOGIA">Tecnologia</option>
+                            <option value="ARTE">Arte</option>
+                            <option value="OTRO">Otro</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-group">
+                            <label for="_idConsulta" class="col-form-label"> Consulta?</label>
+                            <textarea id="_idConsulta" th:field="*{consulta}" class="form-control rounded-0"  rows="3"></textarea>
+                        </div>
+                    </div>
+                    <button type="submit" value="Submit" class="btn btn-primary">Crear</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

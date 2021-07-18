@@ -32,9 +32,6 @@ class Alumno {
                           CONS_TOPE_CALIF_FORO_NOVATO = 10,
                           CONS_TOPE_CALIF_FORO_MEDIO = 20,
                           CONS_TOPE_CALIF_FORO_PRO = 30,
-                          CONS_COMPRA_CRED_NOVATO = 50,
-                          CONS_COMPRA_CRED_MEDIO = 100,
-                          CONS_COMPRA_CRED_PRO = 200,
                           CONS_COMPRAS_NOVATO_SUBIR_NIVEL = 3,
                           CONS_COMPRAS_MEDIO_SUBIR_NIVEL = 5
 
@@ -111,7 +108,7 @@ class Alumno {
         messageSource.setBasenames("lang/messages_ES")
     }*/
 
-    private Alumno sumarCreditos(Integer creditos) {
+    Alumno sumarCreditos(Integer creditos) {
         setCreditos(getCreditos() + creditos)
         this
     }
@@ -124,21 +121,6 @@ class Alumno {
     private Alumno reiniciarCalifPositivasNivel() {
         calificPositivasCredEnForo = 0
         this
-    }
-
-    private void validarCreditosCompra() {
-
-        switch (nivel) {
-            case NivelAlumno.NOVATO:
-                sumarCreditos(CONS_COMPRA_CRED_NOVATO)
-                break
-            case NivelAlumno.MEDIO:
-                sumarCreditos(CONS_COMPRA_CRED_MEDIO)
-                break
-            default: //PRO
-                sumarCreditos(CONS_COMPRA_CRED_PRO)
-        }
-
     }
 
     private void validarNivelCompra() {
@@ -191,27 +173,6 @@ class Alumno {
         getRegular() == Regularidad.REGULAR
     }
 
-    Alumno subirNivel() {
-        def nuevoNivel = getNivel()
-
-        switch (getNivel()) {
-            case NivelAlumno.NOVATO:
-                nuevoNivel = NivelAlumno.MEDIO
-                break
-            case NivelAlumno.MEDIO:
-                nuevoNivel = NivelAlumno.PRO
-                break
-            default:
-                //nivel pro no sube de nivel
-                break
-        }
-
-        setNivel(nuevoNivel)
-
-        this
-
-    }
-
     Alumno incrementarCalifPositivas() {
         calificPositivasCredEnForo += 1
         calificTotalesNivelEnForo += 1
@@ -238,7 +199,7 @@ class Alumno {
         if (existe)
             throw new PagoDobleException("Se realizó un pago doble de un material ya adquirido.")
         comprobantesPago.push(comprobantePago)
-        validarCreditosCompra()
+        nivel.sumarCreditos(this)
         validarNivelCompra()
     }
 
@@ -255,5 +216,9 @@ class Alumno {
             it -> it.getIdMaterial() === idMaterial
         }
         encontrado !== null
+    }
+
+    void subirNivel() {
+        nivel.subirNivel(this)
     }
 }

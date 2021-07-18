@@ -47,8 +47,8 @@ class Docente {
     }
 
     void asignarCurso(Curso curso){
-        def existe = cursos.find{it -> it.getDenominacion() === curso.getDenominacion()}
-        if(existe)
+        def cursoYaAsignado = cursos.find{esteCurso -> esteCurso.getDenominacion() === curso.getDenominacion()}
+        if(cursoYaAsignado)
            throw new CursoExistenteNoAsignableException("El curso ya se asigno al docente.")
         cursos.push(curso)
     }

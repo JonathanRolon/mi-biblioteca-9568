@@ -177,6 +177,7 @@ class CompradorServiceTest {
             alumno = alumnoService.create(generarDNIAleatorio(), "nombre", "apellido", fecNac, curso.getDenominacion())
         }
         alumno.subirNivel()
+        alumno
     }
 
     private TarjetaDeCredito getTarjetaValida(Alumno alumno, CuentaBancaria cuentaAlumno) {

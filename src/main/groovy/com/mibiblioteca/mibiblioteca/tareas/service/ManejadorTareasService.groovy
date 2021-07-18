@@ -10,7 +10,6 @@ import groovy.transform.CompileStatic
 @CompileStatic
 interface ManejadorTareasService {
 
-
     void asignar(Tarea tarea, Curso curso, Docente docente)
 
     List<AsignacionTareaAlumno> getAsignacionesTareas(Curso curso, Alumno alumno)

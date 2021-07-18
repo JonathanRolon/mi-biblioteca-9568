@@ -42,11 +42,9 @@ class DocenteServiceImpl implements DocenteService {
         Optional<Docente> doc = docenteRepository.findById(dni)
         Docente docente = doc ? doc.get() : new Docente(dni, nombre, apellido, fecNac)
         cursos.each { it ->
-            try {
+
                 docente.asignarCurso(it)
-            } catch (RuntimeException ex) {
-                throw ex
-            }
+
         }
         docenteRepository.save(docente)
     }

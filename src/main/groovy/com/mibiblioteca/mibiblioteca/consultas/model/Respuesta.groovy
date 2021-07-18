@@ -10,6 +10,8 @@ import javax.persistence.Entity
 import javax.persistence.OneToMany
 import javax.persistence.Table
 import javax.validation.constraints.NotEmpty
+import java.sql.Timestamp
+import java.time.LocalDateTime
 
 @CompileStatic
 @Entity
@@ -23,6 +25,9 @@ class Respuesta implements Serializable {
     @NotEmpty
     String contenido
 
+    @Column(nullable = false)
+    private Timestamp fechaPublicacion
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Calificacion> calificaciones
 
@@ -31,6 +36,7 @@ class Respuesta implements Serializable {
         respuestaIdentity = new RespuestaIdentity()
         respuestaIdentity.setPublicador(dniPublicador)
         respuestaIdentity.setNroHilo(idHilo)
+        fechaPublicacion = Timestamp.valueOf(LocalDateTime.now())
         calificaciones = new ArrayList<Calificacion>()
     }
 
@@ -51,6 +57,14 @@ class Respuesta implements Serializable {
     Long getPublicador(){
         return respuestaIdentity.getPublicador()
     }
+
+    Timestamp getFechaPublicacion(){
+        return fechaPublicacion
+    }
+
+   Boolean esPublicador(Long dni){
+       respuestaIdentity.getPublicador() === dni
+   }
 
     Boolean esCalificador(){
 

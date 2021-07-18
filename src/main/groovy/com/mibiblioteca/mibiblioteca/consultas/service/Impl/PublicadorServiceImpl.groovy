@@ -4,7 +4,6 @@ import com.mibiblioteca.mibiblioteca.consultas.service.exception.ErrorAlCalifica
 import com.mibiblioteca.mibiblioteca.tareas.model.Alumno
 import com.mibiblioteca.mibiblioteca.consultas.model.Calificacion
 import com.mibiblioteca.mibiblioteca.consultas.model.Hilo
-import com.mibiblioteca.mibiblioteca.tareas.model.NivelAlumno
 import com.mibiblioteca.mibiblioteca.consultas.model.Respuesta
 import com.mibiblioteca.mibiblioteca.consultas.model.TemaHilo
 import com.mibiblioteca.mibiblioteca.tareas.repository.AlumnoRepository
@@ -41,14 +40,14 @@ class PublicadorServiceImpl implements PublicadorService {
         if (!hilo ||
                 (!calificado.esRegular() || !calificador.esRegular()) ||
                 (calificacion < MIN_CALIF_RESP || calificacion > MAX_CALIF_RESP) ||
-                (calificador.getNivel() === NivelAlumno.NOVATO) ||
-                (respuesta.getPublicador() === calificador.getDNI()))
+                (calificador.esNovato()) ||
+                (respuesta.esPublicador(calificador.getDNI())))
             throw new ErrorAlCalificarRespuestaException("Error: al intentar calificar la respuesta")
 
-            if (calificacion > UMBRAL_CALIF_POS) {
-                calificado.incrementarCalifPositivas()
-                alumnoRepository.save(calificado)
-            }
+        if (calificacion > UMBRAL_CALIF_POS) {
+            calificado.incrementarCalifPositivas()
+            alumnoRepository.save(calificado)
+        }
 
         respuesta.agregarCalificacion(calif)
         hilo.actualizarRespuesta(respuesta)
@@ -70,4 +69,19 @@ class PublicadorServiceImpl implements PublicadorService {
         hiloRepository.save(hilo)
     }
 
+    @Override
+    List<Hilo> obtenerHilosDe(Alumno alumno) {
+        def hilos = hiloRepository.findAll()
+        hilos.findAll {hilo -> hilo.getDniPublicador() === alumno}
+    }
+
+    @Override
+    List<Hilo> getForo(){
+        hiloRepository.findAll()
+    }
+
+    @Override
+    Hilo getHilo(Long idHilo) {
+        hiloRepository.findById(idHilo)?.get()
+    }
 }

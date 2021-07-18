@@ -1,0 +1,19 @@
+.btn-label {
+    position: relative;
+    left: -12px;
+    display: inline-block;
+    padding: 6px 12px;
+    background: rgba(0,0,0,0.15);
+    border-radius: 3px 0 0 3px;
+}
+
+.btn { margin-bottom:10px; }
+
+/* Hilo */
+.card-custom {
+    margin: 30px !important;
+}
+
+.cards-list-resp {
+    float:right
+}

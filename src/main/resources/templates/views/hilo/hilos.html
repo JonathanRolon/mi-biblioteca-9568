@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="layouts/header :: headerHead"></head>
+<body>
+<script type="text/javascript" src="../js/hilo.js">
+</script>
+<style src="../css/styles.css">
+</style>
+<div th:replace="layouts/header :: headerBody"/>
+<span>
+    <h3>Foro de consultas</h3>
+</span>
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Estado</th>
+            <th>Consulta</th>
+            <th>Sección</th>
+            <th>Fecha apertura</th>
+            <th>Creado por</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${hilos.empty}">
+            <td colspan="2">El foro esta vacio.</td>
+        </tr>
+        <tr th:each="hilo : ${hilos}">
+            <th><span th:text="${hilo.estadoHilo}"></span></th>
+            <td><span th:text="${hilo.consulta}"></span></td>
+            <td><span th:text="${hilo.tema}"></span></td>
+            <td><span th:text="${hilo.fechaCreacion}"></span></td>
+            <td><span th:text="${hilo.dniPublicador}"></span></td>
+            <td>
+                <a id="_idSeeHiloDetails" th:href="@{'/hilos/' + ${hilo.id}}" type="button" class="button btn btn-labeled btn-info"><i class="fa fa-eye"></i></a>
+            </td>
+           <!-- <td>
+                <a id="_idSeeTrainerDetails" th:href="@{'/hilos/' + ${hilo.id}}" type="button" class="button btn btn-labeled btn-info"><i class="fa fa-eye"></i></a>
+                <a id="_idDeleteTrainer" th:href="@{/trainers/delete/{id}(id=${trainer.id})}" type="button" data-toggle="modal" data-target="#confirm-delete" class="button btn btn-labeled btn-dark"><i class="fa fa-trash"></i></a>
+            </td>-->
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div id="_idAddHiloFragment" th:replace="views/hilo/add :: add"/>
+<!--<div id="_idDeleteTrainerFragment" th:replace="views/Trainer/delete :: delete"/>-->
+<!-- Footer -->
+<footer class="footer page-footer font-small special-color-dark pt-4" th:fragment="footer">
+    <!-- Footer Elements -->
+    <div class="container">
+        <!--Grid row-->
+        <div class="row" style="float:right" >
+            <!--Grid column-->
+            <div class="col-md-6 mb-4">
+                <button id="_idButtonOpenAddHilo" style="width:180px" data-whatever="@mdo" type="button" class="btn btn-primary"
+                        data-toggle="modal" data-target="#_idHiloAddModal">
+                    <span><i class="fa fa-plus"></i></span>
+                    Nueva consulta
+                </button>
+            </div>
+            <!--Grid column-->
+        </div>
+        <!--Grid row-->
+    </div>
+    <!-- Footer Elements -->
+
+    <!-- Copyright -->
+    <!--<div class="footer-copyright text-center py-3">© 2020 Copyright:
+        <a href="https://mdbootstrap.com/">MDBootstrap.com</a>
+    </div>-->
+    <!-- Copyright -->
+</footer>
+<!-- Footer -->
+</body>
+</html>

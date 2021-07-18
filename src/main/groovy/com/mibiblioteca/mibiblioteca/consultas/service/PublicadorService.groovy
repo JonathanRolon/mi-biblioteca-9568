@@ -16,4 +16,9 @@ interface PublicadorService {
 
     Hilo crearHilo(Long dniPreguntador, TemaHilo temaHilo, String consulta)
 
+    List<Hilo> obtenerHilosDe(Alumno alumno)
+
+    List<Hilo> getForo()
+
+    Hilo getHilo(Long idHilo)
 }

@@ -13,6 +13,8 @@ import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.OneToMany
+import java.sql.Timestamp
+import java.time.LocalDateTime
 
 enum EstadoHilo {
     ABIERTO, SUSPENDIDO, CERRADO
@@ -37,6 +39,9 @@ class Hilo {
     @Enumerated(EnumType.STRING)
     EstadoHilo estadoHilo
 
+    @Column(nullable = false)
+    private Timestamp fechaCreacion
+
     @Column(nullable = true)
     String motivoCierre
 
@@ -54,6 +59,7 @@ class Hilo {
         this.tema = tema
         this.estadoHilo = EstadoHilo.ABIERTO
         this.dniPublicador = dniPublicador
+        this.fechaCreacion = Timestamp.valueOf(LocalDateTime.now())
         this.respuestas = new ArrayList<Respuesta>()
     }
 
@@ -63,11 +69,16 @@ class Hilo {
         this.estadoHilo == EstadoHilo.CERRADO
     }
 
+    Timestamp getFechaCreacion(){
+        fechaCreacion
+    }
+
     void agregarRespuesta(Respuesta respuesta) {
         if (estaCerrado()) return //excepcion
         respuestas.push(respuesta)
         this
     }
+
 
     void actualizarRespuesta(Respuesta respuesta) {
         def indexResp = respuestas.findIndexOf { it ->
@@ -78,8 +89,13 @@ class Hilo {
     }
 
     Respuesta getRespuesta(RespuestaIdentity respuestaIdentity) {
-        respuestas.find(it -> it.getIdentity().getNroHilo() == respuestaIdentity.getNroHilo() &&
+        respuestas.find(it ->
+                it.getIdentity().getNroHilo() == respuestaIdentity.getNroHilo() &&
                 it.getIdentity().getPublicador() == respuestaIdentity.getPublicador())
+    }
+
+    List<Respuesta> getRespuestas() {
+        respuestas
     }
 
     void cerrar(String motivoCierre) {
