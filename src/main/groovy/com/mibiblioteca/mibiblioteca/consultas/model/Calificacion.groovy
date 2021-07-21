@@ -41,8 +41,8 @@ class Calificacion{
         this.calificacionIdentity.getIdCalif()
     }
 
-    Boolean esCalificador(Alumno alumno){
-        alumno.getDNI() === calificacionIdentity.getIdCalif()
+    Boolean esCalificador(Long dni){
+        dni == calificacionIdentity.getIdCalif()
     }
 
 }

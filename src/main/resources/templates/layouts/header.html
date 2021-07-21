@@ -14,37 +14,57 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
             integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
             crossorigin="anonymous"></script>
+    <script>
+        $(".nav .nav-link").on("click", function(){
+        $(".nav").find(".active").removeClass("active");
+        $(this).addClass("active");});
+
+    </script>
 </head>
 <body>
 <div class="pos-f-t" th:fragment="headerBody">
-    <div class="collapse" id="navbarToggleExternalContent">
-        <div class="bg-dark p-4">
-            <h5 class="text-white h4">Mi biblioteca 1.0.0</h5>
-            &lt;!&ndash;<span class="text-muted"></span>&ndash;&gt;
-        </div>
-    </div>
-    <nav class="navbar navbar-dark bg-dark">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
-                aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarText">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" th:href="@{biblioteca}">Mi biblioteca</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{tareas}">Mis tareas</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{hilos}">Foro de consultas<span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{tienda}">Tienda</a>
-                </li>
-            </ul>
+    <nav class="navbar navbar-expand-lg bg-secondary navbar-dark rounded">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="http://localhost:8080/biblioteca">Mi biblioteca</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="http://localhost:8080/tareas">Mis tareas</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="http://localhost:8080/hilos">Foro de consultas<span
+                        class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="http://localhost:8080/tienda">Tienda</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            <li th:object="${alumno}" th:if="${tipoUsuario == 'ALUMNO'}"
+                style="margin-left:10px;margin-right:10px;">
+                <h5 style="margin-top:10px;color:#d0aa64">
+                    Nivel:
+                    <span th:text="${alumno.getNivel()}"></span>
+                </h5>
+            </li>
+            <li th:object="${tipoUsuario}" th:if="${tipoUsuario == 'ALUMNO'}"
+                style="margin-left:10px;margin-right:10px;">
+                <!--<h5 th:text="Mis créditos: + ${alumno.getCreditos()}" style="margin-top:10px;color:goldenrod"> </h5>-->
+                <h5 style="margin-top:10px;color:goldenrod">
+                    Mis créditos:
+                    <span th:text="${alumno.getCreditos()}"></span>
+                </h5>
+            </li>
+            <li style="margin-left:10px;margin-right:10px;">
+                <a href="/buy" type="button" class="button btn btn-labeled btn-info"><i class="fa fa-shopping-cart"></i></a>
+            </li>
+            <li style="margin-left:10px;margin-right:10px;">
+                <a href="/login" type="button" class="button btn btn-circle btn-labeled btn-info">
+                    <i class="fa fa-user-circle"></i>
+                </a>
+            </li>
 
-        </div>
+        </ul>
     </nav>
 </div>
 </body>

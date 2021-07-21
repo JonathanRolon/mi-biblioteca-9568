@@ -1,68 +1,81 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head th:replace="layouts/header :: headerHead"></head>
-<body th:object="${hilo}" style="background-image: url('https://i2.wp.com/images.freecreatives.com/wp-content/uploads/2016/02/Free-Cool-Light-Blue-Background.jpg');">
+<body th:object="${hilo}"
+      style="background-image: url('https://i2.wp.com/images.freecreatives.com/wp-content/uploads/2016/02/Free-Cool-Light-Blue-Background.jpg');">
 <script type="text/javascript" src="../js/hilo.js">
 </script>
-<style src="../css/styles.css"></style>
+<div th:replace="layouts/header :: headerBody"></div>
+<link rel="stylesheet" href="../../../static/css/styles.css">
 <div style="width:100%">
-    <div style="margin:30px;max-width: 30rem;" class="card-custom card text-white bg-dark" >
-        <div th:text="*{dniPublicador}"  class="card-header"></div>
+    <div style="margin:30px;max-width: 30rem;" class="card-custom card text-white bg-info mb-3">
+        <div th:text="*{dniPublicador}" class="card-header"></div>
         <div class="card-body">
             <p th:text="*{getFechaCreacion()}" style="float:right" class="card-text"></p>
-            <h5 th:text="*{tema}"  class="card-title"></h5>
+            <h5 th:text="*{tema}" class="card-title"></h5>
             <p th:text="*{consulta}" class="card-text text-white"></p>
         </div>
     </div>
-    <div style="margin:30px;width:30rem;float:right" class="cards-list-resp">
+    <div style="margin:30px;width:40rem;float:right">
         <ul th:each="resp : *{getRespuestas()}" class="list-group">
             <li style="list-style-type: none;">
-                <div class="card-custom card bg-light mb-3" >
+                <div class="card-custom card bg-light mb-3">
                     <div th:text="${resp.getPublicador()}" class="card-header"></div>
                     <div class="card-body">
                         <p th:text="${resp.getFechaPublicacion()}" style="float:right" class="card-text"></p>
                         <p th:text="${resp.contenido}" class="card-text"></p>
                     </div>
+                    <div class="card-footer bg-transparent border-success">
+                        <div style="display:-webkit-flex;display:-ms-flexbox;display:flex;-webkit-flex-direction:row;-ms-flex-direction:row;flex-direction:row;-webkit-align-content:flex-start;-ms-flex-line-pack:start;align-content:flex-start;" class="flex hbox main-center cross-center wrap">
+                            <div style="margin-right:20px;margin-left:20px">
+                                <i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
+                                <p id="_idCalifPos" th:text="${resp.getCalificPositivas()}"></p>
+                            </div>
+                            <div style="margin-right:20px;margin-left:20px">
+                                <i class="fa fa-thumbs-o-down" aria-hidden="true"></i>
+                                <p id="_idCalifNeg" th:text="${resp.getCalificNegativas()}"></p>
+                            </div>
+                            <!-- Por ahora solo los alumnos medios,pros pueden calificar -->
+                            <div th:if="${usuario != resp.getPublicador() and !resp.esCalificador(usuario) and tipoUsuario == 'ALUMNO' and !alumno.esNovato()}">
+                                <form style="float:right;width:400px"
+                                      th:action="@{/hilos/__${hilo.id}__/calificar/__${resp.getPublicador()}__/__${resp.getFechaPublicacion()}__}"
+                                      th:object="${calificacion}" method="post">
+                                    <select th:field="*{calificacion}">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5" selected>5</option>
+                                        <option value="6">6</option>
+                                        <option value="7">7</option>
+                                        <option value="8">8</option>
+                                        <option value="9">9</option>
+                                        <option value="10">10</option>
+                                    </select>
+                                    <button id="_idButtonCalificarRespuesta" type="submit" value="Submit" class="btn btn-primary">Votar</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </li>
         </ul>
-        <div>
-            <form action="#" style="width:400px" th:action="@{/hilos/__${hilo.id}__/responder}" th:object="${respuesta}" method="post">
+        <div style="padding-left:30px">
+            <form action="#" style="width:400px" th:action="@{/hilos/__${hilo.id}__/responder}" th:object="${respuesta}"
+                  method="post">
                 <div class="form-group">
                     <div class="form-group">
                         <label for="_idRespuesta" class="col-form-label">Respuesta</label>
-                        <textarea id="_idRespuesta" th:field="*{contenido}" class="form-control rounded-0" rows="3">
-                            </textarea>
+                        <textarea id="_idRespuesta" th:field="*{contenido}" class="form-control rounded-0" rows="3"></textarea>
                     </div>
                 </div>
                 <button type="submit" value="Submit" class="btn btn-primary">Responder</button>
-                <button id="_idButtonLimpiarTextArea" type="button" class="btn btn-secondary" onclick="javascript:eraseText();" data-dismiss="modal">Limpiar</button>
+                <button id="_idButtonLimpiarTextArea" type="button" class="btn btn-secondary" data-dismiss="modal">
+                    Limpiar
+                </button>
             </form>
         </div>
     </div>
 </div>
-<!--&lt;!&ndash; Footer &ndash;&gt;
-<footer style="width: 100%;bottom:0;" class="footer page-footer font-small special-color-dark pt-4">
-    &lt;!&ndash; Footer Elements &ndash;&gt;
-    <div class="container">
-        &lt;!&ndash;Grid row&ndash;&gt;
-        <div class="row" style="float:right;">
-            &lt;!&ndash;Grid column&ndash;&gt;
-            <div class="col-md-6 mb-4">
-
-            </div>
-            &lt;!&ndash;Grid column&ndash;&gt;
-        </div>
-        &lt;!&ndash;Grid row&ndash;&gt;
-    </div>
-    &lt;!&ndash; Footer Elements &ndash;&gt;
-
-    &lt;!&ndash; Copyright &ndash;&gt;
-    &lt;!&ndash;<div class="footer-copyright text-center py-3">© 2020 Copyright:
-        <a href="https://mdbootstrap.com/">MDBootstrap.com</a>
-    </div>&ndash;&gt;
-    &lt;!&ndash; Copyright &ndash;&gt;
-</footer>-->
-<!-- Footer -->
 </body>
 </html>

@@ -1,6 +1,6 @@
 package com.mibiblioteca.mibiblioteca.consultas.model
 
-
+import com.mibiblioteca.mibiblioteca.tareas.model.Alumno
 import groovy.transform.CompileStatic
 
 import javax.persistence.CascadeType
@@ -25,9 +25,6 @@ class Respuesta implements Serializable {
     @NotEmpty
     String contenido
 
-    @Column(nullable = false)
-    private Timestamp fechaPublicacion
-
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Calificacion> calificaciones
 
@@ -36,7 +33,6 @@ class Respuesta implements Serializable {
         respuestaIdentity = new RespuestaIdentity()
         respuestaIdentity.setPublicador(dniPublicador)
         respuestaIdentity.setNroHilo(idHilo)
-        fechaPublicacion = Timestamp.valueOf(LocalDateTime.now())
         calificaciones = new ArrayList<Calificacion>()
     }
 
@@ -59,15 +55,37 @@ class Respuesta implements Serializable {
     }
 
     Timestamp getFechaPublicacion(){
-        return fechaPublicacion
+        return respuestaIdentity.getFechaCreacion()
+    }
+
+    Integer getCalificPositivas(){
+        def calif = calificaciones.inject(0, {cantidad, thisCalific ->
+           cantidad + ((thisCalific.getCalificacion() > 5) ? 1 : 0)
+        })
+        if(!calif){
+            return 0
+        }
+        return calif
+    }
+
+    Integer getCalificNegativas(){
+        def calif = calificaciones.inject(0, {cantidad, thisCalific ->
+            cantidad + ((thisCalific.getCalificacion() < 6) ? 1 : 0)
+        })
+        if(!calif){
+            return 0
+        }
+        return calif
     }
 
    Boolean esPublicador(Long dni){
        respuestaIdentity.getPublicador() === dni
    }
 
-    Boolean esCalificador(){
-
+    Boolean esCalificador(Long dni){
+        def calificador = calificaciones.find
+                {estaCalif -> (estaCalif.esCalificador(dni))}
+        calificador !== null
     }
 
 }

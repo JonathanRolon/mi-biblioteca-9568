@@ -24,6 +24,7 @@ window.onload = function(){
 
     let oButtonLimpiarResp = $('#_idButtonLimpiarTextArea');
     oButtonLimpiarResp.click(eraseText);
+
     /* let oButtonEdit = $('#_idButtonOpenEditTrainer'),
         oButtonCancel = $('#_idButtonCancel');
      oButtonEdit.click(activar);

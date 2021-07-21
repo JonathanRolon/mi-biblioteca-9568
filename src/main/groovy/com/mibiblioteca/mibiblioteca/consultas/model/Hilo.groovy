@@ -73,6 +73,15 @@ class Hilo {
         fechaCreacion
     }
 
+    Respuesta getRespuesta(Timestamp fechaCreacion, Long publicador){
+        def resp = respuestas.find{estaRespuesta ->
+            def estePublicador = estaRespuesta.getPublicador(),
+                estaFecha = estaRespuesta.getFechaPublicacion()
+            (estePublicador == publicador && estaFecha.toString() == fechaCreacion.toString())
+        }
+        resp
+    }
+
     void agregarRespuesta(Respuesta respuesta) {
         if (estaCerrado()) return //excepcion
         respuestas.push(respuesta)
