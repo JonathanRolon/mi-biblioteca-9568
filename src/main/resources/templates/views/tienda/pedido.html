@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="layouts/header :: headerHead"></head>
+<body th:object="${pedido}"
+      style="background-image: url('https://papers.co/wallpaper/papers.co-sp14-blur-gradation-space-29-wallpaper.jpg');">
+<div class="page-header"
+     style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDeOHrmimNM9DjdMIWmFFb6gTyLUq9ut2zbkFe6A-C3Aw6o4brp-38F9nNBGcBylWK1zg&usqp=CAU');">
+    <div th:replace="layouts/header :: headerBody"/>
+    <h5> Nro. de orden <span th:text="${pedido.nroPedido}"></span></h5>
+    <h5> Estado pedido <span th:text="${pedido.estadoPedido}"></span></h5>
+    <h5> Creado el: <span th:text="${pedido.fechaCreacion}"></span></h5>
+    <h5> Total: <span th:text="${pedido.getTotal()}"></span></h5>
+</div>
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">Código</th>
+        <th scope="col">Estado</th>
+        <th scope="col">Precio</th>
+        <th scope="col"></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:if="*{articulosSolicitados.empty}">
+        <td colspan="2">El pedido esta vacío.</td>
+    </tr>
+    <tr th:each="articulo : *{articulosSolicitados}">
+        <td th:text="${articulo.getIdMaterial()}"></td>
+        <td th:text="${articulo.estado}"></td>
+        <td th:text="${articulo.getPrecioVenta()}"></td>
+        <td>
+            <form th:action="@{/cancelarArticulo/__${articulo.getIdMaterial()}__}" th:object="${articulo}" method="post">
+                <button id="_idCancelar" type="submit" value="Submit" class="btn btn-danger">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                </button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<!-- Footer -->
+<footer class="footer page-footer font-small special-color-dark pt-4" th:fragment="footer">
+    <!-- Footer Elements -->
+    <div class="container">
+        <!--Grid row-->
+        <div class="row" style="float:right">
+            <!--Grid column-->
+            <div class="col-md-6 mb-4">
+                <form th:action="@{/cancelarPedido}" method="post">
+                    <button id="_idButtonCancelarPedido" style="width:180px" data-whatever="@mdo" type="submit"
+                            value="Submit" class="btn btn-danger">
+                        <span><i class="fa fa-times"></i></span>
+                        Cancelar pedido
+                    </button>
+                </form>
+            </div>
+            <div class="col-md-6 mb-4">
+                <button id="_idButtonComprar" style="width:180px" data-whatever="@mdo" type="button"
+                        class="btn btn-primary">
+                    <span><i class="fa fa-money-bill"></i></span>
+                    Comprar
+                </button>
+            </div>
+            <!--Grid column-->
+        </div>
+        <!--Grid row-->
+    </div>
+    <!-- Footer Elements -->
+</footer>
+</body>
+</html>

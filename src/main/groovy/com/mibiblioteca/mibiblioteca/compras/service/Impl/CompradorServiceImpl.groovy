@@ -5,7 +5,7 @@ import com.mibiblioteca.mibiblioteca.compras.model.ComprobantePago
 import com.mibiblioteca.mibiblioteca.compras.model.EstadoPedido
 import com.mibiblioteca.mibiblioteca.compras.model.exception.ComprobantePagoNoAdjuntoException
 import com.mibiblioteca.mibiblioteca.compras.repository.CuentaBancariaRepository
-import com.mibiblioteca.mibiblioteca.compras.repository.TarjetaRepository
+
 import com.mibiblioteca.mibiblioteca.compras.service.CBUColegioService
 import com.mibiblioteca.mibiblioteca.compras.service.exception.MetodosPagoNoValidos
 import com.mibiblioteca.mibiblioteca.compras.service.exception.NoExistePagadorException
@@ -22,12 +22,14 @@ import com.mibiblioteca.mibiblioteca.compras.service.CompradorService
 import groovy.transform.CompileStatic
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 import java.sql.Timestamp
 import java.time.LocalDateTime
 
 @Service
 @CompileStatic
+@Transactional
 class CompradorServiceImpl implements CompradorService {
 
     private final BigDecimal DTO_400_CREDITOS = 0.3
@@ -40,22 +42,10 @@ class CompradorServiceImpl implements CompradorService {
     private PedidoMaterialRepository pedidoMaterialRepository
 
     @Autowired
-    private TarjetaRepository tarjetaRepository
-
-    @Autowired
     private CuentaBancariaRepository cuentaBancariaRepository
 
     @Autowired
     private CBUColegioService cbuColegioService
-
-    //constructor para test
-    CompradorServiceImpl(AlumnoRepository a, PedidoMaterialRepository p, TarjetaRepository t, CuentaBancariaRepository c) {
-        alumnoRepository = a
-        pedidoMaterialRepository = p
-        tarjetaRepository = t
-        cuentaBancariaRepository = c
-        cbuColegioService = new CBUColegioServiceImpl()
-    }
 
     private void adjuntarComprobantesAlumno(Alumno cliente, List<ArticuloMaterial> articulosSolicitados, Timestamp fechaCierre) {
 
@@ -65,7 +55,6 @@ class CompradorServiceImpl implements CompradorService {
                 try {
                     def comprobante = new ComprobantePago(it.getPrecioVenta(), fechaCierre, it.getIdMaterial())
                     cliente.desbloquearMaterial(comprobante)
-                    alumnoRepository.save(cliente)
                 } catch (RuntimeException ex) {
                     throw new ComprobantePagoNoAdjuntoException("Ocurrio un error al intentar adjuntar el comprobante.")
                 }
@@ -76,7 +65,6 @@ class CompradorServiceImpl implements CompradorService {
         try {
             if (creditos === 0) return
             alumno.restarCreditos(LIMITE_CRED_DTO)
-            alumnoRepository.save(alumno)
         } catch (RuntimeException ex) {
             throw new CreditosExcedeCantidadDisponibleException("Ocurrió un error al intentar decrementar " +
                     "los creditos del alumno.")
@@ -98,8 +86,8 @@ class CompradorServiceImpl implements CompradorService {
         }
     }
 
-    private void validarTarjeta(TarjetaDeCredito tarjeta, Long DNICliente, BigDecimal monto) {
-        def esTarjetaValida = tarjeta.validar(DNICliente, monto)
+    private void validarTarjeta(TarjetaDeCredito tarjeta, BigDecimal monto) {
+        def esTarjetaValida = tarjeta.validar(monto)
         if (!esTarjetaValida)
             throw new MetodosPagoNoValidos("Tarjeta de credito no valida.")
     }
@@ -116,7 +104,6 @@ class CompradorServiceImpl implements CompradorService {
     private void restarSaldoTarjeta(TarjetaDeCredito tarjetaDeCredito, BigDecimal monto) {
         try {
             tarjetaDeCredito.impactarPago(monto)
-            tarjetaRepository.save(tarjetaDeCredito)
         } catch (RuntimeException ex) {
             throw new TarjetaErrorDescontarSaldoException("Error: Ocurrio un error al intentar descontar la tarjeta")
         }
@@ -132,7 +119,7 @@ class CompradorServiceImpl implements CompradorService {
         def valorPedido = creditosValidos ? pedido.getTotal() * DTO_400_CREDITOS : pedido.getTotal()
 
         validarCliente(cliente)
-        validarTarjeta(tarjeta, cliente.getDNI(), montoTarjeta)
+        validarTarjeta(tarjeta, montoTarjeta)
         restarCreditosCliente(cliente, creditos)
         restarSaldoTarjeta(tarjeta, valorPedido)
         acreditarCuentas(tarjeta.getCBUCuenta(), valorPedido)
@@ -140,6 +127,18 @@ class CompradorServiceImpl implements CompradorService {
         cerrar(pedido)
         pedido
 
+    }
+
+    @Override
+    PedidoMaterial getPedido(Alumno alumno) {
+
+        def pedido = pedidoMaterialRepository.findAll().find {estePedido ->
+            estePedido.cliente == alumno.getDNI() && estePedido.estadoPedido == EstadoPedido.PENDIENTE
+        }
+        // si no hay pedido pendiente o no existe, lo crea
+        if(!pedido) return crearPedido(alumno)
+
+        return pedido
     }
 
     @Override
@@ -168,20 +167,6 @@ class CompradorServiceImpl implements CompradorService {
         if (!cliente)
             throw new NoExistePagadorException("El cliente vinculado al DNI no existe.")
         pedido.agregar(material, cliente)
-        pedidoMaterialRepository.save(pedido)
-    }
-
-    @Override
-    List<TarjetaDeCredito> obtenerTarjetaDeCredito(Alumno alumno) {
-
-        def tarjetas = tarjetaRepository.findAll()
-        tarjetas.findAll { it -> it.getCliente() === alumno.getDNI() }
-
-    }
-
-    @Override
-    void registrarTarjetaDeCredito(TarjetaDeCredito tarjetaDeCredito) {
-        tarjetaRepository.save(tarjetaDeCredito)
     }
 
     @Override
@@ -192,8 +177,6 @@ class CompradorServiceImpl implements CompradorService {
     @Override
     void cancelarPedido(PedidoMaterial pedido) {
         pedido.cancelar()
-        pedidoMaterialRepository.save(pedido)
     }
-
 
 }

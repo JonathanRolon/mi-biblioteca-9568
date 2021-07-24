@@ -16,8 +16,11 @@ import groovy.transform.CompileStatic
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
+import javax.transaction.Transactional
+
 @Service
 @CompileStatic
+@Transactional
 class ManejadorTareasServiceImpl implements ManejadorTareasService {
 
     @Autowired
@@ -27,11 +30,6 @@ class ManejadorTareasServiceImpl implements ManejadorTareasService {
     @Autowired
     private TareaAlumnoRepository tareaAlumnoRepository
 
-    ManejadorTareasServiceImpl(AlumnoRepository a, DocenteRepository doc, TareaAlumnoRepository tar) {
-        this.alumnoRepository = a
-        this.docenteRepository = doc
-        this.tareaAlumnoRepository = tar
-    }
 
     private void asignarTareaAlCurso(Docente docente, Tarea tarea, Curso curso) {
         try {
@@ -74,20 +72,16 @@ class ManejadorTareasServiceImpl implements ManejadorTareasService {
                 it.getAlumno() === alumno.getDNI()
             }
 
-        tareasAlumno = tareasAlumno.findAll { tarea ->
+        tareasAlumno.findAll { tarea ->
             tareasCurso.findAll { it -> it.getNroTarea() === tarea.getNroTarea() }
         }
-
-        tareasAlumno
     }
 
     @Override
     AsignacionTareaAlumno getAsignacionTarea(Long nroTarea) {
-        def tareaAlumno = tareaAlumnoRepository.findAll().find { it ->
+        tareaAlumnoRepository.findAll().find { it ->
             it.getNroTarea() === nroTarea
         }
-
-        tareaAlumno
     }
 
     @Override
@@ -99,19 +93,16 @@ class ManejadorTareasServiceImpl implements ManejadorTareasService {
         if (!asignacion)
             throw new TareaNoResolubleException("Error: La tarea no se se encuentra " +
                     "asignada al alumno")
-        asignacion = asignacion.resolverTarea(respuesta)
-        tareaAlumnoRepository.save(asignacion)
+        asignacion.resolverTarea(respuesta)
     }
 
     @Override
     AsignacionTareaAlumno cerrarTarea(AsignacionTareaAlumno asignacionTareaAlumno) {
-        asignacionTareaAlumno = asignacionTareaAlumno.cerrar()
-        tareaAlumnoRepository.save(asignacionTareaAlumno)
+        asignacionTareaAlumno.cerrar()
     }
 
     @Override
     AsignacionTareaAlumno calificar(AsignacionTareaAlumno tarea, Integer calificacion){
         tarea.calificar(calificacion)
-        tareaAlumnoRepository.save(tarea)
     }
 }

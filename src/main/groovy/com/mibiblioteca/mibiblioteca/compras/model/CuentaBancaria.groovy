@@ -13,8 +13,7 @@ import javax.validation.constraints.NotEmpty
 enum TipoCuenta{
     CA, CC, CRED
 }
-/*** La idea de esta clase es servir a las historias de usuario #2 y #3,
- * no pretende representar la realidad. ***/
+/*** La idea de esta clase es servir a las historias de usuario #2 y #3. ***/
 
 @Entity
 @CompileStatic

@@ -38,6 +38,8 @@ class ArticuloMaterial {
         this.precioVenta = precioVenta
     }
 
+    ArticuloMaterial(){}
+
     BigDecimal getPrecioVenta(){
         precioVenta
     }

@@ -12,16 +12,6 @@ import org.junit.jupiter.api.Test
 @CompileStatic
 class CuentaBancariaTest {
 
-    @BeforeEach
-    private void setup(){
-
-    }
-
-    @AfterEach
-    private void teardown(){
-
-    }
-
     @Test
     void intentoCargarSaldoNegativoArrojaError(){
         def error = false

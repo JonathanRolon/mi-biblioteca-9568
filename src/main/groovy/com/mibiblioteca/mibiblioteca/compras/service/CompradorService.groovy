@@ -15,13 +15,9 @@ interface CompradorService {
 
     void agregarArticulo(PedidoMaterial pedido, Material material)
 
-    List<TarjetaDeCredito> obtenerTarjetaDeCredito(Alumno alumno)
-
-    void registrarTarjetaDeCredito(TarjetaDeCredito tarjetaDeCredito)
-
     void eliminarArticulo(PedidoMaterial pedido, Material material)
 
     void cancelarPedido(PedidoMaterial pedido)
 
-
+    PedidoMaterial getPedido(Alumno alumno)
 }

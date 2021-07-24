@@ -2,6 +2,8 @@ package com.mibiblioteca.mibiblioteca.tareas.model
 
 
 import com.mibiblioteca.mibiblioteca.compras.model.ComprobantePago
+import com.mibiblioteca.mibiblioteca.compras.model.Material
+import com.mibiblioteca.mibiblioteca.compras.model.TarjetaDeCredito
 import com.mibiblioteca.mibiblioteca.compras.model.exception.PagoDobleException
 import com.mibiblioteca.mibiblioteca.tareas.model.exception.CreditosExcedeCantidadDisponibleException
 import groovy.transform.CompileStatic
@@ -11,6 +13,7 @@ import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
+import javax.persistence.FetchType
 import javax.persistence.Id
 import javax.persistence.OneToMany
 import javax.validation.constraints.NotEmpty
@@ -77,14 +80,15 @@ class Alumno {
     @Column(nullable = false)
     NivelAlumno nivel
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     List<ComprobantePago> comprobantesPago
+
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    List<TarjetaDeCredito> tarjetasRegistradas
 
     @Column(nullable = false)
     @NotEmpty(message = "Curso es requerido.")
     String curso
-
-    //private ResourceBundleMessageSource messageSource
 
     Alumno(Long DNI, String nombre, String apellido, Timestamp fechaNacimiento, String curso) {
         this.DNI = DNI
@@ -98,15 +102,11 @@ class Alumno {
         calificPositivasCredEnForo = 0
         calificTotalesNivelEnForo = 0
         comprobantesPago = new ArrayList<ComprobantePago>()
-        //initMessagesBundle()
+        tarjetasRegistradas = new ArrayList<TarjetaDeCredito>()
     }
 
     Alumno() {}
 
-    /*void initMessagesBundle() {
-        messageSource = new ResourceBundleMessageSource()
-        messageSource.setBasenames("lang/messages_ES")
-    }*/
 
     Alumno sumarCreditos(Integer creditos) {
         setCreditos(getCreditos() + creditos)
@@ -211,14 +211,22 @@ class Alumno {
         return comprobantesPago.size()
     }
 
-    Boolean yaCompre(String idMaterial) {
+    Boolean yaCompre(Material material) {
         def encontrado = comprobantesPago.find {
-            it -> it.getIdMaterial() === idMaterial
+            it -> it.getIdMaterial() == material.getIdMaterial()
         }
         encontrado !== null
     }
 
     void subirNivel() {
         nivel.subirNivel(this)
+    }
+
+    void registrarTarjeta(TarjetaDeCredito tarjetaDeCredito){
+
+    }
+
+    Boolean validarTarjeta(BigDecimal monto){
+
     }
 }

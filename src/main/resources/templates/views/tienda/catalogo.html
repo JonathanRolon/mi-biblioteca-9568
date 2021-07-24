@@ -1,8 +1,51 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head th:replace="layouts/header :: headerHead"></head>
-<body>
+<body style="background-image: url('https://papers.co/wallpaper/papers.co-sp14-blur-gradation-space-29-wallpaper.jpg');">
     <div th:replace="layouts/header :: headerBody"/>
-    <h3>Catalogo</h3>
+    <h3>Catálogo</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Portada</th>
+                <th scope="col">Titulo</th>
+                <th scope="col">Editorial</th>
+                <th scope="col">Precio</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:if="${catalogo.empty}">
+                <td colspan="2">El catalogo esta vacío.</td>
+            </tr>
+            <tr th:each="material : ${catalogo}">
+                <td>
+                    <img th:src="${material.portada}" style="width:100px;height:150px;" alt="No image">
+                </td>
+                <td th:text="${material.titulo}"></td>
+                <td th:text="${material.editorial}"></td>
+                <td>
+                    <div>
+                        $
+                        <span th:text="${material.precio}"></span>
+                    </div>
+                </td>
+                <td>
+                   <div th:if="${alumno.yaCompre(material)}">
+                       <span>Adquirido</span>
+                   </div>
+                    <div th:unless="${alumno.yaCompre(material)}">
+                        <form th:action="@{/pedirArticulo/__${material.IdMaterial}__}" th:object="${material}" method="post">
+                            <span th:if="${pedido.tieneSolicitado(material)}">Pendiente de pago</span>
+                            <button th:unless="${pedido.tieneSolicitado(material)}"
+                               id="_idBuy" type="submit" value="Submit" class="button btn btn-labeled btn-info">
+                                <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </body>
 </html>

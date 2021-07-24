@@ -31,14 +31,6 @@ import java.util.concurrent.ThreadLocalRandom
 @SpringBootTest
 class ManejadorTareasServiceTest {
 
-    /* repositorios */
-    @Autowired
-    private AlumnoRepository alumnoRepository
-    @Autowired
-    private DocenteRepository docenteRepository
-    @Autowired
-    private TareaAlumnoRepository tareaRepository
-
     /* servicios */
     @Autowired
     private ManejadorTareasService tareasService
@@ -54,18 +46,11 @@ class ManejadorTareasServiceTest {
 
     @BeforeEach
     void setup() {
-        //Se inyecta de esta manera porque el repository arroja null pointer exc.
-        tareasService = new ManejadorTareasServiceImpl(alumnoRepository, docenteRepository, tareaRepository)
-        alumnoService = new AlumnoServiceImpl(alumnoRepository)
-        docenteService = new DocenteServiceImpl(docenteRepository)
         curso = new Curso("A")
     }
 
     @AfterEach
     void teardown() {
-        tareaRepository.deleteAll()
-        docenteRepository.deleteAll()
-        alumnoRepository.deleteAll()
         curso = null
     }
 

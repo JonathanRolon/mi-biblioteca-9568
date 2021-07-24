@@ -1,23 +1,22 @@
 package com.mibiblioteca.mibiblioteca.tareas.service.Impl
 
 import com.mibiblioteca.mibiblioteca.tareas.model.Alumno
-import com.mibiblioteca.mibiblioteca.tareas.model.Curso
 import com.mibiblioteca.mibiblioteca.tareas.repository.AlumnoRepository
 import com.mibiblioteca.mibiblioteca.tareas.service.AlumnoService
+import groovy.transform.CompileStatic
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
+import javax.transaction.Transactional
 import java.sql.Timestamp
 
 @Service
+@Transactional
+@CompileStatic
 class AlumnoServiceImpl implements AlumnoService{
 
     @Autowired
     private final AlumnoRepository alumnoRepository
-
-    AlumnoServiceImpl(AlumnoRepository alumnoRepository){
-        this.alumnoRepository = alumnoRepository
-    }
 
     @Override
     Alumno create(Long dni, String nombre, String apellido, Timestamp fecNac, String curso) {
@@ -30,14 +29,7 @@ class AlumnoServiceImpl implements AlumnoService{
 
     @Override
     Alumno update(Alumno alumno) {
-        Alumno al = this.findById(alumno.getDNI())?.get()
-        al.setCreditos(alumno.getCreditos())
-        al.setCurso(alumno.getCurso())
-        al.setNotaAnual(alumno.getNotaAnual())
-        al.setNotaPrimerSemestre(alumno.getNotaPrimerSemestre())
-        al.setNotaSegundoSemestre(alumno.getNotaSegundoSemestre())
-        al.setRegular(alumno.getRegular())
-        alumnoRepository.save(al)
+        alumnoRepository.save(alumno)
     }
 
     @Override

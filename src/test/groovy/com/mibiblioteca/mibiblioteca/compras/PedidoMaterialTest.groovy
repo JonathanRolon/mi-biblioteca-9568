@@ -118,26 +118,6 @@ class PedidoMaterialTest {
         assert(pedido.getEstadoPedido() === EstadoPedido.CERRADO)
     }
 
-    @Test
-    void cerrarPedidoCanceladoArrojaError() {
-        def materiales = generarMaterial(50)
-        def fec = Timestamp.valueOf(LocalDateTime.now())
-        def cliente = new Alumno(35353535, "Nombre", "Apellido", fec, "A")
-        def pedido = new PedidoMaterial(35353535)
-        def errorAlCerrar = false
-        for (int i = 0; i < 50; i++) {
-            pedido.agregar(materiales.pop(), cliente)
-        }
-        pedido.cancelar()
-
-        try{
-            pedido.cerrar()
-        }catch(RuntimeException ex){
-            errorAlCerrar = true
-        }
-
-        assert(pedido.getEstadoPedido() === EstadoPedido.CANCELADO && errorAlCerrar)
-    }
 
     @Test
     void borrarArticuloDelPedidoDecrementaNroArticulos() {
@@ -157,7 +137,7 @@ class PedidoMaterialTest {
     }
 
     @Test
-    void cancelarPedidoPendienteDejaPedidoCancelado() {
+    void cancelarPedidoPendienteDejaPedidoVacio() {
         def materiales = generarMaterial(50)
         def fec = Timestamp.valueOf(LocalDateTime.now())
         def cliente = new Alumno(35353535, "Nombre", "Apellido", fec, "A")
@@ -167,7 +147,7 @@ class PedidoMaterialTest {
             pedido.agregar(materiales.pop(), cliente)
         }
         pedido.cancelar()
-        assert(pedido.getEstadoPedido() === EstadoPedido.CANCELADO)
+        assert(pedido.getArticulosSolicitados().size() === 0)
     }
 
     @Test

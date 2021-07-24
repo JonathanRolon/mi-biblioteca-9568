@@ -11,6 +11,7 @@ import groovy.transform.CompileStatic
 import javax.persistence.CascadeType
 import javax.persistence.Column
 import javax.persistence.Entity
+import javax.persistence.FetchType
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
@@ -19,7 +20,7 @@ import java.sql.Timestamp
 import java.time.LocalDateTime
 
 enum EstadoPedido {
-    PENDIENTE, CANCELADO, CERRADO
+    PENDIENTE, CERRADO
 }
 
 @Entity
@@ -47,7 +48,7 @@ class PedidoMaterial {
     @Column(nullable = false)
     EstadoPedido estadoPedido
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     List<ArticuloMaterial> articulosSolicitados
 
     PedidoMaterial(Long dniCliente) {
@@ -69,7 +70,7 @@ class PedidoMaterial {
             it.getIdMaterial() === material.getIdMaterial()
         }
 
-        def existeEnAlumno = cliente.yaCompre(material.getIdMaterial())
+        def existeEnAlumno = cliente.yaCompre(material)
 
         if (!existeEnPedido && !existeEnAlumno && articulosSolicitados.size() < MAX_CANT_ARTICULOS) {
             def articuloMaterial = new ArticuloMaterial(material.getIdMaterial(), getNroPedido()
@@ -83,8 +84,6 @@ class PedidoMaterial {
     }
 
     void cerrar(){
-        if(estadoPedido === EstadoPedido.CANCELADO)
-            throw new PedidoNoCerrableException("Error: El pedido no se puede cerrar, esta cancelado.")
         if(estadoPedido === EstadoPedido.CERRADO)
             throw new PedidoNoCerrableException("Error: El pedido ya esta cerrado.")
         fechaCierre = Timestamp.valueOf(LocalDateTime.now())
@@ -103,15 +102,16 @@ class PedidoMaterial {
         total
     }
 
+    Boolean tieneSolicitado(Material material){
+        def encontrado = articulosSolicitados.find {
+            articulo -> articulo.getIdMaterial() == material.getIdMaterial()}
+        encontrado != null
+    }
+
     void cancelar() {
-        if(estadoPedido === EstadoPedido.CANCELADO)
-            throw new PedidoNoCancelableException("Error: El pedido ya esta cancelado.")
         if(estadoPedido === EstadoPedido.CERRADO)
             throw new PedidoNoCancelableException("Error: El pedido ya no se puede cancelar, esta cerrado.")
-
-        fechaCancelacion = Timestamp.valueOf(LocalDateTime.now())
-        articulosSolicitados = new ArrayList<ArticuloMaterial>()
-        estadoPedido =  EstadoPedido.CANCELADO
+        articulosSolicitados.clear()
     }
 
 }

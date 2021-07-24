@@ -5,15 +5,8 @@ import com.mibiblioteca.mibiblioteca.tareas.model.Curso
 import com.mibiblioteca.mibiblioteca.tareas.model.NivelAlumno
 import com.mibiblioteca.mibiblioteca.consultas.model.Respuesta
 import com.mibiblioteca.mibiblioteca.consultas.model.TemaHilo
-import com.mibiblioteca.mibiblioteca.tareas.repository.AlumnoRepository
-
-import com.mibiblioteca.mibiblioteca.consultas.repository.HiloRepository
-
 import com.mibiblioteca.mibiblioteca.tareas.service.AlumnoService
-
 import com.mibiblioteca.mibiblioteca.consultas.service.PublicadorService
-import com.mibiblioteca.mibiblioteca.tareas.service.Impl.AlumnoServiceImpl
-import com.mibiblioteca.mibiblioteca.consultas.service.Impl.PublicadorServiceImpl
 
 import groovy.transform.CompileStatic
 import org.junit.jupiter.api.AfterEach
@@ -32,12 +25,6 @@ import java.util.concurrent.ThreadLocalRandom
 @SpringBootTest
 class PublicadorServiceTest {
 
-    /* repositorios */
-    @Autowired
-    private HiloRepository hiloRepository
-    @Autowired
-    private AlumnoRepository alumnoRepository
-
     /* servicios */
     @Autowired
     private AlumnoService alumnoService
@@ -52,17 +39,12 @@ class PublicadorServiceTest {
 
     @BeforeEach
     public void setup() {
-        //se inyecta de esta manera porque el repository arroja null pointer exc.
-        alumnoService = new AlumnoServiceImpl(alumnoRepository)
-        publicadorService = new PublicadorServiceImpl(hiloRepository, alumnoRepository)
         curso = new Curso("A")
         fecNac = new Timestamp(System.currentTimeMillis())
     }
 
     @AfterEach
     void teardown() {
-        alumnoRepository.deleteAll()
-        hiloRepository.deleteAll()
         curso = null
         fecNac = null
     }

@@ -10,21 +10,14 @@ import com.mibiblioteca.mibiblioteca.compras.model.TarjetaDeCredito
 import com.mibiblioteca.mibiblioteca.compras.model.TipoCuenta
 import com.mibiblioteca.mibiblioteca.compras.model.TipoMaterial
 import com.mibiblioteca.mibiblioteca.compras.repository.CuentaBancariaRepository
-import com.mibiblioteca.mibiblioteca.compras.repository.MaterialRepository
-import com.mibiblioteca.mibiblioteca.compras.repository.PedidoMaterialRepository
-import com.mibiblioteca.mibiblioteca.compras.repository.TarjetaRepository
 import com.mibiblioteca.mibiblioteca.compras.service.CBUColegioService
 import com.mibiblioteca.mibiblioteca.compras.service.CompradorService
 import com.mibiblioteca.mibiblioteca.compras.service.Impl.CBUColegioServiceImpl
-import com.mibiblioteca.mibiblioteca.compras.service.Impl.CompradorServiceImpl
-import com.mibiblioteca.mibiblioteca.compras.service.Impl.MaterialServiceImpl
 import com.mibiblioteca.mibiblioteca.compras.service.MaterialService
 import com.mibiblioteca.mibiblioteca.consultas.model.TemaHilo
 import com.mibiblioteca.mibiblioteca.tareas.model.Alumno
 import com.mibiblioteca.mibiblioteca.tareas.model.Curso
-import com.mibiblioteca.mibiblioteca.tareas.repository.AlumnoRepository
 import com.mibiblioteca.mibiblioteca.tareas.service.AlumnoService
-import com.mibiblioteca.mibiblioteca.tareas.service.Impl.AlumnoServiceImpl
 import groovy.transform.CompileStatic
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
@@ -43,14 +36,6 @@ import java.util.concurrent.ThreadLocalRandom
 class CompradorServiceTest {
 
     /* repositorios */
-    @Autowired
-    private final AlumnoRepository alumnoRepository
-    @Autowired
-    private final TarjetaRepository tarjetaRepository
-    @Autowired
-    private final MaterialRepository materialRepository
-    @Autowired
-    private final PedidoMaterialRepository pedidoMaterialRepository
     @Autowired
     private final CuentaBancariaRepository cuentaBancariaRepository
 
@@ -84,11 +69,6 @@ class CompradorServiceTest {
     /* útiles */
 
     private void setupServicios() {
-        //se inyecta de esta manera porque el repository arroja null pointer exc.
-        compradorService = new CompradorServiceImpl(alumnoRepository, pedidoMaterialRepository,
-                tarjetaRepository, cuentaBancariaRepository)
-        alumnoService = new AlumnoServiceImpl(alumnoRepository)
-        materialService = new MaterialServiceImpl(materialRepository)
         cbuColegioService = new CBUColegioServiceImpl()
     }
 
@@ -133,7 +113,6 @@ class CompradorServiceTest {
 
     @BeforeEach
     void setup() {
-
         setupServicios()
         setupData1()
         setupData2()
@@ -142,11 +121,6 @@ class CompradorServiceTest {
 
     @AfterEach
     void teardown() {
-        pedidoMaterialRepository.deleteAll()
-        cuentaBancariaRepository.deleteAll()
-        tarjetaRepository.deleteAll()
-        materialRepository.deleteAll()
-        alumnoRepository.deleteAll()
         libro = null
         revista = null
         curso = null
@@ -183,7 +157,7 @@ class CompradorServiceTest {
     private TarjetaDeCredito getTarjetaValida(Alumno alumno, CuentaBancaria cuentaAlumno) {
         def tarjetaValida = new TarjetaDeCredito(cuentaAlumno.getCBU(),
                 4566456645664656, 123,
-                EntidadBancaria.BANCO_RIO, fechaVto, alumno.getDNI())
+                EntidadBancaria.BANCO_RIO, fechaVto)
         try {
             tarjetaValida.acreditar(5000.00)
         } catch (RuntimeException ex) {

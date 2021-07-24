@@ -14,18 +14,16 @@ import groovy.transform.CompileStatic
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
+import javax.transaction.Transactional
 import java.sql.Timestamp
 
 @CompileStatic
 @Service
+@Transactional
 class DocenteServiceImpl implements DocenteService {
 
     @Autowired
     private final DocenteRepository docenteRepository
-
-    DocenteServiceImpl(DocenteRepository doc) {
-        docenteRepository = doc
-    }
 
     @Override
     List<Docente> findAll() {
@@ -51,9 +49,7 @@ class DocenteServiceImpl implements DocenteService {
 
     @Override
     Docente update(Docente docente) {
-        Docente doc = this.findById(docente.getDNI())?.get()
-
-        docenteRepository.save(doc)
+        docenteRepository.save(docente)
     }
 
     @Override

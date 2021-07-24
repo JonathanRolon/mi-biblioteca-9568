@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="layouts/header :: headerHead"></head>
+<body style="background-image: url('https://papers.co/wallpaper/papers.co-sp14-blur-gradation-space-29-wallpaper.jpg');">
+<div class="page-header"
+     style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDeOHrmimNM9DjdMIWmFFb6gTyLUq9ut2zbkFe6A-C3Aw6o4brp-38F9nNBGcBylWK1zg&usqp=CAU');">
+    <div th:replace="layouts/header :: headerBody"/>
+    <h5> Nro. de orden <span th:text="${pedido.nroPedido}"></span></h5>
+    <h5> Estado pedido <span th:text="${pedido.estadoPedido}"></span></h5>
+    <h5> Creado el: <span th:text="${pedido.fechaCreacion}"></span></h5>
+    <h5> Total: <span th:text="${pedido.getTotal()}"></span></h5>
+</div>
+<form action="#" th:action="@{/pago/__${pedido.nroPedido}__}" th:object="${comprador}" method="post">
+    <div class="form-group">
+        <h6>Seleccione la tarjeta de crédito</h6>
+        <label for="_idNroTarjeta" class="col-form-label"></label>
+        <select id="_idNroTarjeta" th:field="*{tema}" required="required" class="form-select"
+                aria-label="Default select example">
+            <option th:each="tarjeta : ${tarjetas}" th:value="${tarjeta.getNroTarjeta()}"
+                    th:text="${tarjeta.getNroTarjeta()}">
+                <span th:text="${tarjeta.getEntidadBancaria()}"></span>
+            </option>
+        </select>
+    </div>
+    <div class="form-group">
+        <h6>Seleccione los créditos para abonar</h6>
+        <label for="_idCreditos" class="col-form-label">Creditos disponibles</label>
+        <textarea id="_idCreditos" th:field="" class="form-control rounded-0" rows="3"></textarea>
+    </div>
+    <button type="submit" value="Submit" class="btn btn-primary">Pagar</button>
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+</form>
+<!-- Footer -->
+<footer class="footer page-footer font-small special-color-dark pt-4" th:fragment="footer">
+    <!-- Footer Elements -->
+    <div class="container">
+        <!--Grid row-->
+        <div class="row" style="float:right">
+            <!--Grid column-->
+            <div class="col-md-6 mb-4">
+                <button id="_idButtonCancelarPedido" style="width:180px" data-whatever="@mdo" type="button"
+                        class="btn btn-danger">
+                    <span><i class="fa fa-times"></i></span>
+                    Cancelar
+                </button>
+            </div>
+            <div class="col-md-6 mb-4">
+                <button id="_idButtonCancelarPago" style="width:180px" data-whatever="@mdo"
+                        type="button" class="btn btn-primary">
+                    <span><i class="fa fa-money-bill"></i></span>
+                    Cancelar compra
+                </button>
+                <button id="_idButtonComprar" style="width:180px" data-whatever="@mdo" type="button"
+                        class="btn btn-primary">
+                    <span><i class="fa fa-money-bill"></i></span>
+                    Pagar
+                </button>
+            </div>
+            <!--Grid column-->
+        </div>
+        <!--Grid row-->
+    </div>
+    <!-- Footer Elements -->
+</footer>
+</body>
+</html>

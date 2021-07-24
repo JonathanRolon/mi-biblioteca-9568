@@ -1,7 +1,6 @@
 package com.mibiblioteca.mibiblioteca.consultas.service.Impl
 
 import com.mibiblioteca.mibiblioteca.consultas.service.exception.ErrorAlCalificarRespuestaException
-import com.mibiblioteca.mibiblioteca.principal.service.Sesion
 import com.mibiblioteca.mibiblioteca.tareas.model.Alumno
 import com.mibiblioteca.mibiblioteca.consultas.model.Calificacion
 import com.mibiblioteca.mibiblioteca.consultas.model.Hilo
@@ -14,8 +13,11 @@ import groovy.transform.CompileStatic
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
+import javax.transaction.Transactional
+
 @Service
 @CompileStatic
+@Transactional
 class PublicadorServiceImpl implements PublicadorService {
 
     private final Integer MIN_CALIF_RESP = 0, MAX_CALIF_RESP = 10, UMBRAL_CALIF_POS = 5
@@ -25,11 +27,6 @@ class PublicadorServiceImpl implements PublicadorService {
 
     @Autowired
     private HiloRepository hiloRepository
-
-    PublicadorServiceImpl(HiloRepository hiloRepository, AlumnoRepository alumnoRepository) {
-        this.hiloRepository = hiloRepository
-        this.alumnoRepository = alumnoRepository
-    }
 
     @Override
     Calificacion calificar(Alumno calificador, Respuesta respuesta, Integer calificacion) {
@@ -47,12 +44,10 @@ class PublicadorServiceImpl implements PublicadorService {
 
         if (calificacion > UMBRAL_CALIF_POS) {
             calificado.incrementarCalifPositivas()
-            alumnoRepository.save(calificado)
         }
 
         respuesta.agregarCalificacion(calif)
         hilo.actualizarRespuesta(respuesta)
-        hiloRepository.save(hilo)
         calif
     }
 

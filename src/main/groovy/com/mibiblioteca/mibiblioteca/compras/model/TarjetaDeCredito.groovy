@@ -26,9 +26,6 @@ class TarjetaDeCredito {
     TarjetaIdentity tarjetaIdentity
 
     @Column(nullable = false)
-    Long cliente
-
-    @Column(nullable = false)
     BigInteger CBUCuenta
 
     @Column(nullable = false)
@@ -37,13 +34,12 @@ class TarjetaDeCredito {
     @Column(nullable = false)
     Timestamp vencimiento
 
-    TarjetaDeCredito(BigInteger CBUCuenta,Long nroTarjeta, Integer CSV, EntidadBancaria entidadBancaria, Timestamp vto, Long cliente) {
+    TarjetaDeCredito(BigInteger CBUCuenta,Long nroTarjeta, Integer CSV, EntidadBancaria entidadBancaria, Timestamp vto) {
         tarjetaIdentity = new TarjetaIdentity()
         tarjetaIdentity.setNroTarjeta(nroTarjeta)
         tarjetaIdentity.setEntidad(entidadBancaria)
         tarjetaIdentity.setCSV(CSV)
         this.vencimiento = vto
-        this.cliente = cliente
         this.CBUCuenta = CBUCuenta
         saldo = 0
     }
@@ -70,14 +66,17 @@ class TarjetaDeCredito {
         }
     }
 
-    Boolean validar(Long DNI, BigDecimal monto) {
+    Boolean validar(BigDecimal monto) {
         def fechaActual = Timestamp.valueOf(LocalDateTime.now())
         def result = fechaActual.compareTo(vencimiento);
 
-        if ((!cliente === DNI) ||
-                (result > 0) ||
+        if ( (result > 0) ||
                 (saldo < 0 || saldo < monto || monto > LIMITE_CONTADO)) false
         true
+    }
+
+    EntidadBancaria getEntidadBancaria(){
+        tarjetaIdentity.getEntidad()
     }
 
     void impactarPago(BigDecimal montoTarjeta) {

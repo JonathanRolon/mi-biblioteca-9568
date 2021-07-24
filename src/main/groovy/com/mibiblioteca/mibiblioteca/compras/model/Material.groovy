@@ -1,10 +1,7 @@
 package com.mibiblioteca.mibiblioteca.compras.model
 
-import com.mibiblioteca.mibiblioteca.compras.model.exception.FileStorageException
 import com.mibiblioteca.mibiblioteca.consultas.model.TemaHilo
 import groovy.transform.CompileStatic
-import org.springframework.util.StringUtils
-import org.springframework.web.multipart.MultipartFile
 
 import javax.persistence.Column
 import javax.persistence.Embedded
@@ -36,6 +33,9 @@ class Material {
 
     @Column(nullable = false)
     String autor
+
+    @Column(nullable = true)
+    String portada
 
     @Column(nullable = false)
     Timestamp fechaPublicacion

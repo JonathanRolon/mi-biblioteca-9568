@@ -11,6 +11,7 @@ import com.mibiblioteca.mibiblioteca.consultas.model.TemaHilo
 import groovy.transform.CompileStatic
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.util.StringUtils
 import org.springframework.web.multipart.MultipartFile
 
@@ -18,14 +19,11 @@ import java.sql.Timestamp
 
 @Service
 @CompileStatic
+@Transactional
 class MaterialServiceImpl implements MaterialService {
 
     @Autowired
     private MaterialRepository materialRepository
-
-    MaterialServiceImpl(MaterialRepository rep) {
-        materialRepository = rep
-    }
 
     @Override
     Material crear(String idMaterial, BigDecimal precio, String descripcion, String titulo,
@@ -50,7 +48,7 @@ class MaterialServiceImpl implements MaterialService {
                         fechaPublicacion, editorial, tipoMaterial, tema, vigencia, contenidoMaterial)
             }
             materialRepository.save(material)
-            material
+
         } catch (RuntimeException ex) {
             throw new FileStorageException("No se pudo cargar el archivo: " + fileName + ". Intentalo de nuevo!");
         }
@@ -59,16 +57,7 @@ class MaterialServiceImpl implements MaterialService {
 
     @Override
     Material update(Material material) {
-        Material mat = this.findById(material.getIdMaterial())?.get()
-        mat.setAutor(material.getAutor())
-        mat.setDescripcion(material.getDescripcion())
-        mat.setEditorial(material.getEditorial())
-        mat.setFechaPublicacion(material.getFechaPublicacion())
-        mat.setTema(material.getTema())
-        mat.setTipoMaterial(material.getTipoMaterial())
-        mat.setTitulo(material.getTitulo())
-        mat.setVigencia(material.getVigencia())
-        materialRepository.save(mat)
+        materialRepository.save(material)
     }
 
     @Override

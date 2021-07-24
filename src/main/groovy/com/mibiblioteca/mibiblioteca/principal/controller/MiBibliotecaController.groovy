@@ -1,6 +1,6 @@
 package com.mibiblioteca.mibiblioteca.principal.controller
 
-
+import com.mibiblioteca.mibiblioteca.principal.service.CargadorArchivos
 import com.mibiblioteca.mibiblioteca.principal.service.Login
 import com.mibiblioteca.mibiblioteca.principal.service.Sesion
 import com.mibiblioteca.mibiblioteca.principal.service.TipoUsuario
@@ -36,7 +36,9 @@ class MiBibliotecaController {
 
     @PostMapping("/entrar")
     ModelAndView login(Model model, @ModelAttribute('user') Login login) {
+
         def logueado = alumnoRepository.findById(login.getUsuario())
+
         if(!logueado){
             logueado = docenteRepository.findById(login.getUsuario())
             model.addAttribute("tipo", "DOCENTE")
@@ -48,12 +50,14 @@ class MiBibliotecaController {
             Sesion.alumno = logueado.get()
         }
 
+
         Sesion.usuario = login.getUsuario()
         return new ModelAndView("redirect:/hilos")
     }
 
-    @GetMapping("/biblioteca")
+
+ /*   @GetMapping("/biblioteca")
     ModelAndView misArticulos(Model model){
         new ModelAndView("views/biblioteca/mibiblioteca",)
-    }
+    }*/
 }
