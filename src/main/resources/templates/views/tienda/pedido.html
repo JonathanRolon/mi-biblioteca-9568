@@ -7,9 +7,9 @@
      style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDeOHrmimNM9DjdMIWmFFb6gTyLUq9ut2zbkFe6A-C3Aw6o4brp-38F9nNBGcBylWK1zg&usqp=CAU');">
     <div th:replace="layouts/header :: headerBody"/>
     <h5> Nro. de orden <span th:text="${pedido.nroPedido}"></span></h5>
-    <h5> Estado pedido <span th:text="${pedido.estadoPedido}"></span></h5>
+    <h5> Estado pedido: <span th:text="${pedido.estadoPedido}"></span></h5>
     <h5> Creado el: <span th:text="${pedido.fechaCreacion}"></span></h5>
-    <h5> Total: <span th:text="${pedido.getTotal()}"></span></h5>
+    <h5> Total: $<span th:text="${pedido.getTotal()}"></span></h5>
 </div>
 <table class="table">
     <thead>
@@ -39,7 +39,7 @@
     </tbody>
 </table>
 <!-- Footer -->
-<footer class="footer page-footer font-small special-color-dark pt-4" th:fragment="footer">
+<footer th:if="*{!articulosSolicitados.empty}" class="footer page-footer font-small special-color-dark pt-4" th:fragment="footer">
     <!-- Footer Elements -->
     <div class="container">
         <!--Grid row-->
@@ -55,11 +55,13 @@
                 </form>
             </div>
             <div class="col-md-6 mb-4">
-                <button id="_idButtonComprar" style="width:180px" data-whatever="@mdo" type="button"
-                        class="btn btn-primary">
-                    <span><i class="fa fa-money-bill"></i></span>
-                    Comprar
-                </button>
+                <form th:action="@{/completarDatosPago}" method="get">
+                    <button id="_idButtonComprar" style="width:180px" data-whatever="@mdo"
+                            type="submit" value="Submit" class="btn btn-primary">
+                        <span><i class="fa fa-money-bill"></i></span>
+                        Comprar
+                    </button>
+                </form>
             </div>
             <!--Grid column-->
         </div>

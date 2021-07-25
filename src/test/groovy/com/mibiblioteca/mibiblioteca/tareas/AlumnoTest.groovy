@@ -1,6 +1,6 @@
 package com.mibiblioteca.mibiblioteca.tareas
 
-import com.mibiblioteca.mibiblioteca.compras.model.ComprobantePago
+import com.mibiblioteca.mibiblioteca.compras.model.Pago
 import com.mibiblioteca.mibiblioteca.tareas.model.Alumno
 import com.mibiblioteca.mibiblioteca.tareas.model.NivelAlumno
 import groovy.transform.CompileStatic
@@ -72,9 +72,9 @@ class AlumnoTest {
     @Test
     void desbloquear3MaterialesNovatoSubeNivel(){
         def fechaPago = Timestamp.valueOf(LocalDateTime.now())
-        def comprobantePago1 = new ComprobantePago(120 as BigDecimal,fechaPago,"libx")
-        def comprobantePago2 = new ComprobantePago(120  as BigDecimal,fechaPago,"liby")
-        def comprobantePago3 = new ComprobantePago(120  as BigDecimal,fechaPago,"libz")
+        def comprobantePago1 = new Pago(120 as BigDecimal,fechaPago,"libx")
+        def comprobantePago2 = new Pago(120  as BigDecimal,fechaPago,"liby")
+        def comprobantePago3 = new Pago(120  as BigDecimal,fechaPago,"libz")
         def alumno = new Alumno(5413513,"nombre","apellido",fechaPago,"A")
         alumno.desbloquearMaterial(comprobantePago1)
         alumno.desbloquearMaterial(comprobantePago2)
@@ -85,11 +85,11 @@ class AlumnoTest {
     @Test
     void desbloquear5MaterialesMedioSubeNivel(){
         def fechaPago = Timestamp.valueOf(LocalDateTime.now())
-        def comprobantePago1 = new ComprobantePago(120 as BigDecimal,fechaPago,"libr")
-        def comprobantePago2 = new ComprobantePago(120  as BigDecimal,fechaPago,"libs")
-        def comprobantePago3 = new ComprobantePago(120  as BigDecimal,fechaPago,"libt")
-        def comprobantePago4 = new ComprobantePago(120  as BigDecimal,fechaPago,"libu")
-        def comprobantePago5 = new ComprobantePago(120  as BigDecimal,fechaPago,"libv")
+        def comprobantePago1 = new Pago(120 as BigDecimal,fechaPago,"libr")
+        def comprobantePago2 = new Pago(120  as BigDecimal,fechaPago,"libs")
+        def comprobantePago3 = new Pago(120  as BigDecimal,fechaPago,"libt")
+        def comprobantePago4 = new Pago(120  as BigDecimal,fechaPago,"libu")
+        def comprobantePago5 = new Pago(120  as BigDecimal,fechaPago,"libv")
         def alumno = new Alumno(5413513,"nombre","apellido",fechaPago,"A")
         alumno.subirNivel()
 

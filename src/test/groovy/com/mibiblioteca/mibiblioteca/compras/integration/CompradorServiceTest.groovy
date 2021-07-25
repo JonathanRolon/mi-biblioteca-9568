@@ -168,7 +168,9 @@ class CompradorServiceTest {
 
     private void pagarPedido(PedidoMaterial pedido, TarjetaDeCredito tarjeta, Integer creditos) {
         try {
-            compradorService.pagar(pedido, tarjeta, pedido.getTotal(), creditos)
+            def pagoConCreditos = creditos == 400
+            pedido.pagoConCreditos = pagoConCreditos
+            compradorService.pagar(pedido, tarjeta)
         } catch (RuntimeException ex) {
             assert (false)
         }

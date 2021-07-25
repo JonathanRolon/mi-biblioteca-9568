@@ -1,12 +1,13 @@
 package com.mibiblioteca.mibiblioteca.tareas.model
 
 
-import com.mibiblioteca.mibiblioteca.compras.model.ComprobantePago
+import com.mibiblioteca.mibiblioteca.compras.model.Pago
 import com.mibiblioteca.mibiblioteca.compras.model.Material
 import com.mibiblioteca.mibiblioteca.compras.model.TarjetaDeCredito
 import com.mibiblioteca.mibiblioteca.compras.model.exception.PagoDobleException
 import com.mibiblioteca.mibiblioteca.tareas.model.exception.CreditosExcedeCantidadDisponibleException
 import groovy.transform.CompileStatic
+import org.springframework.transaction.annotation.Transactional
 
 import javax.persistence.CascadeType
 import javax.persistence.Column
@@ -25,6 +26,7 @@ enum Regularidad {
 
 @CompileStatic
 @Entity
+@Transactional
 class Alumno {
 
     private final Integer CONS_CREDITOS_MEDIO = 30,
@@ -36,7 +38,8 @@ class Alumno {
                           CONS_TOPE_CALIF_FORO_MEDIO = 20,
                           CONS_TOPE_CALIF_FORO_PRO = 30,
                           CONS_COMPRAS_NOVATO_SUBIR_NIVEL = 3,
-                          CONS_COMPRAS_MEDIO_SUBIR_NIVEL = 5
+                          CONS_COMPRAS_MEDIO_SUBIR_NIVEL = 5,
+                          CONS_CREDITOS_DTO = 400
 
     @Id
     Long DNI
@@ -81,7 +84,7 @@ class Alumno {
     NivelAlumno nivel
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    List<ComprobantePago> comprobantesPago
+    List<Pago> comprobantesPago
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     List<TarjetaDeCredito> tarjetasRegistradas
@@ -101,7 +104,7 @@ class Alumno {
         regular = Regularidad.REGULAR
         calificPositivasCredEnForo = 0
         calificTotalesNivelEnForo = 0
-        comprobantesPago = new ArrayList<ComprobantePago>()
+        comprobantesPago = new ArrayList<Pago>()
         tarjetasRegistradas = new ArrayList<TarjetaDeCredito>()
     }
 
@@ -194,7 +197,7 @@ class Alumno {
         this
     }
 
-    void desbloquearMaterial(ComprobantePago comprobantePago) {
+    void desbloquearMaterial(Pago comprobantePago) {
         def existe = comprobantesPago.find { it -> it.getIdMaterial() === comprobantePago.getIdMaterial() }
         if (existe)
             throw new PagoDobleException("Se realizó un pago doble de un material ya adquirido.")
@@ -223,10 +226,17 @@ class Alumno {
     }
 
     void registrarTarjeta(TarjetaDeCredito tarjetaDeCredito){
-
+        tarjetasRegistradas.push(tarjetaDeCredito)
     }
 
-    Boolean validarTarjeta(BigDecimal monto){
+    Boolean creditosDtoSuficientes(){
+        def valor = creditos >= CONS_CREDITOS_DTO
+        valor
+    }
 
+    TarjetaDeCredito getTarjetaRegistrada(Long nroTarjeta) {
+        tarjetasRegistradas.find {estaTarjeta ->
+            estaTarjeta.getNroTarjeta() == nroTarjeta
+        }
     }
 }

@@ -67,7 +67,8 @@ class HiloController {
         try{
             def hiloSeleccionado = publicadorService.getHilo(id)
             publicadorService.responder(Sesion.usuario, hiloSeleccionado, respuesta.getContenido())
-            return new ModelAndView("redirect:/hilos/" + hilo.getId())
+            model.addAttribute("tipoUsuario", (Sesion.tipoUsuario).toString())
+            new ModelAndView("redirect:/hilos/" + hilo.getId())
         }catch (RuntimeException ex) {
             new ModelAndView('views/hilo/errorResponderHilo')
         }
@@ -82,7 +83,8 @@ class HiloController {
             def hilo = publicadorService.getHilo(id)
             def respuesta = hilo.getRespuesta(fechaCreacionResp, publicadorResp)
             publicadorService.calificar(Sesion.alumno, respuesta , calificacion.getCalificacion())
-            return new ModelAndView("redirect:/hilos/" + hilo.getId())
+            model.addAttribute("tipoUsuario", (Sesion.tipoUsuario).toString())
+            new ModelAndView("redirect:/hilos/" + hilo.getId())
         }catch (RuntimeException ex) {
             new ModelAndView('views/hilo/errorCalificarRta')
         }

@@ -13,7 +13,7 @@ import java.sql.Timestamp
 
 @Entity
 @CompileStatic
-class ComprobantePago{
+class Pago {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,12 +28,12 @@ class ComprobantePago{
     @Column(nullable = false)
     private String idMaterial
 
-    ComprobantePago() {}
+    Pago() {}
 
-    ComprobantePago(BigDecimal abonado, Timestamp fechaPago, String material) {
+    Pago(BigDecimal abonado, Timestamp fechaPago, String material) {
         saldoAbonado = abonado
         fecha = fechaPago
-       idMaterial = material
+        idMaterial = material
     }
 
     Long getNroPago() {

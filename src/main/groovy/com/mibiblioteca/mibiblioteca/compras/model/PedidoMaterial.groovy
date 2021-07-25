@@ -48,6 +48,9 @@ class PedidoMaterial {
     @Column(nullable = false)
     EstadoPedido estadoPedido
 
+    @Column(nullable = false, columnDefinition = "boolean default false")
+    Boolean pagoConCreditos
+
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     List<ArticuloMaterial> articulosSolicitados
 
@@ -56,6 +59,7 @@ class PedidoMaterial {
         estadoPedido = EstadoPedido.PENDIENTE
         fechaCreacion = Timestamp.valueOf(LocalDateTime.now())
         articulosSolicitados = new ArrayList<ArticuloMaterial>()
+        pagoConCreditos = false
     }
 
     PedidoMaterial() {}
@@ -100,6 +104,10 @@ class PedidoMaterial {
     BigDecimal getTotal() {
         def total = articulosSolicitados.inject(0 as BigDecimal, { suma, it -> suma + it.getPrecioVenta()})
         total
+    }
+
+    BigDecimal getTotalConDescuento() {
+        getTotal() * (1 - 0.3)
     }
 
     Boolean tieneSolicitado(Material material){

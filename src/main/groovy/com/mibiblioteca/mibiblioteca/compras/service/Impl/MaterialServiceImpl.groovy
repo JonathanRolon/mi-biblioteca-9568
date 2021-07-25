@@ -8,6 +8,7 @@ import com.mibiblioteca.mibiblioteca.compras.model.exception.FileStorageExceptio
 import com.mibiblioteca.mibiblioteca.compras.repository.MaterialRepository
 import com.mibiblioteca.mibiblioteca.compras.service.MaterialService
 import com.mibiblioteca.mibiblioteca.consultas.model.TemaHilo
+import com.mibiblioteca.mibiblioteca.tareas.model.Alumno
 import groovy.transform.CompileStatic
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -56,11 +57,6 @@ class MaterialServiceImpl implements MaterialService {
     }
 
     @Override
-    Material update(Material material) {
-        materialRepository.save(material)
-    }
-
-    @Override
     void deleteById(String idMaterial) {
         materialRepository.deleteById(idMaterial)
     }
@@ -73,5 +69,15 @@ class MaterialServiceImpl implements MaterialService {
     @Override
     List<Material> findAll() {
         materialRepository.findAll()
+    }
+
+    @Override
+    List<Material> getMaterialDe(Alumno alumno){
+        def lista = findAll()
+        lista.findAll {materialDeEstudio ->
+            alumno.getComprobantesPago().find {pago ->
+                materialDeEstudio.getIdMaterial() == pago.getIdMaterial()
+            }
+        }
     }
 }

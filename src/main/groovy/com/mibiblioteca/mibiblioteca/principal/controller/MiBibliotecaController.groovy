@@ -1,6 +1,6 @@
 package com.mibiblioteca.mibiblioteca.principal.controller
 
-import com.mibiblioteca.mibiblioteca.principal.service.CargadorArchivos
+import com.mibiblioteca.mibiblioteca.compras.service.MaterialService
 import com.mibiblioteca.mibiblioteca.principal.service.Login
 import com.mibiblioteca.mibiblioteca.principal.service.Sesion
 import com.mibiblioteca.mibiblioteca.principal.service.TipoUsuario
@@ -25,6 +25,8 @@ class MiBibliotecaController {
     private AlumnoRepository alumnoRepository
     @Autowired
     private DocenteRepository docenteRepository
+    @Autowired
+    private MaterialService materialService
 
     @RequestMapping("/")
     def home(Model model) {
@@ -50,14 +52,15 @@ class MiBibliotecaController {
             Sesion.alumno = logueado.get()
         }
 
-
         Sesion.usuario = login.getUsuario()
         return new ModelAndView("redirect:/hilos")
     }
 
-
- /*   @GetMapping("/biblioteca")
+    @GetMapping("/biblioteca")
     ModelAndView misArticulos(Model model){
-        new ModelAndView("views/biblioteca/mibiblioteca",)
-    }*/
+        def alumno = alumnoRepository.findById(Sesion.alumno.getDNI())?.get()
+        model.addAttribute("alumno", alumno)
+        model.addAttribute("tipoUsuario", (Sesion.tipoUsuario).toString())
+        new ModelAndView("views/biblioteca/mibiblioteca", [mibiblioteca: materialService.getMaterialDe(alumno)])
+    }
 }

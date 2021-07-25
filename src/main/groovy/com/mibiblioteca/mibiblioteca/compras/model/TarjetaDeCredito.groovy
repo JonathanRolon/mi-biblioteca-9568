@@ -5,6 +5,7 @@ import com.mibiblioteca.mibiblioteca.compras.model.exception.TarjetaExcedeLimite
 import com.mibiblioteca.mibiblioteca.compras.model.exception.TarjetaMontoNoValidoException
 import groovy.transform.CompileStatic
 import org.hibernate.annotations.CreationTimestamp
+import org.springframework.transaction.annotation.Transactional
 
 import javax.persistence.Column
 import javax.persistence.Entity
@@ -16,8 +17,13 @@ import javax.validation.constraints.NotEmpty
 import java.sql.Timestamp
 import java.time.LocalDateTime
 
+enum EntidadBancaria {
+    BANCO_RIO, BANCO_AZUL, BANCO_DEL_PLATA
+}
+
 @Entity
 @CompileStatic
+@Transactional
 class TarjetaDeCredito {
 
     private final BigDecimal LIMITE_CONTADO = 50000.00
@@ -48,6 +54,10 @@ class TarjetaDeCredito {
 
     Long getNroTarjeta() {
         this.getTarjetaIdentity().getNroTarjeta()
+    }
+
+    BigDecimal getSaldo(){
+        saldo
     }
 
     Integer getCVV() {

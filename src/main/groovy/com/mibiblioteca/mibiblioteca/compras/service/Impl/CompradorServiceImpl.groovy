@@ -1,7 +1,7 @@
 package com.mibiblioteca.mibiblioteca.compras.service.Impl
 
 import com.mibiblioteca.mibiblioteca.compras.model.ArticuloMaterial
-import com.mibiblioteca.mibiblioteca.compras.model.ComprobantePago
+import com.mibiblioteca.mibiblioteca.compras.model.Pago
 import com.mibiblioteca.mibiblioteca.compras.model.EstadoPedido
 import com.mibiblioteca.mibiblioteca.compras.model.exception.ComprobantePagoNoAdjuntoException
 import com.mibiblioteca.mibiblioteca.compras.repository.CuentaBancariaRepository
@@ -32,8 +32,8 @@ import java.time.LocalDateTime
 @Transactional
 class CompradorServiceImpl implements CompradorService {
 
-    private final BigDecimal DTO_400_CREDITOS = 0.3
-    private final Integer LIMITE_CRED_DTO = 400
+    private final Integer LIMITE_CRED_DTO = 400,
+            SIN_CRED_DTO = 0
 
     @Autowired
     private AlumnoRepository alumnoRepository
@@ -53,7 +53,7 @@ class CompradorServiceImpl implements CompradorService {
             it ->
 
                 try {
-                    def comprobante = new ComprobantePago(it.getPrecioVenta(), fechaCierre, it.getIdMaterial())
+                    def comprobante = new Pago(it.getPrecioVenta(), fechaCierre, it.getIdMaterial())
                     cliente.desbloquearMaterial(comprobante)
                 } catch (RuntimeException ex) {
                     throw new ComprobantePagoNoAdjuntoException("Ocurrio un error al intentar adjuntar el comprobante.")
@@ -111,22 +111,22 @@ class CompradorServiceImpl implements CompradorService {
     }
 
     @Override
-    PedidoMaterial pagar(PedidoMaterial pedido, TarjetaDeCredito tarjeta, BigDecimal montoTarjeta, Integer creditos) {
+    PedidoMaterial pagar(PedidoMaterial pedido,
+                         TarjetaDeCredito tarjeta) {
 
         def cliente = alumnoRepository.findById(pedido.getCliente()).get()
         def fechaCierre = Timestamp.valueOf(LocalDateTime.now())
-        def creditosValidos = (creditos >= LIMITE_CRED_DTO)
-        def valorPedido = creditosValidos ? pedido.getTotal() * DTO_400_CREDITOS : pedido.getTotal()
+        def valorPedido = pedido.pagoConCreditos ? pedido.getTotalConDescuento() : pedido.getTotal()
+        def creditosARestar = pedido.pagoConCreditos ? LIMITE_CRED_DTO : SIN_CRED_DTO
 
         validarCliente(cliente)
-        validarTarjeta(tarjeta, montoTarjeta)
-        restarCreditosCliente(cliente, creditos)
+        validarTarjeta(tarjeta, valorPedido)
+        restarCreditosCliente(cliente, creditosARestar)
         restarSaldoTarjeta(tarjeta, valorPedido)
         acreditarCuentas(tarjeta.getCBUCuenta(), valorPedido)
         adjuntarComprobantesAlumno(cliente, pedido.getArticulosSolicitados(), fechaCierre)
         cerrar(pedido)
         pedido
-
     }
 
     @Override
