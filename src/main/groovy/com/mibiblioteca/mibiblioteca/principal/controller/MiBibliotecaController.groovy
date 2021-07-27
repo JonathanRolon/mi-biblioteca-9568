@@ -53,7 +53,7 @@ class MiBibliotecaController {
         }
 
         Sesion.usuario = login.getUsuario()
-        return new ModelAndView("redirect:/hilos")
+        return new ModelAndView("redirect:/tareas")
     }
 
     @GetMapping("/biblioteca")

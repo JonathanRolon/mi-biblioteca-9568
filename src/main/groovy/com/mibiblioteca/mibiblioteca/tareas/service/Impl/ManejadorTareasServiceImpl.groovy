@@ -4,7 +4,6 @@ import com.mibiblioteca.mibiblioteca.tareas.model.Alumno
 import com.mibiblioteca.mibiblioteca.tareas.model.AsignacionTareaAlumno
 import com.mibiblioteca.mibiblioteca.tareas.model.Curso
 import com.mibiblioteca.mibiblioteca.tareas.model.Docente
-import com.mibiblioteca.mibiblioteca.tareas.model.EstadoAsignacionTarea
 import com.mibiblioteca.mibiblioteca.tareas.model.Tarea
 import com.mibiblioteca.mibiblioteca.tareas.model.exception.TareaNoAsignableException
 import com.mibiblioteca.mibiblioteca.tareas.model.exception.TareaNoResolubleException
@@ -45,10 +44,10 @@ class ManejadorTareasServiceImpl implements ManejadorTareasService {
 
 
         alumnosCurso = alumnoRepository.findAll().findAll {
-            it -> it.getCurso() === curso.getDenominacion()
+            it -> it.getCurso() == curso.getDenominacion()
         }
 
-        if (alumnosCurso.size() === 0)
+        if (alumnosCurso.size() == 0)
             throw new TareaNoAsignableException("Error: No existen alumnos asignados al curso de la tarea.")
 
         alumnosCurso.each { it ->
@@ -66,28 +65,30 @@ class ManejadorTareasServiceImpl implements ManejadorTareasService {
     }
 
     @Override
-    List<AsignacionTareaAlumno> getAsignacionesTareas(Curso curso, Alumno alumno) {
-        def tareasCurso = curso.getTareasAsignadas(),
-            tareasAlumno = tareaAlumnoRepository.findAll().findAll { it ->
-                it.getAlumno() === alumno.getDNI()
-            }
-
-        tareasAlumno.findAll { tarea ->
-            tareasCurso.findAll { it -> it.getNroTarea() === tarea.getNroTarea() }
+    List<AsignacionTareaAlumno> getAsignacionesTareas(Alumno alumno) {
+        tareaAlumnoRepository.findAll().findAll { it ->
+            it.getAlumno() == alumno.getDNI()
         }
     }
 
     @Override
-    AsignacionTareaAlumno getAsignacionTarea(Long nroTarea) {
-        tareaAlumnoRepository.findAll().find { it ->
-            it.getNroTarea() === nroTarea
+    List<AsignacionTareaAlumno> getAsignacionesTareas(Long nroTarea) {
+        tareaAlumnoRepository.findAll().findAll { asignacion ->
+            asignacion.getNroTarea() == nroTarea
         }
     }
 
     @Override
-    AsignacionTareaAlumno resolver(Tarea tareaCurso, String respuesta) {
+    AsignacionTareaAlumno getAsignacionTarea(Long nroDNI, Long nroTarea) {
+        tareaAlumnoRepository.findAll().find { asignacion ->
+            asignacion.getNroTarea() == nroTarea && asignacion.getAlumno() == nroDNI
+        }
+    }
+
+    @Override
+    AsignacionTareaAlumno resolver(Long nroTarea, Long alumnoDNI, String respuesta) {
         def asignacion = tareaAlumnoRepository.findAll().find { it ->
-            it.getNroTarea() === tareaCurso.getNroTarea()
+            it.getNroTarea() == nroTarea && it.getAlumno() == alumnoDNI
         }
 
         if (!asignacion)
@@ -102,7 +103,35 @@ class ManejadorTareasServiceImpl implements ManejadorTareasService {
     }
 
     @Override
-    AsignacionTareaAlumno calificar(AsignacionTareaAlumno tarea, Integer calificacion){
+    AsignacionTareaAlumno cerrarAsignacionTarea(Long nroTarea, Long dniAlumno) {
+        def asignacion = tareaAlumnoRepository.findAll().find{estaAsignacion->
+            estaAsignacion.getNroTarea() == nroTarea && estaAsignacion.getAlumno() == dniAlumno
+        }
+        asignacion.cerrar()
+    }
+
+    @Override
+    AsignacionTareaAlumno calificar(Long nroTarea, Long dniAlumno, Integer calificacion) {
+       def asignacionTarea = tareaAlumnoRepository.findAll().find{
+           asignacion -> asignacion.getNroTarea() == nroTarea &&
+                   asignacion.getAlumno() == dniAlumno
+       }
+       asignacionTarea.calificar(calificacion)
+    }
+
+    @Override
+    AsignacionTareaAlumno calificar(AsignacionTareaAlumno tarea, Integer calificacion) {
         tarea.calificar(calificacion)
+    }
+
+    @Override
+    String getConsignaTarea(Long nroTarea){
+        def docentes = docenteRepository.findAll(), tarea
+
+        for(Docente doc: docentes){
+            tarea = doc.getTarea(nroTarea)
+            if(tarea) break
+        }
+        tarea?.getConsigna()
     }
 }

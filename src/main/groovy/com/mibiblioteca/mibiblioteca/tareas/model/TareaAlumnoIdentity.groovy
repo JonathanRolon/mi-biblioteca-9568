@@ -24,18 +24,18 @@ class TareaAlumnoIdentity implements Serializable {
         this.DNI = DNI
     }
 
-    @Override
+   /* @Override
     boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false
         TareaAlumnoIdentity that = (TareaAlumnoIdentity) o
         if (!idTarea.equals(that.idTarea)) false
         DNI.equals(that.DNI);
-    }
+    }*/
 
-    @Override
+  /*  @Override
     int hashCode() {
         int result = idTarea.hashCode()
        31 * result + DNI.hashCode()
-    }
+    }*/
 }

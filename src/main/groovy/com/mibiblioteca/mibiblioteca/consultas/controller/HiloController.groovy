@@ -6,6 +6,7 @@ import com.mibiblioteca.mibiblioteca.consultas.model.Respuesta
 import com.mibiblioteca.mibiblioteca.consultas.model.RespuestaIdentity
 import com.mibiblioteca.mibiblioteca.consultas.service.PublicadorService
 import com.mibiblioteca.mibiblioteca.principal.service.Sesion
+import com.mibiblioteca.mibiblioteca.tareas.repository.AlumnoRepository
 import groovy.transform.CompileStatic
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
@@ -27,11 +28,14 @@ class HiloController {
 
     @Autowired
     private final PublicadorService publicadorService
+    @Autowired
+    private final AlumnoRepository alumnoRepository
 
     @RequestMapping(method = RequestMethod.GET)
     ModelAndView showAll(Model model) {
+        def alumno = alumnoRepository.findById(Sesion.alumno.getDNI())?.get()
         model.addAttribute("hilo", new Hilo())
-        model.addAttribute("alumno", Sesion.alumno)
+        model.addAttribute("alumno", alumno)
         model.addAttribute("tipoUsuario", (Sesion.tipoUsuario).toString())
         new ModelAndView('views/hilo/hilos', [hilos: publicadorService.getForo()])
     }
@@ -50,12 +54,13 @@ class HiloController {
     @RequestMapping(value = '/{id}', method = RequestMethod.GET)
     ModelAndView findById(@PathVariable('id') Long id, Model model) {
         def hilo = publicadorService.getHilo(id)
+        def alumno = alumnoRepository.findById(Sesion.alumno.getDNI())?.get()
         model.addAttribute("hilo", hilo)
         model.addAttribute("respuesta", new Respuesta())
         model.addAttribute("calificacion", new Calificacion())
         model.addAttribute("usuario", Sesion.usuario)
         model.addAttribute("tipoUsuario", (Sesion.tipoUsuario).toString())
-        model.addAttribute("alumno", Sesion.alumno)
+        model.addAttribute("alumno", alumno)
         new ModelAndView('views/hilo/hilo', [hilo: hilo])
     }
 

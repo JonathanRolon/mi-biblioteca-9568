@@ -92,7 +92,7 @@ class ManejadorTareasServiceTest {
 
         tareaCurso = asignarTarea(docente, curso)
         assert (tareaCurso.getFechaEntrega().after(Timestamp.valueOf(LocalDateTime.now())))
-        tareaAlumno = tareasService.resolver(tareaCurso, respuestaValida)
+        tareaAlumno = tareasService.resolver(tareaCurso.getNroTarea(), alumno.getDNI(), respuestaValida)
         assert(tareaAlumno.getEstado() === EstadoAsignacionTarea.ABIERTA_PEND_CALIF)
     }
 
@@ -107,7 +107,7 @@ class ManejadorTareasServiceTest {
             tareaAlumno
 
         tareaCurso = asignarTarea(docente, curso)
-        tareaAlumno = tareasService.resolver(tareaCurso, respuestaValida)
+        tareaAlumno = tareasService.resolver(tareaCurso.getNroTarea(), alumno.getDNI(), respuestaValida)
 
         tareaAlumno = tareasService.cerrarTarea(tareaAlumno)
         assert(tareaAlumno.getEstado() === EstadoAsignacionTarea.CERRADA_PEND_CALIF)
@@ -123,7 +123,7 @@ class ManejadorTareasServiceTest {
 
 
         tareaCurso = asignarTarea(docente, curso)
-        tareaAlumno = tareasService.resolver(tareaCurso, respuestaValida)
+        tareaAlumno = tareasService.resolver(tareaCurso.getNroTarea(), alumno.getDNI(), respuestaValida)
 
         tareaAlumno = tareasService.cerrarTarea(tareaAlumno)
 

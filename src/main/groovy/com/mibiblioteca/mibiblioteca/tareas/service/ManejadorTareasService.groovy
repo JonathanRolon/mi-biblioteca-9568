@@ -12,13 +12,21 @@ interface ManejadorTareasService {
 
     void asignar(Tarea tarea, Curso curso, Docente docente)
 
-    List<AsignacionTareaAlumno> getAsignacionesTareas(Curso curso, Alumno alumno)
-
-    AsignacionTareaAlumno getAsignacionTarea(Long nroTarea)
-
-    AsignacionTareaAlumno resolver(Tarea tareaCurso, String respuesta)
+    AsignacionTareaAlumno resolver(Long nroTarea, Long alumnoDNI, String respuesta)
 
     AsignacionTareaAlumno cerrarTarea(AsignacionTareaAlumno asignacionTareaAlumno)
 
+    AsignacionTareaAlumno getAsignacionTarea(Long nroDNI, Long nroTarea)
+
     AsignacionTareaAlumno calificar(AsignacionTareaAlumno tarea, Integer calificacion)
+
+    List<AsignacionTareaAlumno> getAsignacionesTareas(Alumno alumno)
+
+    List<AsignacionTareaAlumno> getAsignacionesTareas(Long nroTarea)
+
+    String getConsignaTarea(Long nroTarea)
+
+    AsignacionTareaAlumno cerrarAsignacionTarea(Long nroTarea, Long dniAlumno)
+
+    AsignacionTareaAlumno calificar(Long nroTarea, Long dniAlumno, Integer calificacion)
 }

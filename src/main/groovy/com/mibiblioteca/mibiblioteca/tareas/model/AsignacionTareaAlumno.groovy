@@ -5,23 +5,17 @@ import com.mibiblioteca.mibiblioteca.tareas.model.exception.TareaNoCalificableEx
 import com.mibiblioteca.mibiblioteca.tareas.model.exception.TareaNoCerrableException
 import com.mibiblioteca.mibiblioteca.tareas.model.exception.TareaNoResolubleException
 import groovy.transform.CompileStatic
-import org.hibernate.annotations.CreationTimestamp
 
 import javax.persistence.Column
 import javax.persistence.EmbeddedId
 import javax.persistence.Entity
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
-import javax.persistence.Temporal
-import javax.persistence.TemporalType
-import javax.validation.constraints.Max
-import javax.validation.constraints.Min
-import javax.validation.constraints.NotBlank
 import java.sql.Timestamp
 import java.time.LocalDateTime
 
 enum EstadoAsignacionTarea {
-    ABIERTA_PEND_RES, ABIERTA_PEND_CALIF, ABIERTA_VENCIDA, CERRADA_PEND_CALIF, CERRADA
+    ABIERTA_PEND_RES, ABIERTA_PEND_CALIF, CERRADA_PEND_CALIF, CERRADA
 }
 
 @Entity
@@ -43,7 +37,7 @@ class AsignacionTareaAlumno {
     private Timestamp fechaCalificacion
 
     @Column(nullable = true)
-    private String respuesta
+    String respuesta
 
     @Column(nullable = false)
     private Timestamp fechaLimite
@@ -53,7 +47,7 @@ class AsignacionTareaAlumno {
     EstadoAsignacionTarea estado
 
     @Column(nullable = true)
-    private Integer calificacion
+    Integer calificacion
 
     AsignacionTareaAlumno(Long nroTarea, Long DNIAlumno, Timestamp entrega) {
 
@@ -75,13 +69,33 @@ class AsignacionTareaAlumno {
         this.id.getIdTarea()
     }
 
+    Timestamp getFechaAsignacion(){
+        fechaAsignacion
+    }
+
+    Timestamp getFechaCierre(){
+        fechaCierre
+    }
+
+    Timestamp getFechaCalificacion(){
+        fechaCalificacion
+    }
+
+    Timestamp getFechaLimite(){
+        fechaLimite
+    }
+
+    Boolean esResoluble(){
+        def ahora = Timestamp.valueOf(LocalDateTime.now())
+        def resultado = ahora.compareTo(fechaLimite)
+        def estadoOk = (estado.toString() == EstadoAsignacionTarea.ABIERTA_PEND_RES.toString())
+        (resultado < 0) && estadoOk
+    }
+
     AsignacionTareaAlumno resolverTarea(String respuesta) {
         def fechaEnvio = Timestamp.valueOf(LocalDateTime.now())
 
-        if (fechaEnvio.after(fechaLimite) && EstadoAsignacionTarea.ABIERTA_PEND_RES.toString())
-            estado = EstadoAsignacionTarea.ABIERTA_VENCIDA
-
-        if (estado.toString() !== EstadoAsignacionTarea.ABIERTA_PEND_RES.toString())
+        if (estado.toString() != EstadoAsignacionTarea.ABIERTA_PEND_RES.toString())
             throw new TareaNoResolubleException("La tarea ya no puede resolverse.")
 
         estado = EstadoAsignacionTarea.ABIERTA_PEND_CALIF
@@ -95,26 +109,42 @@ class AsignacionTareaAlumno {
     }
 
     AsignacionTareaAlumno cerrar() {
-        def invalido = (estado.toString() !== EstadoAsignacionTarea.ABIERTA_PEND_CALIF.toString()) &&
-                        (estado.toString() !== EstadoAsignacionTarea.ABIERTA_VENCIDA.toString()) &&
-                        (estado.toString() !== EstadoAsignacionTarea.ABIERTA_PEND_RES.toString())
+        def invalido = (estado.toString() != EstadoAsignacionTarea.ABIERTA_PEND_CALIF.toString()) &&
+                        (estado.toString() != EstadoAsignacionTarea.ABIERTA_PEND_RES.toString())
         if (invalido)
          {
             throw new TareaNoCerrableException("La tarea no se encuentra abierta.")
         }
         estado = EstadoAsignacionTarea.CERRADA_PEND_CALIF
+        fechaCierre = Timestamp.valueOf(LocalDateTime.now())
         this
     }
 
     void calificar(Integer calificacion) {
         if (calificacion < MIN_CALIF || calificacion > MAX_CALIF)
             throw new CalificacionInvalidaException("Error: Puntuación no permitida.")
-        if (estado.toString() !== EstadoAsignacionTarea.CERRADA_PEND_CALIF.toString())
+        if (estado.toString() != EstadoAsignacionTarea.CERRADA_PEND_CALIF.toString())
             throw new TareaNoCalificableException("Error: La tarea debe estar pendiente de calificación.")
 
         this.calificacion = calificacion
         estado = EstadoAsignacionTarea.CERRADA
         fechaCalificacion = Timestamp.valueOf(LocalDateTime.now())
+    }
+
+    Boolean estaCerrada(){
+        def estado = estado.toString() == EstadoAsignacionTarea.CERRADA_PEND_CALIF.toString() ||
+        estado.toString() == EstadoAsignacionTarea.CERRADA.toString()
+        estado
+    }
+
+    Boolean estaCerradaPendiente(){
+        estado.toString() == EstadoAsignacionTarea.CERRADA_PEND_CALIF.toString()
+    }
+
+    Boolean estaVencidaPendiente(){
+        def ahora = Timestamp.valueOf(LocalDateTime.now())
+        def resultado = ahora.compareTo(fechaLimite)
+        resultado >= 0 && !estaCerrada()
     }
 
 }

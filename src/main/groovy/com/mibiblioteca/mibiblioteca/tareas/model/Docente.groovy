@@ -55,10 +55,26 @@ class Docente {
 
     Docente(){}
 
+    List<Curso> getCursos(){
+        cursos
+    }
+
     void asignarTarea(Tarea tarea, Curso curso) {
         def encontrado = cursos.find {it -> it.getDenominacion() === curso.getDenominacion()}
         if(!encontrado)
             throw new CursoNoExisteException("Error: No fue posible asignar la tarea. El curso no existe.")
         encontrado.asignar(tarea)
+    }
+
+    Tarea getTarea(Long nroTarea) {
+        def tarea
+
+        for(Curso curso :cursos) {
+            tarea = curso.getTareasAsignadas().find { estaTarea ->
+                estaTarea.getNroTarea() == nroTarea
+            }
+            if(tarea) break
+        }
+        tarea
     }
 }
