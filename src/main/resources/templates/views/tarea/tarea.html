@@ -4,20 +4,20 @@
 <body style="background-image: url('https://papers.co/wallpaper/papers.co-sp14-blur-gradation-space-29-wallpaper.jpg');">
 <style src="../css/styles.css">
 </style>
-<div class="page-header"
-     style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDeOHrmimNM9DjdMIWmFFb6gTyLUq9ut2zbkFe6A-C3Aw6o4brp-38F9nNBGcBylWK1zg&usqp=CAU');">
+<div class="page-header">
     <div th:replace="layouts/header :: headerBody"/>
-    <h5> Nro. de tarea: <span th:text="${tarea.nroTarea}"></span></h5>
-    <h5> Consigna: <span th:text="${tarea.consigna}"></span></h5>
-    <h5> Fecha de entrega: <span th:text="${tarea.getFechaEntrega()}"></span></h5>
+    <h5 style="margin:10px;color:#E5E5E5;"> Tarea # <span th:text="${tarea.nroTarea}"></span></h5>
+    <h5 style="margin:10px;color:#E5E5E5;"> Consigna: <span th:text="${tarea.consigna}"></span></h5>
+    <h5 style="margin:10px;color:#E5E5E5;"> Fecha de entrega: <span th:text="${tarea.getFechaEntrega()}"></span></h5>
 </div>
-<span>
+<hr style="background-color:#E5E5E5">
+<div style="margin:10px;color:#E5E5E5;">
     <h3>Asignaciones a alumnos</h3>
-</span>
+</div>
 <div class="table-responsive">
     <table class="table" th:each="asignacionTarea : ${asignaciones}">
         <thead>
-        <tr>
+        <tr style="color:#E5E5E5;">
             <th>Alumno</th>
             <th>Fecha asignación</th>
             <th>Fecha cierre</th>
@@ -29,19 +29,19 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:if="${asignaciones.empty}">
+        <tr style="color:#FFFFFF;" th:if="${asignaciones.empty}">
             <td colspan="2">La tarea no posee alumnos asignados.</td>
         </tr>
-        <tr>
+        <tr style="color:#FFFFFF;">
             <th><span  th:text="${asignacionTarea.getAlumno()}"></span></th>
-            <td><span th:text="${asignacionTarea.getFechaAsignacion()}"></span></td>
-            <td><span th:text="${asignacionTarea.getFechaCierre()}? ${asignacionTarea.getFechaCierre()} : 'No asignada'"></span></td>
-            <td><span th:text="${asignacionTarea.getFechaCalificacion()} ? ${asignacionTarea.getFechaCalificacion()} : 'No asignada'"></span></td>
-            <td><span th:text="${asignacionTarea.estado}"></span></td>
-            <td><span th:text="${asignacionTarea.getCalificacion()} ? ${asignacionTarea.getCalificacion()} : 'Sin calificar'"></span></td>
+            <td><span th:text="${asignacionTarea.getFechaAsignacionFormat()}"></span></td>
+            <td><span th:text="${asignacionTarea.getFechaCierre()}? ${asignacionTarea.getFechaCierreFormat()} : 'No asignada'"></span></td>
+            <td><span th:text="${asignacionTarea.getFechaCalificacion()} ? ${asignacionTarea.getFechaCalificacionFormat()} : 'No asignada'"></span></td>
+            <td><span th:text="${asignacionTarea.getEstadoDesc()}"></span></td>
+            <td><span th:text="${asignacionTarea.getCalificacion()} ? ${asignacionTarea.getCalificacionFormat()} : 'Sin calificar'"></span></td>
             <td>
                 <a id="_idSeeAsignacionDetails"
-                   th:href="@{/asignacionTarea/__${tarea.nroTarea}__}" type="button"
+                   th:href="@{/tareas/verTareaAsignada/__${tarea.nroTarea}__/__${asignacionTarea.getAlumno()}__}" type="button"
                    class="button btn btn-labeled btn-info">
                     <i class="fa fa-eye"></i>
                 </a>

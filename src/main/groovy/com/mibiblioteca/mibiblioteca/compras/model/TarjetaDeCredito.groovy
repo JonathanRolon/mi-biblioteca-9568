@@ -18,7 +18,24 @@ import java.sql.Timestamp
 import java.time.LocalDateTime
 
 enum EntidadBancaria {
-    BANCO_RIO, BANCO_AZUL, BANCO_DEL_PLATA
+    BANCO_RIO{
+        @Override
+        String getDescripcion(){
+            "Banco Rio"
+        }
+    }, BANCO_AZUL{
+        @Override
+        String getDescripcion(){
+            "Banco Azul"
+        }
+    }, BANCO_DEL_PLATA{
+        @Override
+        String getDescripcion(){
+            "Banco Del Plata"
+        }
+    }
+
+    abstract String getDescripcion()
 }
 
 @Entity
@@ -40,7 +57,7 @@ class TarjetaDeCredito {
     @Column(nullable = false)
     Timestamp vencimiento
 
-    TarjetaDeCredito(BigInteger CBUCuenta,Long nroTarjeta, Integer CSV, EntidadBancaria entidadBancaria, Timestamp vto) {
+    TarjetaDeCredito(BigInteger CBUCuenta,String nroTarjeta, Integer CSV, EntidadBancaria entidadBancaria, Timestamp vto) {
         tarjetaIdentity = new TarjetaIdentity()
         tarjetaIdentity.setNroTarjeta(nroTarjeta)
         tarjetaIdentity.setEntidad(entidadBancaria)
@@ -52,7 +69,7 @@ class TarjetaDeCredito {
 
     TarjetaDeCredito() {}
 
-    Long getNroTarjeta() {
+    String getNroTarjeta() {
         this.getTarjetaIdentity().getNroTarjeta()
     }
 
@@ -87,6 +104,10 @@ class TarjetaDeCredito {
 
     EntidadBancaria getEntidadBancaria(){
         tarjetaIdentity.getEntidad()
+    }
+
+    String getEntidadBancariaDesc(){
+        getEntidadBancaria().getDescripcion()
     }
 
     void impactarPago(BigDecimal montoTarjeta) {

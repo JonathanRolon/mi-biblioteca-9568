@@ -17,7 +17,7 @@ class TarjetaDeCreditoTest {
         def entidadBanc = EntidadBancaria.BANCO_DEL_PLATA
         def vto = Timestamp.valueOf("2025-09-23 10:10:10.0")
         def tarjetaDeCredito = new TarjetaDeCredito(5461354 as BigInteger,
-                54654646466644,546, entidadBanc ,vto)
+                '54654646466644',546, entidadBanc ,vto)
         try{
             tarjetaDeCredito.acreditar(limite + 0.001)
         }catch(RuntimeException ex){
@@ -35,7 +35,7 @@ class TarjetaDeCreditoTest {
         def entidadBanc = EntidadBancaria.BANCO_DEL_PLATA
         def vto = Timestamp.valueOf("2025-09-23 10:10:10.0")
         def tarjetaDeCredito = new TarjetaDeCredito(5461354 as BigInteger,
-                54654646466644,546, entidadBanc ,vto)
+                '54654646466644',546, entidadBanc ,vto)
         try{
             tarjetaDeCredito.acreditar(monto as BigDecimal)
         }catch(RuntimeException ex){

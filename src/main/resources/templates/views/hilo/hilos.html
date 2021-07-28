@@ -7,13 +7,13 @@
 <style src="../css/styles.css">
 </style>
 <div th:replace="layouts/header :: headerBody"/>
-<span>
+<div style="margin:10px;color:#E5E5E5;">
     <h3>Foro de consultas</h3>
-</span>
+</div>
 <div class="table-responsive">
     <table class="table">
         <thead>
-        <tr>
+        <tr style="color:#E5E5E5">
             <th>Estado</th>
             <th>Consulta</th>
             <th>Sección</th>
@@ -26,11 +26,11 @@
         <tr th:if="${hilos.empty}">
             <td colspan="2">El foro esta vacio.</td>
         </tr>
-        <tr th:each="hilo : ${hilos}">
-            <th><span th:text="${hilo.estadoHilo}"></span></th>
+        <tr th:each="hilo : ${hilos}" style="color:#FFFFFF">
+            <th><span th:text="${hilo.getEstadoDesc()}"></span></th>
             <td><span th:text="${hilo.consulta}"></span></td>
-            <td><span th:text="${hilo.tema}"></span></td>
-            <td><span th:text="${hilo.fechaCreacion}"></span></td>
+            <td><span th:text="${hilo.getTemaDesc()}"></span></td>
+            <td><span th:text="${hilo.getFechaCreacionFormat()}"></span></td>
             <td><span th:text="${hilo.dniPublicador}"></span></td>
             <td>
                 <a id="_idSeeHiloDetails" th:href="@{'/hilos/' + ${hilo.id}}" type="button" class="button btn btn-labeled btn-info"><i class="fa fa-eye"></i></a>

@@ -12,7 +12,7 @@
         <div th:text="*{dniPublicador}" class="card-header"></div>
         <div class="card-body">
             <p th:text="*{getFechaCreacion()}" style="float:right" class="card-text"></p>
-            <h5 th:text="*{tema}" class="card-title"></h5>
+            <h5 th:text="*{getTemaDesc()}" class="card-title"></h5>
             <p th:text="*{consulta}" class="card-text text-white"></p>
         </div>
     </div>
@@ -22,7 +22,7 @@
                 <div class="card-custom card bg-light mb-3">
                     <div th:text="${resp.getPublicador()}" class="card-header"></div>
                     <div class="card-body">
-                        <p th:text="${resp.getFechaPublicacion()}" style="float:right" class="card-text"></p>
+                        <p th:text="${resp.getFechaPublicacionFormat()}" style="float:right" class="card-text"></p>
                         <p th:text="${resp.contenido}" class="card-text"></p>
                     </div>
                     <div class="card-footer bg-transparent border-success">

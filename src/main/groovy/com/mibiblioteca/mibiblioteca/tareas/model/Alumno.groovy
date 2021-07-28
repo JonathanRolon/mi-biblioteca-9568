@@ -126,6 +126,10 @@ class Alumno {
         this
     }
 
+    String getNivelDescripcion(){
+        nivel.getDescripcion()
+    }
+
     private void validarNivelCompra() {
 
         def compras = comprobantesPago.findAll { it -> it.getSaldoAbonado() > 0 }
@@ -234,7 +238,7 @@ class Alumno {
         valor
     }
 
-    TarjetaDeCredito getTarjetaRegistrada(Long nroTarjeta) {
+    TarjetaDeCredito getTarjetaRegistrada(String nroTarjeta) {
         tarjetasRegistradas.find {estaTarjeta ->
             estaTarjeta.getNroTarjeta() == nroTarjeta
         }

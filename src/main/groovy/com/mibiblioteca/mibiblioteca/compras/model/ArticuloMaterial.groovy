@@ -40,6 +40,10 @@ class ArticuloMaterial {
 
     ArticuloMaterial(){}
 
+    String getEstadoDesc(){
+        estado.getDescripcion()
+    }
+
     BigDecimal getPrecioVenta(){
         precioVenta
     }

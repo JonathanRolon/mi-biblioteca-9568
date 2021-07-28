@@ -13,7 +13,7 @@ class TarjetaIdentity implements Serializable{
     private static final long serialVersionUID = 1L;
 
     @NotNull
-    Long nroTarjeta
+    String nroTarjeta
 
     @NotNull
     EntidadBancaria entidad

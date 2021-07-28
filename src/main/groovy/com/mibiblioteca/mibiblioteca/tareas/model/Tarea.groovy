@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
 import java.sql.Timestamp
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 
 @CompileStatic
@@ -42,4 +43,17 @@ class Tarea implements Serializable{
     Timestamp getFechaEntrega() {
         fechaEntrega
     }
+
+    String getFechaCreacionFormat(){
+        SimpleDateFormat format =
+                new SimpleDateFormat("dd-MM-YYYY HH:mm:ss")
+        format.format(new Date(fechaCreacion.getTime()))
+    }
+
+    String getFechaEntregaFormat(){
+        SimpleDateFormat format =
+                new SimpleDateFormat("dd-MM-YYYY HH:mm:ss")
+        format.format(new Date(fechaEntrega.getTime()))
+    }
+
 }

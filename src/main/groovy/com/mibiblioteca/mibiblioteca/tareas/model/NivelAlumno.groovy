@@ -8,10 +8,13 @@ enum NivelAlumno {
         void sumarCreditos(Alumno alumno){
             alumno.sumarCreditos(CONS_COMPRA_CRED_NOVATO)
         }
-
         @Override
         void subirNivel(Alumno alumno){
             alumno.setNivel(NivelAlumno.MEDIO)
+        }
+        @Override
+        String getDescripcion(){
+            "Novato"
         }
     }, MEDIO{
         private final CONS_COMPRA_CRED_MEDIO = 100
@@ -23,6 +26,10 @@ enum NivelAlumno {
         void subirNivel(Alumno alumno){
             alumno.setNivel(NivelAlumno.PRO)
         }
+        @Override
+        String getDescripcion(){
+            "Medio"
+        }
     }, PRO{
         private final CONS_COMPRA_CRED_PRO = 200
         @Override
@@ -33,8 +40,13 @@ enum NivelAlumno {
         void subirNivel(Alumno alumno){
             return //nivel pro no sube de nivel
         }
+        @Override
+        String getDescripcion(){
+            "PRO"
+        }
     };
 
     abstract void sumarCreditos(Alumno alumno)
     abstract void subirNivel(Alumno alumno)
+    abstract String getDescripcion()
 }

@@ -18,6 +18,7 @@
         $(".nav .nav-link").on("click", function(){
         $(".nav").find(".active").removeClass("active");
         $(this).addClass("active");});
+
     </script>
 </head>
 <body>
@@ -55,20 +56,22 @@
                        class="button btn btn-circle btn-labeled btn-info dropdown-toggle">
                         <i class="fa fa-user-circle"></i>
                     </a>
-                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
+                    <div style="width:200px" class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink">
                         <div th:if="${tipoUsuario == 'ALUMNO'}">
-                            <h5 th:text="${alumno.nombre}" style="margin-left:10px;margin-top:10px;color:#d0aa64">
+                            <h5 style="margin-left:10px;margin-top:10px;color:#d0aa64">
+                                Alumno: <span th:text="${alumno.nombre}"></span>
                             </h5>
                         </div>
                         <div th:if="${tipoUsuario == 'DOCENTE'}">
-                            <h5 th:text="${docente.nombre}" style="margin-left:10px;margin-top:10px;color:#d0aa64">
+                            <h5 style="margin-left:10px;margin-top:10px;color:#d0aa64">
+                                Docente: <span th:text="${docente.nombre}"></span>
                             </h5>
                         </div>
                         <div th:object="${alumno}" th:if="${tipoUsuario == 'ALUMNO'}"
                              style="margin-left:10px;margin-right:10px;">
                             <h5 style="margin-top:10px;color:#d0aa64">
                                 Nivel:
-                                <span th:text="${alumno.getNivel()}"></span>
+                                <span th:text="${alumno.getNivelDescripcion()}"></span>
                             </h5>
                         </div>
                         <div th:object="${tipoUsuario}" th:if="${tipoUsuario == 'ALUMNO'}"

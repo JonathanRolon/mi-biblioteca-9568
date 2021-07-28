@@ -6,10 +6,10 @@
     <!-- Mensajes de resultados -->
     <div class="alert alert-success"  th:if="${success != null}" th:text="${success}"></div>
     <div class="alert alert-danger" th:if="${error != null}" th:text="${error}"></div>
-    <h3>Catálogo</h3>
+    <h3 style="margin:10px;color:#E5E5E5">Catálogo</h3>
     <table class="table">
         <thead>
-            <tr>
+            <tr style="color:#E5E5E5">
                 <th scope="col">Portada</th>
                 <th scope="col">Titulo</th>
                 <th scope="col">Editorial</th>
@@ -25,21 +25,22 @@
                 <td>
                     <img th:src="${material.portada}" style="width:100px;height:150px;" alt="No image">
                 </td>
-                <td th:text="${material.titulo}"></td>
-                <td th:text="${material.editorial}"></td>
+                <td style="color:#FFFFFF" th:text="${material.titulo}"></td>
+                <td style="color:#FFFFFF" th:text="${material.editorial}"></td>
                 <td>
-                    <div>
+                    <div style="color:#91c8f6">
                         $
                         <span th:text="${material.precio}"></span>
                     </div>
                 </td>
                 <td>
                    <div th:if="${alumno.yaCompre(material)}">
-                       <span>Adquirido</span>
+                       <span style="color:#ABE2AB"><b>Adquirido</b></span>
                    </div>
                     <div th:unless="${alumno.yaCompre(material)}">
                         <form th:action="@{/pedirArticulo/__${material.IdMaterial}__}" th:object="${material}" method="post">
-                            <span th:if="${pedido.tieneSolicitado(material)}">Pendiente de pago</span>
+                            <span style="color:#FABD64"
+                                  th:if="${pedido.tieneSolicitado(material)}"><b>Pendiente de pago</b></span>
                             <button th:unless="${pedido.tieneSolicitado(material)}"
                                id="_idBuy" type="submit" value="Submit" class="button btn btn-labeled btn-info">
                                 <i class="fa fa-shopping-cart" aria-hidden="true"></i>

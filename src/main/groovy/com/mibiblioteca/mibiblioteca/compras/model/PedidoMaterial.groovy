@@ -17,10 +17,22 @@ import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.OneToMany
 import java.sql.Timestamp
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 
 enum EstadoPedido {
-    PENDIENTE, CERRADO
+    PENDIENTE{
+        @Override
+        String getDescripcion(){
+            "Pendiente"
+        }
+    }, CERRADO{
+        @Override
+        String getDescripcion(){
+            "Cerrado"
+        }
+    }
+    abstract String getDescripcion()
 }
 
 @Entity
@@ -85,6 +97,16 @@ class PedidoMaterial {
            throw new ArticuloExistenteEnPedidoException("Error: el articulo a agregar ya existe.")
         }
 
+    }
+
+    String getEstado(){
+        estadoPedido.getDescripcion()
+    }
+
+    String getFechaCreacionFormat(){
+        SimpleDateFormat format =
+                new SimpleDateFormat("dd-MM-YYYY HH:mm:ss")
+        format.format(new Date(fechaCreacion.getTime()))
     }
 
     void cerrar(){

@@ -14,10 +14,28 @@ import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.OneToMany
 import java.sql.Timestamp
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 
 enum EstadoHilo {
-    ABIERTO, SUSPENDIDO, CERRADO
+    ABIERTO{
+        @Override
+        String getDescripcion(){
+            "Abierto"
+        }
+    }, SUSPENDIDO{
+        @Override
+        String getDescripcion(){
+            "Suspendido"
+        }
+    }, CERRADO{
+        @Override
+        String getDescripcion(){
+            "Cerrado"
+        }
+    }
+
+    abstract String getDescripcion()
 }
 
 @CompileStatic
@@ -71,6 +89,20 @@ class Hilo {
 
     Timestamp getFechaCreacion(){
         fechaCreacion
+    }
+
+    String getFechaCreacionFormat() {
+        SimpleDateFormat format =
+                new SimpleDateFormat("dd-MM-YYYY HH:mm:ss")
+        format.format(new Date(fechaCreacion.getTime()))
+    }
+
+    String getEstadoDesc(){
+        estadoHilo.getDescripcion()
+    }
+
+    String getTemaDesc(){
+        tema.getDescripcion()
     }
 
     Respuesta getRespuesta(Timestamp fechaCreacion, Long publicador){

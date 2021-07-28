@@ -18,7 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes
 
 @Controller
 @CompileStatic
-class CatalogoController {
+class ComprasController {
 
     @Autowired
     private final CompradorService compradorService
@@ -103,7 +103,7 @@ class CatalogoController {
 
     @PostMapping(value = '/pago/{nroTarjeta}')
     ModelAndView pagar(Model model, @ModelAttribute PedidoMaterial pedidoMaterial,
-                        @PathVariable('nroTarjeta') Long nroTarjeta,
+                        @PathVariable('nroTarjeta') String nroTarjeta,
                         RedirectAttributes flash){
         def comprador = alumnoRepository.findById(Sesion.alumno.getDNI())?.get()
         def pedido = compradorService.getPedido(Sesion.alumno)

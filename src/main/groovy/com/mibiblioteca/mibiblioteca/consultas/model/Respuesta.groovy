@@ -11,6 +11,7 @@ import javax.persistence.OneToMany
 import javax.persistence.Table
 import javax.validation.constraints.NotEmpty
 import java.sql.Timestamp
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 
 @CompileStatic
@@ -56,6 +57,12 @@ class Respuesta implements Serializable {
 
     Timestamp getFechaPublicacion(){
         return respuestaIdentity.getFechaCreacion()
+    }
+
+    String getFechaPublicacionFormat(){
+        SimpleDateFormat format =
+                new SimpleDateFormat("dd-MM-YYYY HH:mm:ss")
+        format.format(new Date(respuestaIdentity.getFechaCreacion().getTime()))
     }
 
     Integer getCalificPositivas(){

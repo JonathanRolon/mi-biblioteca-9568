@@ -48,23 +48,23 @@ class CargadorTarjetasCredito {
 
     void cargarTarjetaAlumno(){
         def fechaVto = new Timestamp(2025, 12, 25, 23, 59, 59, 59)
-        def tarjeta1 = new TarjetaDeCredito(1111135715859 as BigInteger,4502123445244588,859,EntidadBancaria.BANCO_AZUL,fechaVto)
+        def tarjeta1 = new TarjetaDeCredito(1111135715859 as BigInteger,'4734-6513-1321-3248',859,EntidadBancaria.BANCO_AZUL,fechaVto)
         def alumno1 = alumnoRepository.findById(35715859)?.get()
         alumno1.registrarTarjeta(tarjeta1)
 
-        def tarjeta2 = new TarjetaDeCredito(1111135715860 as BigInteger,4654524655465456,123,EntidadBancaria.BANCO_RIO,fechaVto)
+        def tarjeta2 = new TarjetaDeCredito(1111135715860 as BigInteger,'4654-5246-5546-5456',123,EntidadBancaria.BANCO_RIO,fechaVto)
         def alumno2 = alumnoRepository.findById(35715860)?.get()
         alumno2.registrarTarjeta(tarjeta2)
 
-        def tarjeta3 =  new TarjetaDeCredito(1111135715861 as BigInteger,486546546135434,456,EntidadBancaria.BANCO_DEL_PLATA,fechaVto)
+        def tarjeta3 =  new TarjetaDeCredito(1111135715861 as BigInteger,'4865-4654-6135-4344',456,EntidadBancaria.BANCO_DEL_PLATA,fechaVto)
         def alumno3 = alumnoRepository.findById(35715861)?.get()
         alumno3.registrarTarjeta(tarjeta3)
 
-        def tarjeta4 =  new TarjetaDeCredito(1111135715862 as BigInteger,498744616131120,789,EntidadBancaria.BANCO_AZUL,fechaVto)
+        def tarjeta4 =  new TarjetaDeCredito(1111135715862 as BigInteger,'4987-4461-6131-1207',789,EntidadBancaria.BANCO_AZUL,fechaVto)
         def alumno4 = alumnoRepository.findById(35715862)?.get()
         alumno4.registrarTarjeta(tarjeta4)
 
-        def tarjeta5 =  new TarjetaDeCredito(1111135715863 as BigInteger,473465131321324,101,EntidadBancaria.BANCO_RIO,fechaVto)
+        def tarjeta5 =  new TarjetaDeCredito(1111135715863 as BigInteger,'4502-1234-4524-4588',101,EntidadBancaria.BANCO_RIO,fechaVto)
         def alumno5 = alumnoRepository.findById(35715863)?.get()
         alumno5.registrarTarjeta(tarjeta5)
     }

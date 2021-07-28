@@ -5,22 +5,23 @@
 <style src="../css/styles.css">
 </style>
 <div th:replace="layouts/header :: headerBody"/>
-<span th:if="${docente != null}">
+<div style="margin:10px;color:#E5E5E5;" th:if="${docente != null}">
     <h3>Mis tareas</h3>
-</span>
+</div>
+<hr style="background-color:#E5E5E5">
 <!-- Docente -->
 <div th:if="${docente != null}" th:object="${docente}">
     <ul th:each="curso : ${docente.getCursos()}" class="list-group">
         <li style="list-style-type: none;">
-            <h5>
+            <h5 style="margin:10px;color:#E5E5E5;">
                 Curso:
                 <span th:text="${curso.denominacion}"></span>
             </h5>
-            <h5>Tareas asignadas</h5>
+            <h5 style="margin:10px;color:#E5E5E5;">Tareas asignadas</h5>
             <div class="table-responsive">
                 <table class="table">
                     <thead>
-                    <tr>
+                    <tr style="margin:10px;color:#E5E5E5;">
                         <th>Nro. Tarea</th>
                         <th>Consigna</th>
                         <th>Fecha de creación</th>
@@ -29,14 +30,14 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:if="${curso.tareasAsignadas.empty}">
+                    <tr style="color:#FFFFFF;" th:if="${curso.tareasAsignadas.empty}">
                         <td colspan="2">Aún no se creó ninguna tarea.</td>
                     </tr>
-                    <tr th:each="tarea : ${curso.tareasAsignadas}">
+                    <tr th:each="tarea : ${curso.tareasAsignadas}" style="color:#FFFFFF;">
                         <th><span th:text="${tarea.nroTarea}"></span></th>
                         <td><span th:text="${tarea.consigna}"></span></td>
-                        <td><span th:text="${tarea.getFechaCreacion()}"></span></td>
-                        <td><span th:text="${tarea.getFechaEntrega()}"></span></td>
+                        <td><span th:text="${tarea.getFechaCreacionFormat()}"></span></td>
+                        <td><span th:text="${tarea.getFechaEntregaFormat()}"></span></td>
                         <td>
                             <a id="_idSeeTareaDetails" th:href="@{/tareas/__${tarea.nroTarea}__}" type="button"
                                class="button btn btn-labeled btn-info"><i class="fa fa-eye"></i></a>
@@ -51,16 +52,16 @@
 
 <!-- Alumno -->
 <div th:if="${alumno != null}" class="table-responsive">
-   <span>
+   <div style="margin:10px;color:#E5E5E5;">
     <h3>Tareas asignadas</h3>
-</span>
+</div>
     <div class="table-responsive">
         <table class="table" th:each="asignacionTarea : ${tareas}">
             <thead>
-            <tr>
+            <tr style="color:#E5E5E5;">
                 <th>Nro. de tarea</th>
                 <th>Fecha asignación</th>
-                <th>Fecha limite</th>
+                <th>Fecha límite</th>
                 <th>Estado</th>
                 <th>Calificación</th>
                 <th></th>
@@ -70,11 +71,11 @@
             <tr th:if="${tareas.empty}">
                 <td colspan="2">No hay tareas asignadas.</td>
             </tr>
-            <tr>
+            <tr style="color:#FFFFFF;">
                 <th><span  th:text="${asignacionTarea.getNroTarea()}"></span></th>
-                <td><span th:text="${asignacionTarea.getFechaAsignacion()}"></span></td>
-                <td><span th:text="${asignacionTarea.getFechaLimite()}"></span></td>
-                <td><span th:text="${asignacionTarea.estado}"></span></td>
+                <td><span th:text="${asignacionTarea.getFechaAsignacionFormat()}"></span></td>
+                <td><span th:text="${asignacionTarea.getFechaLimiteFormat()}"></span></td>
+                <td><span th:text="${asignacionTarea.getEstadoDesc()}"></span></td>
                 <td><span th:text="${asignacionTarea.getCalificacion()} ? ${asignacionTarea.getCalificacion()} : 'Sin calificar'"></span></td>
                 <td>
                     <a id="_idSeeAsignacionDetails"

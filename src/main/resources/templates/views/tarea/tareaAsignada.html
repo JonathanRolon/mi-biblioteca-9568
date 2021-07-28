@@ -4,20 +4,26 @@
 <body style="background-image: url('https://papers.co/wallpaper/papers.co-sp14-blur-gradation-space-29-wallpaper.jpg');">
 <script type="text/javascript" src="../../js/tarea.js">
 </script>
-<div class="page-header"
-     style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDeOHrmimNM9DjdMIWmFFb6gTyLUq9ut2zbkFe6A-C3Aw6o4brp-38F9nNBGcBylWK1zg&usqp=CAU');">
+<div class="page-header">
     <div th:replace="layouts/header :: headerBody"/>
-    <h5> Nro. de tarea: <span th:text="${asignacion.getNroTarea()}"></span></h5>
-    <h5> Consigna: <span th:text="${consigna}"></span></h5>
-    <h5> Fecha de entrega: <span th:text="${asignacion.getFechaLimite()}"></span></h5>
-    <h5> Estado: <span th:text="${asignacion.estado}"></span></h5>
+    <h3 style="margin:10px;color:#E5E5E5;">Detalle de tarea #<span th:text="${asignacion.getNroTarea()}"></span></h3>
+    <h5 style="margin:10px;color:#E5E5E5;"> Consigna: <span th:text="${consigna}"></span></h5>
+    <h5 style="margin:10px;color:#E5E5E5;"> Fecha de entrega: <span th:text="${asignacion.getFechaLimiteFormat()}"></span></h5>
+    <h5 style="margin:10px;color:#E5E5E5;"> Estado: <span th:text="${asignacion.getEstadoDesc()}"></span></h5>
+    <h5 style="margin:10px;color:#E5E5E5;"> Calificación: <span th:text="${asignacion.calificacion} ? ${asignacion.calificacion} : 'Sin calificar'"></span></h5>
 </div>
-<div th:if="${!asignacion.esResoluble()}">
-    <h5>Mi respuesta:
+<hr style="background-color:#E5E5E5;">
+<div style="color:#FFFFFF;margin:10px" th:if="${!asignacion.esResoluble() and tipoUsuario == 'ALUMNO'}">
+    <h5><b>Mi respuesta:</b>
         <span th:text="${asignacion.respuesta}? ${asignacion.respuesta} : 'No resuelta'"></span>
     </h5>
 </div>
-<div th:if="${asignacion.esResoluble()}" style="padding-left:30px">
+<div style="color:#FFFFFF;" th:if="${tipoUsuario == 'DOCENTE'}">
+    <h5><b>Respuesta del alumno:</b>
+        <span th:text="${asignacion.respuesta}? ${asignacion.respuesta} : 'No resuelta'"></span>
+    </h5>
+</div>
+<div th:if="${asignacion.esResoluble() and tipoUsuario == 'ALUMNO'}" style="padding-left:30px">
     <form action="#" style="width:400px" th:action="@{/tareas/resolver/__${asignacion.getNroTarea()}__}"
           th:object="${asignacion}"
           method="post">

@@ -12,10 +12,33 @@ import javax.persistence.Entity
 import javax.persistence.EnumType
 import javax.persistence.Enumerated
 import java.sql.Timestamp
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 
 enum EstadoAsignacionTarea {
-    ABIERTA_PEND_RES, ABIERTA_PEND_CALIF, CERRADA_PEND_CALIF, CERRADA
+    ABIERTA_PEND_RES{
+        @Override
+        String getDescripcion() {
+            "Abierta pendiente de resolución"
+        }
+    }, ABIERTA_PEND_CALIF{
+        @Override
+        String getDescripcion() {
+            "Abierta pendiente de calificación"
+        }
+    }, CERRADA_PEND_CALIF{
+        @Override
+        String getDescripcion() {
+            "Cerrada pendiente de calificación"
+        }
+    }, CERRADA{
+        @Override
+        String getDescripcion() {
+            "Cerrada"
+        }
+    }
+
+    abstract String getDescripcion()
 }
 
 @Entity
@@ -69,23 +92,47 @@ class AsignacionTareaAlumno {
         this.id.getIdTarea()
     }
 
-    Timestamp getFechaAsignacion(){
+    Timestamp getFechaAsignacion() {
         fechaAsignacion
     }
 
-    Timestamp getFechaCierre(){
+    Timestamp getFechaCierre() {
         fechaCierre
     }
 
-    Timestamp getFechaCalificacion(){
+    Timestamp getFechaCalificacion() {
         fechaCalificacion
     }
 
-    Timestamp getFechaLimite(){
+    Timestamp getFechaLimite() {
         fechaLimite
     }
 
-    Boolean esResoluble(){
+    String getFechaAsignacionFormat() {
+        SimpleDateFormat format =
+                new SimpleDateFormat("dd-MM-YYYY HH:mm:ss")
+        format.format(new Date(fechaAsignacion.getTime()))
+    }
+
+    String getFechaCierreFormat() {
+        SimpleDateFormat format =
+                new SimpleDateFormat("dd-MM-YYYY HH:mm:ss")
+        format.format(new Date(fechaCierre.getTime()))
+    }
+
+    String getFechaCalificacionFormat() {
+        SimpleDateFormat format =
+                new SimpleDateFormat("dd-MM-YYYY HH:mm:ss")
+        format.format(new Date(fechaCalificacion.getTime()))
+    }
+
+    String getFechaLimiteFormat() {
+        SimpleDateFormat format =
+                new SimpleDateFormat("dd-MM-YYYY HH:mm:ss")
+        format.format(new Date(fechaLimite.getTime()))
+    }
+
+    Boolean esResoluble() {
         def ahora = Timestamp.valueOf(LocalDateTime.now())
         def resultado = ahora.compareTo(fechaLimite)
         def estadoOk = (estado.toString() == EstadoAsignacionTarea.ABIERTA_PEND_RES.toString())
@@ -108,11 +155,14 @@ class AsignacionTareaAlumno {
         calificacion
     }
 
+    String getEstadoDesc() {
+        estado.getDescripcion()
+    }
+
     AsignacionTareaAlumno cerrar() {
         def invalido = (estado.toString() != EstadoAsignacionTarea.ABIERTA_PEND_CALIF.toString()) &&
-                        (estado.toString() != EstadoAsignacionTarea.ABIERTA_PEND_RES.toString())
-        if (invalido)
-         {
+                (estado.toString() != EstadoAsignacionTarea.ABIERTA_PEND_RES.toString())
+        if (invalido) {
             throw new TareaNoCerrableException("La tarea no se encuentra abierta.")
         }
         estado = EstadoAsignacionTarea.CERRADA_PEND_CALIF
@@ -131,17 +181,17 @@ class AsignacionTareaAlumno {
         fechaCalificacion = Timestamp.valueOf(LocalDateTime.now())
     }
 
-    Boolean estaCerrada(){
+    Boolean estaCerrada() {
         def estado = estado.toString() == EstadoAsignacionTarea.CERRADA_PEND_CALIF.toString() ||
-        estado.toString() == EstadoAsignacionTarea.CERRADA.toString()
+                estado.toString() == EstadoAsignacionTarea.CERRADA.toString()
         estado
     }
 
-    Boolean estaCerradaPendiente(){
+    Boolean estaCerradaPendiente() {
         estado.toString() == EstadoAsignacionTarea.CERRADA_PEND_CALIF.toString()
     }
 
-    Boolean estaVencidaPendiente(){
+    Boolean estaVencidaPendiente() {
         def ahora = Timestamp.valueOf(LocalDateTime.now())
         def resultado = ahora.compareTo(fechaLimite)
         resultado >= 0 && !estaCerrada()

@@ -24,7 +24,7 @@ import java.sql.Timestamp
 @Controller
 @CompileStatic
 @RequestMapping('/hilos')
-class HiloController {
+class ConsultasController {
 
     @Autowired
     private final PublicadorService publicadorService

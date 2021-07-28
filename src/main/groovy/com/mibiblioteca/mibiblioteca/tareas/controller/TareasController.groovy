@@ -20,7 +20,7 @@ import org.springframework.web.servlet.ModelAndView
 @Controller
 @CompileStatic
 @RequestMapping('/tareas')
-class TareaController {
+class TareasController {
 
     @Autowired
     private final ManejadorTareasService manejadorTareasService
@@ -95,8 +95,22 @@ class TareaController {
         def consignaTarea = manejadorTareasService.getConsignaTarea(nroTarea)
         def alumno = alumnoRepository.findById(Sesion.alumno.getDNI())?.get()
         model.addAttribute("consigna", consignaTarea)
-        model.addAttribute("asignacion", tareaAsignada)
         model.addAttribute("alumno", alumno)
+        model.addAttribute("asignacion", tareaAsignada)
+        model.addAttribute("tipoUsuario", (Sesion.tipoUsuario).toString())
+        new ModelAndView('views/tarea/tareaAsignada')
+    }
+
+    @GetMapping(value = '/verTareaAsignada/{nroTarea}/{dniAlumno}')
+    ModelAndView verTareaAlumno(@PathVariable('nroTarea') Long nroTarea,
+                                @PathVariable('dniAlumno') Long dniAlumno,
+                                  Model model){
+        def tareaAsignada = manejadorTareasService.getAsignacionTarea(dniAlumno, nroTarea)
+        def consignaTarea = manejadorTareasService.getConsignaTarea(nroTarea)
+        def docente = docenteRepository.findById(Sesion.docente.getDNI())?.get()
+        model.addAttribute("consigna", consignaTarea)
+        model.addAttribute("asignacion", tareaAsignada)
+        model.addAttribute("docente", docente)
         model.addAttribute("tipoUsuario", (Sesion.tipoUsuario).toString())
         new ModelAndView('views/tarea/tareaAsignada')
     }

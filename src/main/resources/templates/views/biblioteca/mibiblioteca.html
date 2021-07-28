@@ -5,16 +5,16 @@
 <script type="text/javascript" src="../js/biblioteca.js">
 </script>
 <div th:replace="layouts/header :: headerBody"/>
-<h3>Mis artículos</h3>
+<h3 style="margin:10px;color:#E5E5E5">Mis artículos</h3>
 <div class="py-5">
-    <div th:if="${mibiblioteca.empty}">Aún no tenes material de estudio adquirido.</div>
-    <div class="container" th:each="material: ${mibiblioteca}">
-        <div class="row row-cols-auto">
-            <div class="col-md-4">
-                <div class="card" style="width: 18rem;">
+    <div style="margin:10px;color:#E5E5E5" th:if="${mibiblioteca.empty}">Aún no tenes material de estudio adquirido.</div>
+    <div class="container-fluid" >
+        <div class="d-flex flex-row flex-nowrap overflow-auto" ><!-- class="row flex-row flex-nowrap"-->
+            <div th:each="material: ${mibiblioteca}" class="col-3" ><!---->
+                <div class="card" style="width: 18rem;background:#e8ac58">
                     <img class="card-img-top" style="margin: 70px;width: 200px;height: 300px;" alt="No image"
                          th:src="${material.portada}">
-                    <div class="card-body">
+                    <div  class="card-body">
                         <h5 class="card-title" th:text="${material.titulo}">Card title</h5>
                         <span th:text="${material.editorial}" class="card-text"></span>
                         <br>
@@ -24,8 +24,16 @@
                     </div>
                 </div>
             </div>
+            </div>
         </div>
-    </div>
+
+    <!--<div class="container" th:each="material: ${mibiblioteca}">
+        <div class="row row-cols-auto">
+            <div class="col-md-4">
+
+            </div>
+        </div>
+    </div>-->
 </div>
 </body>
 </html>

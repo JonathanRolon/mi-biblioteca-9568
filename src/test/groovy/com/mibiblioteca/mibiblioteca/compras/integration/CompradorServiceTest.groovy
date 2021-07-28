@@ -156,7 +156,7 @@ class CompradorServiceTest {
 
     private TarjetaDeCredito getTarjetaValida(Alumno alumno, CuentaBancaria cuentaAlumno) {
         def tarjetaValida = new TarjetaDeCredito(cuentaAlumno.getCBU(),
-                4566456645664656, 123,
+                '4566456645664656', 123,
                 EntidadBancaria.BANCO_RIO, fechaVto)
         try {
             tarjetaValida.acreditar(5000.00)
