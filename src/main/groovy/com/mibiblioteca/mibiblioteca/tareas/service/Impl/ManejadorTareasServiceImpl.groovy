@@ -40,12 +40,9 @@ class ManejadorTareasServiceImpl implements ManejadorTareasService {
 
     private void asignarTareaAlumnosDelCurso(Curso curso, Tarea tarea) {
         def tareaAlumnoAsignacion,
-            alumnosCurso
-
-
-        alumnosCurso = alumnoRepository.findAll().findAll {
-            it -> it.getCurso() == curso.getDenominacion()
-        }
+            alumnosCurso = alumnoRepository.findAll().findAll {
+            unAlumno -> unAlumno.getCurso() == curso.getDenominacion()
+            }
 
         if (alumnosCurso.size() == 0)
             throw new TareaNoAsignableException("Error: No existen alumnos asignados al curso de la tarea.")

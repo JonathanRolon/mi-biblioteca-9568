@@ -3,7 +3,6 @@ package com.mibiblioteca.mibiblioteca.consultas.controller
 import com.mibiblioteca.mibiblioteca.consultas.model.Calificacion
 import com.mibiblioteca.mibiblioteca.consultas.model.Hilo
 import com.mibiblioteca.mibiblioteca.consultas.model.Respuesta
-import com.mibiblioteca.mibiblioteca.consultas.model.RespuestaIdentity
 import com.mibiblioteca.mibiblioteca.consultas.service.PublicadorService
 import com.mibiblioteca.mibiblioteca.principal.service.Sesion
 import com.mibiblioteca.mibiblioteca.tareas.repository.AlumnoRepository
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.servlet.ModelAndView
+import org.springframework.web.servlet.mvc.support.RedirectAttributes
 
 import javax.transaction.Transactional
 import java.sql.Timestamp
@@ -42,12 +42,15 @@ class ConsultasController {
 
     @Transactional
     @PostMapping("/add")
-    ModelAndView add(Model model, @ModelAttribute('hilo') Hilo hilo) {
+    ModelAndView add(Model model, @ModelAttribute('hilo') Hilo hilo,
+                    RedirectAttributes flash) {
         try {
             Hilo nuevoHilo = publicadorService.crearHilo(Sesion.usuario, hilo.getTema(), hilo.getConsulta())
+            flash.addFlashAttribute("infoMsg","Creaste una nueva consulta!")
             findById(nuevoHilo.getId(), model)
         } catch (RuntimeException ex) {
-            new ModelAndView('views/hilo/errorCreacionHilo')
+            flash.addFlashAttribute("error","Error al intentar agregar una nueva consulta!")
+            new ModelAndView('redirect:/hilos')
         }
     }
 
@@ -68,31 +71,34 @@ class ConsultasController {
     @RequestMapping(value = '/{id}/responder', method = RequestMethod.POST)
     ModelAndView responderHilo(@PathVariable('id') Long id, @ModelAttribute('hilo') Hilo hilo,
                                @ModelAttribute('respuesta') Respuesta respuesta,
-                               Model model) {
+                               Model model, RedirectAttributes flash) {
         try{
             def hiloSeleccionado = publicadorService.getHilo(id)
             publicadorService.responder(Sesion.usuario, hiloSeleccionado, respuesta.getContenido())
             model.addAttribute("tipoUsuario", (Sesion.tipoUsuario).toString())
-            new ModelAndView("redirect:/hilos/" + hilo.getId())
         }catch (RuntimeException ex) {
-            new ModelAndView('views/hilo/errorResponderHilo')
+            flash.addFlashAttribute("error","Error al intentar responder la consulta!")
         }
+        new ModelAndView("redirect:/hilos/" + hilo.getId())
     }
 
     @Transactional
     @RequestMapping(value = '/{id}/calificar/{publicador}/{fechaCreacion}', method = RequestMethod.POST)
-    ModelAndView guardarCalificacionAlumno(@PathVariable('id') Long id, @PathVariable('publicador') Long publicadorResp,
+    ModelAndView guardarCalificacionAlumno(@PathVariable('id') Long id,
+                                           @PathVariable('publicador') Long publicadorResp,
                                            @PathVariable('fechaCreacion') Timestamp fechaCreacionResp,
-                                           @ModelAttribute('calificacion') Calificacion calificacion, Model model) {
+                                           @ModelAttribute('calificacion') Calificacion calificacion,
+                                           Model model, RedirectAttributes flash) {
+        def hilo = publicadorService.getHilo(id)
         try{
-            def hilo = publicadorService.getHilo(id)
             def respuesta = hilo.getRespuesta(fechaCreacionResp, publicadorResp)
             publicadorService.calificar(Sesion.alumno, respuesta , calificacion.getCalificacion())
             model.addAttribute("tipoUsuario", (Sesion.tipoUsuario).toString())
-            new ModelAndView("redirect:/hilos/" + hilo.getId())
+            flash.addFlashAttribute("infoMsg","Tu calificación se ha publicado!")
         }catch (RuntimeException ex) {
-            new ModelAndView('views/hilo/errorCalificarRta')
+            flash.addFlashAttribute("error", "Error al intentar calificar la respuesta!")
         }
+        new ModelAndView("redirect:/hilos/" + hilo.getId())
     }
 
 }

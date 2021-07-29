@@ -18,7 +18,6 @@
         $(".nav .nav-link").on("click", function(){
         $(".nav").find(".active").removeClass("active");
         $(this).addClass("active");});
-
     </script>
 </head>
 <body>
@@ -89,9 +88,12 @@
                     </div>
                 </div>
             </li>
-
         </ul>
     </nav>
+    <!-- Mensajes de resultados -->
+    <div class="alert alert-success"  th:if="${success != null}" th:text="${success}"></div>
+    <div class="alert alert-info"  th:if="${infoMsg != null}" th:text="${infoMsg}"></div>
+    <div class="alert alert-danger" th:if="${error != null}" th:text="${error}"></div>
 </div>
 </body>
 </html>

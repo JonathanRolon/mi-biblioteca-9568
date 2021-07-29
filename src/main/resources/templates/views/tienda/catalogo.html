@@ -3,9 +3,6 @@
 <head th:replace="layouts/header :: headerHead"></head>
 <body style="background-image: url('https://papers.co/wallpaper/papers.co-sp14-blur-gradation-space-29-wallpaper.jpg');">
     <div th:replace="layouts/header :: headerBody"/>
-    <!-- Mensajes de resultados -->
-    <div class="alert alert-success"  th:if="${success != null}" th:text="${success}"></div>
-    <div class="alert alert-danger" th:if="${error != null}" th:text="${error}"></div>
     <h3 style="margin:10px;color:#E5E5E5">Catálogo</h3>
     <table class="table">
         <thead>

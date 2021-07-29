@@ -28,6 +28,18 @@ class PublicadorServiceImpl implements PublicadorService {
     @Autowired
     private HiloRepository hiloRepository
 
+
+    private void validarCalificar(Hilo hilo, Alumno calificado,
+                                  Alumno calificador, Integer calificacion,
+                                  Respuesta respuesta) {
+        if (!hilo ||
+                (!calificado.esRegular() || !calificador.esRegular()) ||
+                (calificacion < MIN_CALIF_RESP || calificacion > MAX_CALIF_RESP) ||
+                (calificador.esNovato()) ||
+                (respuesta.esPublicador(calificador.getDNI())))
+            throw new ErrorAlCalificarRespuestaException("Error: al intentar calificar la respuesta")
+    }
+
     @Override
     Calificacion calificar(Alumno calificador, Respuesta respuesta, Integer calificacion) {
 
@@ -35,17 +47,8 @@ class PublicadorServiceImpl implements PublicadorService {
         def calif = new Calificacion(respuesta, calificador.getDNI(), calificacion)
         def hilo = hiloRepository.findById(respuesta.getHiloId()).get()
 
-        if (!hilo ||
-                (!calificado.esRegular() || !calificador.esRegular()) ||
-                (calificacion < MIN_CALIF_RESP || calificacion > MAX_CALIF_RESP) ||
-                (calificador.esNovato()) ||
-                (respuesta.esPublicador(calificador.getDNI())))
-            throw new ErrorAlCalificarRespuestaException("Error: al intentar calificar la respuesta")
-
-        if (calificacion > UMBRAL_CALIF_POS) {
-            calificado.incrementarCalifPositivas()
-        }
-
+        validarCalificar(hilo, calificado, calificador, calificacion, respuesta)
+        if (calificacion > UMBRAL_CALIF_POS) calificado.incrementarCalifPositivas()
         respuesta.agregarCalificacion(calif)
         hilo.actualizarRespuesta(respuesta)
         calif
@@ -68,11 +71,11 @@ class PublicadorServiceImpl implements PublicadorService {
     @Override
     List<Hilo> obtenerHilosDe(Alumno alumno) {
         def hilos = hiloRepository.findAll()
-        hilos.findAll {hilo -> hilo.getDniPublicador() === alumno}
+        hilos.findAll { hilo -> hilo.getDniPublicador() === alumno }
     }
 
     @Override
-    List<Hilo> getForo(){
+    List<Hilo> getForo() {
         hiloRepository.findAll()
     }
 
