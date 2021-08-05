@@ -8,7 +8,7 @@
 <div style="margin:10px;color:#E5E5E5;" th:if="${docente != null}">
     <h3>Mis tareas</h3>
 </div>
-<hr style="background-color:#E5E5E5">
+<hr th:if="${docente != null}" style="background-color:#E5E5E5">
 <!-- Docente -->
 <div th:if="${docente != null}" th:object="${docente}">
     <ul th:each="curso : ${docente.getCursos()}" class="list-group">
@@ -46,15 +46,18 @@
                     </tbody>
                 </table>
             </div>
-        </li><br>
+        </li>
+        <br>
     </ul>
 </div>
-
 <!-- Alumno -->
 <div th:if="${alumno != null}" class="table-responsive">
-   <div style="margin:10px;color:#E5E5E5;">
-    <h3>Tareas asignadas</h3>
-</div>
+    <div style="margin:10px;color:#E5E5E5;">
+        <h3>Tareas asignadas</h3>
+    </div>
+    <div th:if="${tareas.empty}" style="margin:10px;color:#E5E5E5;">
+        <span>No hay tareas asignadas.</span>
+    </div>
     <div class="table-responsive">
         <table class="table" th:each="asignacionTarea : ${tareas}">
             <thead>
@@ -68,15 +71,14 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:if="${tareas.empty}">
-                <td colspan="2">No hay tareas asignadas.</td>
-            </tr>
             <tr style="color:#FFFFFF;">
-                <th><span  th:text="${asignacionTarea.getNroTarea()}"></span></th>
+                <th><span th:text="${asignacionTarea.getNroTarea()}"></span></th>
                 <td><span th:text="${asignacionTarea.getFechaAsignacionFormat()}"></span></td>
                 <td><span th:text="${asignacionTarea.getFechaLimiteFormat()}"></span></td>
                 <td><span th:text="${asignacionTarea.getEstadoDesc()}"></span></td>
-                <td><span th:text="${asignacionTarea.getCalificacion()} ? ${asignacionTarea.getCalificacion()} : 'Sin calificar'"></span></td>
+                <td><span
+                        th:text="${asignacionTarea.getCalificacion()} ? ${asignacionTarea.getCalificacion()} : 'Sin calificar'"></span>
+                </td>
                 <td>
                     <a id="_idSeeAsignacionDetails"
                        th:href="@{/tareas/verTareaAsignada/__${asignacionTarea.getNroTarea()}__}" type="button"

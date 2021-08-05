@@ -38,7 +38,7 @@
             <td><span th:text="${asignacionTarea.getFechaCierre()}? ${asignacionTarea.getFechaCierreFormat()} : 'No asignada'"></span></td>
             <td><span th:text="${asignacionTarea.getFechaCalificacion()} ? ${asignacionTarea.getFechaCalificacionFormat()} : 'No asignada'"></span></td>
             <td><span th:text="${asignacionTarea.getEstadoDesc()}"></span></td>
-            <td><span th:text="${asignacionTarea.getCalificacion()} ? ${asignacionTarea.getCalificacionFormat()} : 'Sin calificar'"></span></td>
+            <td><span th:text="${asignacionTarea.getCalificacion()} ? ${asignacionTarea.getCalificacion()} : 'Sin calificar'"></span></td>
             <td>
                 <a id="_idSeeAsignacionDetails"
                    th:href="@{/tareas/verTareaAsignada/__${tarea.nroTarea}__/__${asignacionTarea.getAlumno()}__}" type="button"
@@ -47,7 +47,7 @@
                 </a>
             </td>
             <td>
-                <div th:if="${asignacionTarea.estaVencidaPendiente()}" style="width:135px;">
+                <div th:if="${asignacionTarea.estaPendienteCierre()}" style="width:135px;">
                     <a id="_idCerrarAsignacionTarea"
                        th:href="@{/tareas/cerrarTarea/__${tarea.nroTarea}__/__${asignacionTarea.getAlumno()}__}" type="button"
                        class="btn btn-secondary" >

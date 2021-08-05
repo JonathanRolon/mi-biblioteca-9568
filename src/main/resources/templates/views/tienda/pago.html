@@ -11,7 +11,7 @@
     <h5 style="color:#BFBFBF; margin:10px"> Estado pedido: <span th:text="${pedido.getEstado()}"></span></h5>
     <h5 style="color:#BFBFBF; margin:10px"> Creado el: <span th:text="${pedido.getFechaCreacionFormat()}"></span></h5>
     <h5 style="color:#BFBFBF; margin:10px" id="_totalId"> Total: $<span th:text="${pedido.getTotal()}"></span></h5>
-    <h5 id="_totalConDtoId" style="display:none;color:##BFBFBF; margin:10px"> Total con descuento: <span
+    <h5 id="_totalConDtoId" style="display:none;color:#e4c640;margin:10px"> Total con descuento: <span
             th:text="${pedido.getTotalConDescuento()}"></span>
         <span>(30% OFF)</span></h5>
 </div>
@@ -39,7 +39,13 @@
                 <br>
                 <label for="_idSaldoTarjeta"><b>Saldo actual:</b> $</label>
                 <span id="_idSaldoTarjeta" th:text="${tarjeta.getSaldo()}">
-                    </span>
+                </span>
+                <div id="_idSaldoInsuf" style="font-size: 12px;pointer-events:none;"
+                     th:if="${pedido.getTotal() > tarjeta.getSaldo()}"
+                     class="btn btn-light">
+                    <i class="fa fa-info"></i>
+                    Saldo insuficiente
+                </div>
             </div>
         </div>
         <div style="color:#FFFFFF" class="form-group">

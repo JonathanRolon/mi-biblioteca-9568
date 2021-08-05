@@ -191,7 +191,7 @@ class AsignacionTareaAlumno {
         estado.toString() == EstadoAsignacionTarea.CERRADA_PEND_CALIF.toString()
     }
 
-    Boolean estaVencidaPendiente() {
+    Boolean estaPendienteCierre() {
         def ahora = Timestamp.valueOf(LocalDateTime.now())
         def resultado = ahora.compareTo(fechaLimite)
         resultado >= 0 && !estaCerrada()

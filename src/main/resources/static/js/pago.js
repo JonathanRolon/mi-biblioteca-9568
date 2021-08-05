@@ -6,6 +6,7 @@ window.onload = function(){
         const dto = 0.3;
         let totalPago = parseFloat($("#_totalId").get(0).children[0].innerText);
         let h5ConDto = $("#_totalConDtoId").get(0);
+        let divSaldoInsuf = $("#_idSaldoInsuf").get(0);
         let butPagar = $("#_buttonSubmitPagoId").get(0);
         let saldoTarjeta= parseFloat($("#_idSaldoTarjeta").get(0).innerText);
         let importeAUsarCred = $("#_importeCreditosAGastarId").get(0);
@@ -20,6 +21,7 @@ window.onload = function(){
         }
 
         butPagar.disabled = (saldoTarjeta < totalPago) ? true : false;
+        divSaldoInsuf.style.display = (saldoTarjeta < totalPago) ? "initial" : "none";
     }
 
      let oButtonSelectPagoCred = $('#_pagarConCredId');

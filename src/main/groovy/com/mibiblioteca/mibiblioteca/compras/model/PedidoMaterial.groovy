@@ -124,7 +124,8 @@ class PedidoMaterial {
     }
 
     BigDecimal getTotal() {
-        def total = articulosSolicitados.inject(0 as BigDecimal, { suma, it -> suma + it.getPrecioVenta()})
+        def total = articulosSolicitados.inject(0 as BigDecimal, { suma,
+       it -> suma + it.getPrecioVenta()})
         total
     }
 
